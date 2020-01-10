@@ -26,6 +26,7 @@ coef_1f(mod1f)
 
 # not sure why all of the action happens in item 1 here
 # perhaps evidence that modeling multidimensionally is hard
+# and maybe something to do with variance of that second dimension being 0 but us not inputting that
 mod2f <- multipleGroup(sim$data, 2, itemtype = "2PL", sim$groups, invariance = c("free_means","slopes", "intercepts"), technical = list(NCYCLES = 50))
 coef(mod2f)
 

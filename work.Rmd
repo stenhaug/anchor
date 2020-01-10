@@ -1,0 +1,36 @@
+
+```{r}
+library(tidyverse)
+library(mirt)
+R.utils::sourceDirectory("R")
+```
+
+```{r}
+pars_1_dif <-
+    read_csv("data-parameters/kopf2015-8.csv") %>%
+    arrange(desc(easy)) %>%
+    mutate(
+        item = row_number(),
+        nuisance_disc = c(0, 0, 0, 0.2, 0, 0, 0, 0)
+    )
+
+sim_1_dif <- sim_bias(pars = pars_1_dif, n_ref = 10000, n_foc = 10000, mean_foc = -1)
+
+dif_constrained_baseline_one_at_a_time(data = sim_1_dif$data, groups = sim_1_dif$groups)
+```
+
+
+
+
+```{r}
+pars_3_dif <-
+    read_csv("data-parameters/kopf2015-8.csv") %>%
+    arrange(desc(easy)) %>%
+    mutate(
+        item = row_number(),
+        nuisance_disc = c(0, 0, 0, 0.5, 0.5, 0.5, 0, 0)
+    )
+```
+
+
+
