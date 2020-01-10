@@ -11,16 +11,32 @@ pars_1_dif <-
     arrange(desc(easy)) %>%
     mutate(
         item = row_number(),
-        nuisance_disc = c(0, 0, 0, 0.2, 0, 0, 0, 0)
+        nuisance_disc = c(0, 0, 0, 0.5, 0, 0, 0, 0)
     )
 
-sim_1_dif <- sim_bias(pars = pars_1_dif, n_ref = 10000, n_foc = 10000, mean_foc = -1)
+sim_1_dif <- sim_bias(pars = pars_1_dif, n_ref = 50000, n_foc = 50000, mean_foc = -1)
+```
 
+```{r}
 dif_constrained_baseline_one_at_a_time(data = sim_1_dif$data, groups = sim_1_dif$groups)
 ```
 
+```{r}
+mod <- 
+    multipleGroup(
+        sim_1_dif$data,
+        1,
+        itemtype = "Rasch",
+        sim_1_dif$groups,
+        invariance = c("free_var"),
+        technical = list(NCYCLES = 100),
+        SE = TRUE
+    )
 
-
+mod %>% 
+    mod_to_draws_df() %>% 
+    draws_df_to_logit_plot()
+```
 
 ```{r}
 pars_3_dif <-
