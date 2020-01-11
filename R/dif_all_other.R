@@ -4,6 +4,6 @@ dif_all_other <- function(data, groups){
     ) %>%
         mutate(
             p = item %>% map_dbl(~ constrained_baseline_test_flex_items(data, groups, flex_items = .)),
-            status = ifelse(p > 0.05, "flex", "unknown")
+            status = ifelse(p > 0.05, "unknown", "flex")
         )
 }

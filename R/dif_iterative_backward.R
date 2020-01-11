@@ -10,13 +10,11 @@ get_next_status <- function(status, data, groups){
         select(-status)
 }
 
-dif_iterative_backward <- function(data, groups){
+dif_iterative_backward <- function(data, groups, all_other){
 
-    dif_cb <- dif_all_other(data, groups)
-
-    if (all(dif_cb$p > 0.05)){
+    if (all(all_other$p > 0.05)){
         return(
-            dif_cb %>%
+            all_other %>%
                 mutate(
                     status = ifelse(item == which.min(p), "flex", "unknown")
                 )
@@ -24,7 +22,7 @@ dif_iterative_backward <- function(data, groups){
     }
 
     status <-
-        dif_cb %>%
+        all_other %>%
         mutate(
             status = ifelse(item == which.min(p), "flex", "unknown")
         )
