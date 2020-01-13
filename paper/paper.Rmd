@@ -1,0 +1,52 @@
+---
+output:
+  bookdown::pdf_document2:
+    includes:
+    keep_tex: no
+    latex_engine: xelatex
+    number_sections: yes
+    toc: yes
+    toc_depth: 2
+header-includes: 
+- \usepackage{float}
+- \usepackage{todonotes}
+- \usepackage{caption}
+- \usepackage[autostyle, english = american]{csquotes}
+
+fontsize: 11pt
+link-citations: yes
+spacing: double
+
+title: "Measurement invariance"
+
+subtitle: |
+    Ben Stenhaug & Ben Domingue  
+    Stanford University
+
+abstract: |
+  <!-- https://tinyurl.com/ybremelq -->
+  
+bibliography: paper.bib
+---
+
+<!-- setup -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    fig.align='center',
+    echo=FALSE,
+    warning=TRUE,
+    fig.pos='H'
+)
+
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+theme_set(theme_bw())
+```
+
+```{r child = "paper1.Rmd"}
+```
+
+# References

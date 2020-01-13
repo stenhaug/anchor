@@ -2,23 +2,52 @@
 ```{r}
 library(tidyverse)
 library(mirt)
+set.seed(123)
 R.utils::sourceDirectory("R")
 ```
 
 ```{r}
-pars_1_dif <-
-    read_csv("data-parameters/kopf2015-8.csv") %>%
-    arrange(desc(easy)) %>%
-    mutate(
-        item = row_number(),
-        nuisance_disc = c(0, 0, 0, 0.1, 0.1, 0, 0, 0)
-    )
-
-sim_1_dif <- sim_bias(pars = pars_1_dif, n_ref = 50000, n_foc = 50000, mean_foc = -1)
+create_pars_1_biased_item <- function(){
+    tibble(
+        item = 1:8,
+        easy = rnorm(8, 0, 1),
+        target_disc = 1,
+        nuisance_disc = c(rep(0.5, 1), rep(0, 7))
+    ) %>%
+    arrange(desc(nuisance_disc), easy)
+}
 ```
 
 ```{r}
-all_other <- dif_all_other(sim_1_dif$data, sim_1_dif$groups)
+out <- 
+    tibble(
+        pars = rerun(1, create_pars_1_biased_item())
+    ) %>% 
+    mutate(
+        sim = pars %>% map(~ sim_bias(pars = ., n_ref = 10000, n_foc = 10000, mean_foc = -1)),
+        intuitive_mod = sim %>% map(~ fit_mod_intuitive(.$data, .$groups))
+    ) %>% 
+    mutate(
+        all_other_status = sim %>% map(~ dif_all_other(.$data, .$groups)),
+        all_other_mod = 
+            map2(
+                sim, 
+                all_other_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex")
+                )
+            ),
+        all_other_final_dif = all_other_mod %>% map(mod_to_final_dif)
+    )
 
-iterative_backward <- dif_iterative_backward(sim_1_dif$data, sim_1_dif$groups, all_other)
+out$intuitive_mod[[1]] %>% 
+    mod_intuitive_to_draws_df() %>% 
+    draws_df_to_logit_plot() +
+    geom_point(data = out$all_other_final_dif[[1]], aes(x = dif, y = item), color = "red") +
+    geom_vline(xintercept = filter(out$all_other_final_dif[[1]], anchor)$dif[1], linetype = "dashed", color = "red")
 ```
+
+
+

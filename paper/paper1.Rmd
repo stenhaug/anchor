@@ -1,0 +1,3 @@
+# Hello
+
+but there is no guarantee that it will work for the small sample sizes with which psychometricians often work [@mcdonald1995goodness].

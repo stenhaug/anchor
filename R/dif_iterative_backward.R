@@ -28,7 +28,7 @@ dif_iterative_backward <- function(data, groups, all_other){
         )
 
     while(TRUE){
-        new_status <- get_next_status(status, sim_1_dif$data, sim_1_dif$groups)
+        new_status <- get_next_status(status, data, groups)
 
         status <-
             status %>%
