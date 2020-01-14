@@ -2,8 +2,8 @@ fit_mod_intuitive <- function(data, groups){
     multipleGroup(data, 1, itemtype = "Rasch", groups, invariance = "free_var", SE = TRUE)
 }
 
-mod_intuitive_to_draws_df <- function(mod_intuitive){
-    par_draws <- MASS::mvrnorm(n = 10000, mu = extract.mirt(mod_intuitive, "parvec"), Sigma = extract.mirt(mod_intuitive, "vcov"))
+mod_intuitive_to_draws_df <- function(mod){
+    par_draws <- MASS::mvrnorm(n = 10000, mu = extract.mirt(mod, "parvec"), Sigma = extract.mirt(mod, "vcov"))
 
     par_draws <- par_draws[ , str_detect(colnames(par_draws), "d")]
 

@@ -1,32 +1,29 @@
 
+- implement gini!!
+
+- implement the forward SA
+
 ```{r}
 library(tidyverse)
 library(mirt)
+library(cluster)
 set.seed(123)
 R.utils::sourceDirectory("R")
 ```
 
-```{r}
-create_pars_1_biased_item <- function(){
-    tibble(
-        item = 1:8,
-        easy = rnorm(8, 0, 1),
-        target_disc = 1,
-        nuisance_disc = c(rep(0.5, 1), rep(0, 7))
-    ) %>%
-    arrange(desc(nuisance_disc), easy)
-}
-```
+# 1
 
 ```{r}
-out <- 
+out_1_biased_item <- 
     tibble(
-        pars = rerun(1, create_pars_1_biased_item())
+        pars = rerun(100, create_pars_1_biased_item()) # swap in pars function here
     ) %>% 
+    # sim and fit intuitive
     mutate(
         sim = pars %>% map(~ sim_bias(pars = ., n_ref = 10000, n_foc = 10000, mean_foc = -1)),
         intuitive_mod = sim %>% map(~ fit_mod_intuitive(.$data, .$groups))
     ) %>% 
+    # dif: all other
     mutate(
         all_other_status = sim %>% map(~ dif_all_other(.$data, .$groups)),
         all_other_mod = 
@@ -36,18 +33,189 @@ out <-
                 ~ mod_flexible(
                     .x$data, 
                     .x$groups, 
-                    which(.y$status == "flex")
+                    which(.y$status == "flex"),
+                    se = TRUE
                 )
             ),
         all_other_final_dif = all_other_mod %>% map(mod_to_final_dif)
+    ) %>% 
+    # dif: iterative backward
+    mutate(
+        it_back_status = map2(sim, all_other_status, ~ dif_iterative_backward(.x$data, .x$groups, .y)),
+        it_back_mod = 
+            map2(
+                sim, 
+                it_back_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        it_back_final_dif = it_back_mod %>% map(mod_to_final_dif)
+    ) %>% 
+    # dif: tibs cluster
+    mutate(
+        cluster = 
+            intuitive_mod %>% 
+            map(mod_to_final_dif) %>% 
+            map(~ mutate(., cluster = irt_cluster(dif)))
+    ) %>% 
+    mutate(cluster_stats = cluster %>% map(get_cluster_stats)) %>% 
+    mutate(cluster_status = map2(cluster, cluster_stats, left_join, by = "cluster")) %>% 
+    mutate(
+        cluster_mod = 
+            map2(
+                sim, 
+                cluster_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        cluster_final_dif = cluster_mod %>% map(mod_to_final_dif)
     )
-
-out$intuitive_mod[[1]] %>% 
-    mod_intuitive_to_draws_df() %>% 
-    draws_df_to_logit_plot() +
-    geom_point(data = out$all_other_final_dif[[1]], aes(x = dif, y = item), color = "red") +
-    geom_vline(xintercept = filter(out$all_other_final_dif[[1]], anchor)$dif[1], linetype = "dashed", color = "red")
 ```
 
+# 3
+
+```{r}
+out_3_biased_items <- 
+    tibble(
+        pars = rerun(100, create_pars_3_biased_items()) # swap in pars function here
+    ) %>% 
+    # sim and fit intuitive
+    mutate(
+        sim = pars %>% map(~ sim_bias(pars = ., n_ref = 10000, n_foc = 10000, mean_foc = -1)),
+        intuitive_mod = sim %>% map(~ fit_mod_intuitive(.$data, .$groups))
+    ) %>% 
+    # dif: all other
+    mutate(
+        all_other_status = sim %>% map(~ dif_all_other(.$data, .$groups)),
+        all_other_mod = 
+            map2(
+                sim, 
+                all_other_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        all_other_final_dif = all_other_mod %>% map(mod_to_final_dif)
+    ) %>% 
+    # dif: iterative backward
+    mutate(
+        it_back_status = map2(sim, all_other_status, ~ dif_iterative_backward(.x$data, .x$groups, .y)),
+        it_back_mod = 
+            map2(
+                sim, 
+                it_back_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        it_back_final_dif = it_back_mod %>% map(mod_to_final_dif)
+    ) %>% 
+    # dif: tibs cluster
+    mutate(
+        cluster = 
+            intuitive_mod %>% 
+            map(mod_to_final_dif) %>% 
+            map(~ mutate(., cluster = irt_cluster(dif)))
+    ) %>% 
+    mutate(cluster_stats = cluster %>% map(get_cluster_stats)) %>% 
+    mutate(cluster_status = map2(cluster, cluster_stats, left_join, by = "cluster")) %>% 
+    mutate(
+        cluster_mod = 
+            map2(
+                sim, 
+                cluster_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        cluster_final_dif = cluster_mod %>% map(mod_to_final_dif)
+    )
+```
+
+# 4
+
+```{r}
+out_4_biased_items_balanced <- 
+    tibble(
+        pars = rerun(100, create_pars_4_biased_items_balanced()) # swap in pars function here
+    ) %>% 
+    # sim and fit intuitive
+    mutate(
+        sim = pars %>% map(~ sim_bias(pars = ., n_ref = 10000, n_foc = 10000, mean_foc = -1)),
+        intuitive_mod = sim %>% map(~ fit_mod_intuitive(.$data, .$groups))
+    ) %>% 
+    # dif: all other
+    mutate(
+        all_other_status = sim %>% map(~ dif_all_other(.$data, .$groups)),
+        all_other_mod = 
+            map2(
+                sim, 
+                all_other_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        all_other_final_dif = all_other_mod %>% map(mod_to_final_dif)
+    ) %>% 
+    # dif: iterative backward
+    mutate(
+        it_back_status = map2(sim, all_other_status, ~ dif_iterative_backward(.x$data, .x$groups, .y)),
+        it_back_mod = 
+            map2(
+                sim, 
+                it_back_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        it_back_final_dif = it_back_mod %>% map(mod_to_final_dif)
+    ) %>% 
+    # dif: tibs cluster
+    mutate(
+        cluster = 
+            intuitive_mod %>% 
+            map(mod_to_final_dif) %>% 
+            map(~ mutate(., cluster = irt_cluster(dif)))
+    ) %>% 
+    mutate(cluster_stats = cluster %>% map(get_cluster_stats)) %>% 
+    mutate(cluster_status = map2(cluster, cluster_stats, left_join, by = "cluster")) %>% 
+    mutate(
+        cluster_mod = 
+            map2(
+                sim, 
+                cluster_status, 
+                ~ mod_flexible(
+                    .x$data, 
+                    .x$groups, 
+                    which(.y$status == "flex"),
+                    se = TRUE
+                )
+            ),
+        cluster_final_dif = cluster_mod %>% map(mod_to_final_dif)
+    )
+```
 
 

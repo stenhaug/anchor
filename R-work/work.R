@@ -1,3 +1,28 @@
+# can i add some sort of sampling error somewhere
+
+out$intuitive_mod[[1]] %>%
+    mod_intuitive_to_draws_df() %>%
+    View()
+
+# was playing with clustering for each draw..
+
+mod_intuitive <- out$intuitive_mod[[1]]
+
+
+
+x <- mod %>% mod_to_draws_df(10)
+
+hi <-
+    x %>%
+    gather(item, easy, -run) %>%
+    arrange(run) %>%
+    split(.$run) %>%
+    map(~ irt_cluster(.$easy))
+
+vec <- y$val[1:8]
+
+#
+
 library(tidyverse)
 library(mirt)
 
