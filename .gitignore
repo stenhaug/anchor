@@ -1,4 +1,5 @@
 RODO.md
 .Rproj.user
 .Rhistory
-.RData
+*.RData
+*.pdf

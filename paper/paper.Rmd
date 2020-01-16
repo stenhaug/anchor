@@ -5,17 +5,18 @@ output:
     keep_tex: no
     latex_engine: xelatex
     number_sections: yes
-    toc: yes
+    toc: no
     toc_depth: 2
 header-includes: 
 - \usepackage{float}
-- \usepackage{todonotes}
-- \usepackage{caption}
 - \usepackage[autostyle, english = american]{csquotes}
+- \setlength{\parindent}{4em}
+- \setlength{\parskip}{4em}
+- \renewcommand{\baselinestretch}{1.5}
 
 fontsize: 11pt
 link-citations: yes
-spacing: double
+spacing: single
 
 title: "Measurement invariance"
 
@@ -45,6 +46,8 @@ library(kableExtra)
 
 theme_set(theme_bw())
 ```
+
+# Intro
 
 ```{r child = "paper1.Rmd"}
 ```

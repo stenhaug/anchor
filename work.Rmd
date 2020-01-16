@@ -218,4 +218,9 @@ out_4_biased_items_balanced <-
     )
 ```
 
+```{r}
+save.image("work_run_1.Rdata")
+```
+
+
 
