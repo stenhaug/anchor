@@ -2,54 +2,63 @@
 output:
   bookdown::pdf_document2:
     includes:
-    keep_tex: no
+    keep_tex: yes
     latex_engine: xelatex
     number_sections: yes
-    toc: no
+    toc: yes
     toc_depth: 2
 header-includes: 
 - \usepackage{float}
 - \usepackage[autostyle, english = american]{csquotes}
 - \setlength{\parindent}{4em}
-- \setlength{\parskip}{4em}
-- \renewcommand{\baselinestretch}{1.5}
-
+- \setlength{\parskip}{2em}
+- \usepackage{setspace}\doublespacing
 fontsize: 11pt
 link-citations: yes
-spacing: single
-
 title: "Measurement invariance"
-
 subtitle: |
     Ben Stenhaug & Ben Domingue  
     Stanford University
-
 abstract: |
+  ABSTRACT TO DO
   <!-- https://tinyurl.com/ybremelq -->
-  
 bibliography: paper.bib
 ---
 
-<!-- setup -->
-
 ```{r setup, include = FALSE}
+# 
+# https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html 
+
 knitr::opts_chunk$set(
     fig.align='center',
     echo=FALSE,
     warning=TRUE,
-    fig.pos='H'
+    fig.pos='H',
+    fig.retina = 5
 )
 
 library(tidyverse)
+library(mirt)
 library(knitr)
 library(kableExtra)
+set.seed(123)
+R.utils::sourceDirectory(here::here("R"))
 
 theme_set(theme_bw())
 ```
 
-# Intro
+\clearpage
 
-```{r child = "paper1.Rmd"}
+# Introduction
+
+```{r child = "paper_1_intro.Rmd"}
+```
+
+# DIF methods
+
+```{r child = "paper_2_dif_methods.Rmd"}
 ```
 
 # References
+
+<!-- weird formatting, solution is to use papaja (look at paper_apa.Rmd) -->

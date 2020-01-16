@@ -26,9 +26,5 @@ draws_df_to_logit_plot <- function(draws_df){
         gather(var, val) %>%
         ggplot(aes(x = val, y = var)) +
         ggridges::geom_density_ridges() +
-        labs(
-            x = "Focal group logits - Reference group logits",
-            y = "",
-            subtitle = "Identify by fixing both means to 0 and let difference show up in item easiness"
-        )
+        labs(x = "", y = "")
 }

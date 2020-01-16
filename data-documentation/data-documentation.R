@@ -9,7 +9,7 @@ pars <-
         item = 1:8,
         easy = rnorm(8, 0, 1),
         target_disc = 1,
-        nuisance_disc = c(rep(0.5, 1), rep(0, 7)) # 1 + 7 = 8
+        nuisance_disc = c(rep(0.5, 3), rep(0, 5)) # 1 + 7 = 8
     ) %>%
     arrange(desc(nuisance_disc), easy)
 
@@ -21,7 +21,7 @@ sim %>% write_rds("data-documentation/sim.rds")
 
 # intuitive
 mod <- multipleGroup(sim$data, 1, itemtype = "Rasch", sim$groups, invariance = "free_var", SE = TRUE)
-mod %>% mod_to_draws_df() %>% draws_df_to_logit_plot()
+mod %>% mod_intuitive_to_draws_df() %>% draws_df_to_logit_plot()
 
 # all other
 all_other <- dif_all_other(sim$data, sim$groups)
