@@ -85,7 +85,7 @@ out_1_biased_item <-
 ```{r}
 out_3_biased_items <- 
     tibble(
-        pars = rerun(100, create_pars_3_biased_items()) # swap in pars function here
+        pars = rerun(1, create_pars_3_biased_items())
     ) %>% 
     # sim and fit intuitive
     mutate(

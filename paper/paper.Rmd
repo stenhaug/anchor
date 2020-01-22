@@ -39,6 +39,7 @@ knitr::opts_chunk$set(
 
 library(tidyverse)
 library(mirt)
+library(cluster)
 library(knitr)
 library(kableExtra)
 set.seed(123)
@@ -61,4 +62,4 @@ theme_set(theme_bw())
 
 # References
 
-<!-- weird formatting, solution is to use papaja (look at paper_apa.Rmd) -->
+<!-- weird formatting, solution is to use papaja (look at paper_apa.Rmd) or this might also be helpful https://stackoverflow.com/questions/4073674/how-to-disable-indentation-in-particular-section-in-latex-->

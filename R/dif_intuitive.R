@@ -1,5 +1,5 @@
 fit_mod_intuitive <- function(data, groups){
-    multipleGroup(data, 1, itemtype = "Rasch", groups, invariance = "free_var", SE = TRUE)
+    multipleGroup(data, 1, itemtype = "Rasch", groups, invariance = "free_var", SE = TRUE, verbose = FALSE)
 }
 
 mod_intuitive_to_draws_df <- function(mod){
