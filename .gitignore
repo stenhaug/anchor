@@ -2,3 +2,4 @@ RODO.md
 .Rproj.user
 .Rhistory
 *.RData
+*.rds

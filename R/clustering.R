@@ -25,8 +25,8 @@ get_cluster_stats <- function(cluster){
         group_by(cluster) %>%
         summarize(
             n = n(),
-            sd = sd(dif)
+            sd = sd(difference_in_easy)
         ) %>%
-        arrange(desc(n), sd) %>%
+        arrange(desc(n), sd) %>% # chooses based on the greatest number of items
         mutate(status = ifelse(row_number() == 1, "unknown", "flex"))
 }

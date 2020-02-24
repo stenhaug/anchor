@@ -1,0 +1,62 @@
+goal is to understand what types of selections gini and l1 are making
+
+# simulated
+
+```{r}
+emlg <- read_rds(here("data-documentation/emlg.rds"))
+```
+
+the thing to notice is that 
+
+- gini takes the median of the dominant group (not totally clear how it chooses)
+
+- l1 anywhere in the median (here its even so its a range)
+
+```{r}
+emlg %>% emlg_to_gini_l1()
+
+sort(emlg$difference_in_easy)
+```
+
+# create
+
+```{r}
+emlg <- 
+    tibble(
+        ref_easy = c(0, 0, 0, 0, 0.5, 1, 1, 1, 1),
+        foc_easy = rep(0, 9)
+    ) %>% 
+    mutate(difference_in_easy = ref_easy - foc_easy)
+```
+
+- gini again the median of the dominant group
+
+- l1 chooses the median
+
+```{r}
+emlg %>% emlg_to_gini_l1()
+
+sort(emlg$difference_in_easy)
+```
+
+# create
+
+```{r}
+emlg <- 
+    tibble(
+        ref_easy = seq(0, 1, length.out = 9),
+        foc_easy = rep(0, 9)
+    ) %>% 
+    mutate(difference_in_easy = ref_easy - foc_easy)
+```
+
+- gini again the median of the dominant group but its not clear how it finds it here but it does 
+
+- l1 chooses the median as always
+
+```{r}
+emlg %>% emlg_to_gini_l1()
+
+sort(emlg$difference_in_easy)
+```
+

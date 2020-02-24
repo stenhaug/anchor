@@ -14,7 +14,7 @@ mod_intuitive_to_draws_df <- function(mod){
     n_items <- ncol(par_draws) / 2
 
     for (i in 1:n_items) {
-        draws_df[[paste0("item", i)]] <- par_draws[ , i + n_items] - par_draws[ , i]
+        draws_df[[paste0("item", i)]] <- par_draws[ , i] - par_draws[ , i + n_items]
     }
 
     draws_df

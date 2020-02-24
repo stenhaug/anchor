@@ -1,10 +1,17 @@
-Psychometricians have long been in search of the perfect DIF detection method. @meade2012solving compared the most commonly used methods and unequivocally recommended the all-others-as-anchors (AOAA) method, where each item is tested one at a time for DIF using all other items as anchors. More specifically, testing is done using a nested model comparison between the baseline model, where all item parameters are fixed across groups, and the flexible model, where the parameters of the tested item are freed across groups. Anchor items have fixed parameters across groups and consequently are used to estimate the ability difference between groups. For example, @edelen2006identification used AOAA to look for DIF between the English and Spanish versions of the 21-item Mini-Mental State Examination and found that 10 of the 21 items exhibited DIF. How can we be sure its those 10 items and not the other 11 items with DIF? Implicit in the use of AOAA is the assumption that all items not being tested do not exhibit DIF, which is, of course, impossible. Undesirably, most applications of DIF methods and many simulation studies do not make explicit the assumptions of the DIF method @strobl2018anchor. In this way, psychometricians might benefit from adopting economists' habit of explicitly stating assumptions and debating their plausibility. 
+Psychometricians have long been in search of the perfect DIF detection method. In the following three sections, we summarize DIF methods and propose new DIF methods. We use a simple simulation to demonstrate DIF methods: 10,000 reference group students and 10,000 focal group students take an eight-item test. Target ability is simulated ${\theta_i}^{\text{ref}} \sim N(0,1)$ for students in the reference group and ${\theta_i}^{\text{foc}} \sim N(-1,1)$ for students in the focal group. Nuisance ability is set to ${\eta_i}^{\text{ref}} = 0$ for the reference group and ${\eta_i}^{\text{ref}} = -1$ for the focal group. The slope on target ability is set to $a_{1j} = 1$ for all items, and the slope on nuisance ability is set to $a_{2j} = 0.5$ for the last three items (the items with DIF) and $a_{2j} = 0$ otherwise.
+
+## All others as anchors
+
+@meade2012solving compared the most commonly used methods and unequivocally recommended the all-others-as-anchors (AOAA) method in which each item is tested one at a time for DIF using all other items as anchors. More specifically, testing is done using a nested model comparison between the baseline model, where all item parameters are fixed across groups, and the flexible model, where the parameters of the tested item are freed across groups. Anchor items have fixed parameters across groups and consequently are used to estimate the ability difference between groups. For example, @edelen2006identification used AOAA to look for DIF between the English and Spanish versions of the 21-item Mini-Mental State Examination and found that 10 of the 21 items exhibited DIF. How can we be sure its those 10 items and not the other 11 items with DIF? Implicit in the use of AOAA is the assumption that all items not being tested do not exhibit DIF, which is, of course, impossible. Undesirably, most applications of DIF methods and many simulation studies do not make explicit the assumptions of the DIF method @strobl2018anchor. In this way, psychometricians might benefit from adopting economists' habit of explicitly stating assumptions and debating their plausibility. 
 
 Researchers have noticed the circular logic of AOAA, but have mostly described it indirectly by pointing out inflated Type I errors in simulation studies [@stark2006detecting]. A simple thought experiment illustrates how AOAA fails: Imagine a test with a sufficiently large number of students and three items where the first item has DIF, and the other two do not. Using AOAA, all items test positive for DIF. The last two items incorrectly test positive because including the first item in the anchor set causes the group ability difference to be misestimated. This phenomenon of items with real DIF inducing the appearance of DIF in other items was only indirectly discussed in the literature until @andrich2012real coined the term "artificial DIF."
 
-One way to attempt to counter artificial DIF is with purification with iterative anchor selection. For example, [@drasgow1987study] started with AOAA, removed items displaying DIF from the anchor set, then continued iteratively to test the remaining items for DIF until no more items tested positively. [@kopf2015framework] named this technique Iterative-backward-AOAA with "backward" (as in reverse, not incorrect) referring to beginning with the assumption that all items are DIF free. We find this name confusing and instead refer to this method as all-others-as-anchors-all-significiant (AOAA-AS) where appending all-significant indicates that anchor selection is done iteratively with all items that show statistical significance for DIF are removed from the anchor set. AOAA-AS might seem like an improvement, but what does one do when all items display DIF in the first AOAA stage? With a sufficient sample size, this will necessarily be the case. @kopf2015framework encountered precisely this problem in their simulation study and chose to select a single anchor item randomly. Woods suggested a more straightforward, one-step method which uses AOAA and selects the, say, four items that exhibit the least amount of DIF. It's unclear if one should proceed if those four items display DIF themselves. 
+One way to attempt to counter artificial DIF is with purification with iterative anchor selection. For example, [@drasgow1987study] started with AOAA, removed items displaying DIF from the anchor set, then continued iteratively to test the remaining items for DIF until no more items tested positively. [@kopf2015framework] named this technique Iterative-backward-AOAA with "backward" (as in reverse, not incorrect) referring to beginning with the assumption that all items are DIF free. We find this name confusing and instead refer to this method as all-others-as-anchors-all-significiant (AOAA-AS) where appending all-significant indicates that anchor selection is done iteratively with all items that show statistical significance for DIF are removed from the anchor set. AOAA-AS might seem like an improvement, but what does one do when all items display DIF in the first AOAA stage? With a sufficient sample size, this will necessarily be the case. @kopf2015framework encountered precisely this problem in their simulation study and chose to select a single anchor item randomly. @woods2009empirical suggested a more straightforward, one-step method which uses AOAA and selects the, say, four items that exhibit the least amount of DIF. It's unclear if one should proceed if those four items display DIF themselves. 
 
-We propose an extension of these methods, all-others-as-anchors-one-at-a-time (AOAA-OAAT), which, to our knowledge (and surprise), has not previously been proposed. AOAA-OAT starts with AOAA, and the single item exhibiting the most DIF is removed from the anchor set. Each item in the anchor set is then tested for DIF again (with items outside of the anchor set allowed to have free parameters across groups in both the baseline and flexible model). This process continues until no new items display DIF. AOAA-OAAT and AOAA-AS are similar in that they are both iterative; the difference is that AOAA-OAAT takes the more conservative approach of removing only the item exhibiting the most DIF. Applying AOAA-OAT to our thought experiment demonstrates its logic. The initial AOAA removes the real DIF item from the anchor set because it exhibits the most DIF. In the next step, both of the other items test negative for DIF, and we arrive at the correct conclusion. AOAA-OAT has two assumptions: First, that at least one item does not have DIF, and second, that the majority of items do not have DIF. Table X summarizes. 
+We propose an extension of these methods, all-others-as-anchors-one-at-a-time (AOAA-OAAT), which, to our knowledge (and surprise), has not previously been proposed. AOAA-OAT starts with AOAA, and the single item exhibiting the most DIF is removed from the anchor set. Each item in the anchor set is then tested for DIF again (with items outside of the anchor set allowed to have free parameters across groups in both the baseline and flexible model). This process continues until no new items display DIF. AOAA-OAAT and AOAA-AS are similar in that they are both iterative; the difference is that AOAA-OAAT takes the more conservative approach of removing only the item exhibiting the most DIF. Applying AOAA-OAT to our thought experiment demonstrates its logic. The initial AOAA removes the real DIF item from the anchor set because it exhibits the most DIF. In the next step, both of the other items test negative for DIF, and we arrive at the correct conclusion. AOAA-OAT has two assumptions: First, that at least one item does not have DIF, and second, that the majority of items do not have DIF. Table X summarizes these methods. In wrapping one's mind around these methods it's useful to remember that AOAA is not an iterative procedure, while the methods with a dash, AOAA-OAT and AAOA-AS, are iterative procedures with AOAA-OAT being the most conservative.
+
+ALSO MAKE A TABLE OF SIMULATION RESULTS
+
 <!-- the two kopf 2015 papers love the iterative forward SA. I bet AOAA-OAT is as good or better while fitting fewer models -->
 
 \begin{center}
@@ -25,32 +32,131 @@ We propose an extension of these methods, all-others-as-anchors-one-at-a-time (A
  \end{tabular}
 \end{center}
 
-DIF methods, in general, seem to be designed to automatically detect items with DIF without any intervention from a human. In some cases, it might make sense to present information to the analyst in a way that empowers them to make decisions. Our preferred technique, which we refer to as the "equal means logit graph" (EMLG), is to set both groups means to 0 so that differences in performance to manifest in the item parameters. Relatedly, @pohl2017cluster fit a model with both groups means set to 0 in a pedagogical example, and @talbot2013taking fixed both pre-test and post-test means to 0 in order to estimate item-specific learning gains. 
+## Presenting information to the analyst
 
-We use a simple simulation to demonstrate EMLG. 10,000 reference group students and 10,000 focal group students take an eight-item test. Target ability is simulated ${\theta_i}^{\text{ref}} \sim N(0,1)$ for students in the reference group and ${\theta_i}^{\text{foc}} \sim N(-1,1)$ for students in the focal group. Nuisance ability is set to ${\eta_i}^{\text{ref}} = 0$ for the reference group and ${\eta_i}^{\text{ref}} = -1$ for the focal group. The slope on target ability is set to $a_{1j} = 1$ for all items, and the slope on nuisance ability is set to $a_{2j} = 0.5$ for the last three items (the items with DIF) and $a_{2j} = 0$ otherwise. We fit a unidimensional Rasch, with both group means fixed to 0, to the simulated item response data. We estimate the item parameter covariance matrix using Oakes' identity [@chalmers2018numerical]. Multiple imputations (MI) [@yang2012characterizing] are used to estimate the distribution of the difference in difficulty, ${b_j}^{\text{foc}} - {b_j}^{\text{ref}}$, for each item. Figure \ref{fig:emlg} shows these distributions.
+DIF methods, in general, seem to be designed to automatically detect items with DIF without any intervention from a human. We refer to DIF methods that do not use an analyst's judgement as "algorithmic DIF methods." On the other hand, it might make sense to present information to the analyst in a way that empowers them to make decisions in some cases. We propose a technique, the "equal means logit graph" (EMLG), where both group means are to 0 so that differences in performance manifest exclusively in the item parameters. Relatedly, @pohl2017cluster fit a model with both groups means set to 0 in a pedagogical example, and @talbot2013taking fixed both pre-test and post-test means to 0 in order to estimate item-specific learning gains. 
+
+We fit a unidimensional Rasch, with both group means fixed to 0, to the simulated item response data. We estimate the item parameter covariance matrix using Oakes' identity [@chalmers2018numerical]. Multiple imputations (MI) [@yang2012characterizing] are used to estimate the distribution of the difference in difficulty, ${b_j}^{\text{foc}} - {b_j}^{\text{ref}}$, for each item. Figure \ref{fig:emlg} shows these distributions in the EMLG. 
 
 ```{r emlg, fig.cap = 'Equal means logit graph (EMLG)', out.width="70%", warning = FALSE, message = FALSE}
-source("paper_2_sim.R")
+# source(here("paper/paper_2_sim.R"))
+# out_3_biased_items %>% write_rds(here("paper", "paper_2_out_3_biased_items.rds"))
+out_3_biased_items <- read_rds(here("paper", "paper_2_out_3_biased_items.rds"))
 
-out_3_biased_items$intuitive_mod[[1]] %>% 
-    mod_intuitive_to_draws_df() %>% 
-    mutate_at(vars(starts_with("item")), function(x) -x) %>% 
+out_3_biased_items$intuitive_mod[[1]] %>%
+    mod_intuitive_to_draws_df() %>%
     draws_df_to_logit_plot() +
     labs(
-        x = latex2exp::TeX("$b_j^{foc} - b_j^{ref}$ (group means fixed to 0)")
+        x = latex2exp::TeX("$b_j^{ref} - b_j^{foc}$ (group means fixed to 0)")
     )
 
 # labeling good enough for now maybe check here to fiddle more:
 # https://stackoverflow.com/questions/8190087/italic-greek-letters-latex-style-math-in-plot-titles
 ```
 
-It cannot be stated strongly enough that Figure \ref{fig:emlg} contains all possible information about the difference in group performance. The challenge, then, is to identify the difference in group ability. The analyst might assume that, because there are five items showing a difference of about 1 logit and only three items showing a difference of 1.5 logits, the group ability difference is 1 logit and items 6, 7, and 8 contain approximately 0.5 logit bias against the focal group. The implicit assumption they are making is that it is the minority of items that contain DIF.
+It cannot be stated strongly enough that the EMLG contains all possible information about the difference in group performance. The challenge, then, is to identify the difference in group ability. The analyst might assume that — because there are five items where the reference group outperforms the focal group by 1 logit and only three items where the difference is 1.5 logits — items 1-5 are unbiased and should be used as anchor items. At this point, the analyst re-fits the model with the anchor items having fixed parameters across groups so that they are used to estimate the difference in group ability. The parameters of the other items are free to vary across groups, and, indeed, the new model finds that the item easiness difference, ${b_j}^{\text{ref}} - {b_j}^{\text{foc}}$, is about 0.5 logits for each of these items.
 
-DIF methods use an algorith with its own set of assumptions to identify the group ability difference. 
+One way to show this:
 
-The beauty of the EMLG graph is it makes clear all information instead of allowing the analyst the false sense of security of running an algorithm and wholeheartedlyr believing the output. 
+```{r who, fig.cap = 'fix this', out.width="70%"}
+out_3_biased_items$intuitive_mod[[1]] %>%
+    mod_intuitive_to_draws_df() %>%
+    draws_df_to_logit_plot() +
+    geom_vline(xintercept = filter(out_3_biased_items$AOAA_OAT_final_dif[[1]], anchor)$difference_in_easy[1], linetype = "dashed", color = "#009E73") +
+    geom_point(
+        data = out_3_biased_items$AOAA_OAT_final_dif[[1]],
+        aes(x = difference_in_easy, y = item),
+        color = "#009E73",
+        size = 2
+    ) +
+    labs(
+        title =
+            "<span style='color:#009E73'> Analyst decision based on EMLG <br>
+            Anchor on items 1-5 and freely estimate items 6-8 </span>",
+        x = latex2exp::TeX("$b_j^{ref} - b_j^{foc} - \\mu_j^{foc}$")
+    ) +
+    theme(
+        plot.title = element_markdown(lineheight = 1.1)
+    )
+```
 
-We know that this test contains DIF. Which items depends on ability difference which we can be sure of. We can, however, quantify the amount of DIF on this test. We can take the SD or we can assume between and calculate chalmers statistic for each. We might not know for sure the ability difference but we can quantify the potential for DIF. For each we calculate the SD across item parameters. 
+Another way to show this:
 
+```{r why, fig.cap = 'fix this', out.width="70%"}
+out_3_biased_items$AOAA_OAT_final_dif[[1]] %>%
+    select(item, anchor, a_ref_easy, b_foc_easy) %>%
+    gather(var, val, -item, -anchor) %>%
+    mutate(var = case_when(anchor ~ "anchor", var == "a_ref_easy" ~ "ref_easy", var == "b_foc_easy" ~ "foc_easy")) %>%
+    ggplot(aes(x = item, y = val, color = var)) +
+    geom_point() +
+    coord_flip() +
+    scale_color_manual(values = c("black", "blue", "red"))
+```
 
+One of our key concerns with algorithmic DIF methods is that they can lull the analyst into a false sense of security. Too often, the analyst chooses a method, implements it, and then proceeds as if the method certainly identified the correct anchor items. The EMLG combats this concern by presenting all information clearly to the analyst. In the previous example, the analyst is may be weary of their results having seen how arbitrary it was to conclude that the first five and not the last three items are unbiased. Even in cases where algorithmic DIF methods are used, the analyst should use the EMLG to give them a sense of their item response data. 
+
+## Clustering
+
+@bechger2015statistical proposed choosing anchor items by identifying clusters of items that function similarly and then choosing one of those clusters to be the "anchor cluster." They pointed out that one way around the unidentifiability issue of item response models is to arbitrarily set an item easiness parameter to 0. For each group, the relative difficulties for each pair of items are stored in the matrix $\mathbf{R}^{\text{ref}}$ with entries ${R_{xy}}^{\text{ref}} = {b_x}^{\text{ref}} - {b_y}^{\text{ref}}$. The ultimate matrix of interest is $\Delta \mathbf{R} \equiv \mathbf{R}^{\text{ref}}-\mathbf{R}^{\text{foc}}$ which is the "differences between groups in the pairwise differences in difficulty between items" [p. 323].
+
+The general idea of identifying clusters of items is interesting. However, their approach is needlessly complicated and they did not give specific suggestions on how to move from $\Delta \mathbf{R}$ to a set of anchor items. @pohl2017cluster extended their work by proposing an approach for identifying anchor items. $\Delta \mathbf{R}$ is skew-symmetric and of rank 1 so that all information is contained in a single row or column. Accordingly, they use k-means clustering on just the first column of $\Delta \mathbf{R}$ where the number of clusters, k, is chosen by minimizing BIC. They suggest using a combination of cluster size, cluster homogeneity, and cluster parameter precision to choose which of the clusters is the anchor cluster. However, in their simulation study, they find that BIC identifies only a single cluster, so they use all items as anchors.
+
+We propose a new cluster-based approach which we refer to as equal means clustering (EMC). Instead of working with an arbitrary column from $\Delta \mathbf{R}$, we work with the vector of differences in item easiness, ${b_j}^\text{ref} - {b_j}^\text{foc}$, when both groups have their means fixed to 0 as is the case in the EMLG. Instead of choosing k with BIC, we use the gap statistic method reccommended by @hastie2001estimating. The largest cluster is chosen as the anchor cluster. If there is a tie for the largest cluster, the cluster with the lowest standard deviation of item easiness differences is selected.
+
+Using this method, we find that _________. 
+
+```{r}
+out_3_biased_items$cluster_status[[1]] %>% 
+    select(item, a_ref_easy, b_foc_easy, difference_in_easy, cluster) %>% 
+    mutate(anchor = ifelse(cluster == 1, TRUE, FALSE))
+```
+
+## Anchor points
+
+All of the previously discussed DIF methods select a set of anchor items, whether that selection is done by an algorithm or the analyst. The difference in group abilities is then estimated using exclusively the anchor items. An alternative strategy is to select an anchor point, which essentially specifies the difference in group abilities directly. Anchor point methods have the advantage of not assuming that any particular item is DIF-free and therefore, all items can be tested for DIF.
+
+### Gini index
+
+@strobl2018anchor suggest using the Gini index -@gini1912variabilita for selecting anchor points. The Gini index is typically used to measure the inequality of wealth distribution in a country. South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution @chitiga2015income. In general, the Gini index "takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little" [@strobl2018anchor, p. 7].
+
+The Gini index is maximized to select the anchor point. The intuition is that we want to find the anchor point such that a small minority of items have bias while the vast majority do not. Denote the easiness difference between the two groups when both group means are fixed to zero as $d_j = {b_j}^\text{ref} - {b_j}^\text{foc}$, a function that calculates the Gini index from a vector of non-negative elements as $G(\mathbf{x})$, and the mean of the focal group ability when the reference group ability is fixed to zero (i.e. the anchor point) as $\Theta$. The anchor point is set to 
+$$
+\argmax_\Theta G(\mathbf{d} + \Theta)
+$$
+where $\Theta \in (-\infty, \infty)$ and $\Theta$ is added to each element of $\mathbf{d}$.
+
+```{r}
+emlg <- 
+    coef_1f(out_3_biased_items$intuitive_mod[[1]])$items %>% 
+    select(item, ref_easy = a_ref_easy, foc_easy = b_foc_easy) %>% 
+    mutate(difference_in_easy = ref_easy - foc_easy)
+
+gini_results <- emlg_to_gini_l1(emlg, lo = -2, hi = 0)
+```
+
+Figure \ref{fig:workplease} shows these distributions in the EMLG. 
+
+```{r workplease, fig.cap = 'always need a capt', out.width="70%"}
+gini_results$grid %>% 
+    ggplot(aes(x = anchor_point, y = gini)) +
+    geom_point()
+```
+
+Strobl used the Gini coefficient
+
+Also the method where we say okay we can always add 1 to group ability and subtract 1 from group difference so we need a way to select from all of these solutions which are equivalent from a likelihood perspective. An obvious solution is to min total between curves
+
+- min between curves perform similarly to minimizing l1 norm in Rasch case but has clearer solution for 2PL and on
+
+```{r workplease2, fig.cap = 'always need a capt', out.width="70%"}
+# min_bc <-
+#     out_3_biased_items$intuitive_mod[[1]] %>%
+#     min_between_curves(lo = 0.95, hi = 1.1, by = 0.001)
+
+# min_bc %>% write_rds(here("paper", "paper_2_min_bc.rds"))
+
+min_bc <- read_rds(here("paper", "paper_2_min_bc.rds"))
+
+min_bc$graph
+```
 

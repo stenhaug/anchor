@@ -8,13 +8,13 @@ output:
     toc: yes
     toc_depth: 2
 header-includes: 
-- \usepackage{amsmath}
-- \DeclareMathOperator*{\argmax}{arg\,max}
 - \usepackage{float}
 - \usepackage[autostyle, english = american]{csquotes}
 - \setlength{\parindent}{4em}
 - \setlength{\parskip}{2em}
 - \usepackage{setspace}\doublespacing
+- \usepackage{amsmath}
+- \DeclareMathOperator*{\argmax}{arg\,max}
 fontsize: 11pt
 link-citations: yes
 title: "Measurement invariance"
@@ -53,28 +53,8 @@ R.utils::sourceDirectory(here("R"))
 theme_set(theme_bw())
 ```
 
-\clearpage
+The Gini index is maximized to select the anchor point. The intuition is that we want to find the anchor point such that a small minority of items have bias while the vast majority do not. Denote the easiness difference between the two groups when both group means are fixed to zero as $d_j = {b_j}^\text{ref} - {b_j}^\text{foc}$, a function that calculates the Gini index from a vector of non-negative elements as $G(\mathbf{x})$, and the mean of the focal group ability when the reference group ability is fixed to zero (i.e. the anchor point) as $\Theta$.
 
-# TO DO
-
-- be sure all my directions match. i think i switched everything to be item easiness at some point but not sure if i did it throughout
-
-# Introduction
-
-```{r child = "paper_1_intro.Rmd"}
-```
-
-# DIF methods
-
-```{r child = "paper_2_dif_methods.Rmd"}
-```
-
-\clearpage
-
-# Notes
-
-- adjust to all be easiness including multidimensional talk
-
-# References
-
-<!-- weird formatting, solution is to use papaja (look at paper_apa.Rmd) or this might also be helpful https://stackoverflow.com/questions/4073674/how-to-disable-indentation-in-particular-section-in-latex-->
+$$
+\argmax_\Theta G(\mathbf{d} + \Theta)
+$$
