@@ -134,7 +134,7 @@ emlg <-
 gini_results <- emlg_to_gini_l1(emlg, lo = -2, hi = 0)
 ```
 
-Figure \ref{fig:workplease} shows these distributions in the EMLG. 
+Figure \ref{fig:workplease} shows the gini coefficient at a variety of possible values for $\Theta$. We find that the anchor point is `r round(gini_results$gini_anchor_points, 2)`.
 
 ```{r workplease, fig.cap = 'always need a capt', out.width="70%"}
 gini_results$grid %>% 
@@ -142,11 +142,23 @@ gini_results$grid %>%
     geom_point()
 ```
 
-Strobl used the Gini coefficient
+### Minimizing between curves
 
-Also the method where we say okay we can always add 1 to group ability and subtract 1 from group difference so we need a way to select from all of these solutions which are equivalent from a likelihood perspective. An obvious solution is to min total between curves
+Imagine multigroup item response data where $\Theta^{\text{foc}} = \Theta^{\text{ref}}$ and $d_j = 0 \forall j$ so that there is no DIF. The fundamental identification problem of DIF in multipgroup IRT models is that
+there are an infinite number of models with the same likelihood from which to choose. For example, we could correctly assume that the focal group has the same ability as the reference group and fix $\Theta^{\text{foc}} = 0$. The model would then estimate $d_j \approx 0 \forall j$, and we would correctly conclude the groups have the same ability and there is no DIF. Alternatively, we could assume that the focal group has very high ability and fix $\Theta^{\text{foc}} = 3$. The model would then compensate by finding $d_j \approx -3 \forall j$, and we would incorrectly conclude that the the focal group is high ability but each item contains DIF against the focal group. Both of these models have the same likelihood, so how should we choose which model to believe? This is the fundamental identification problem.
 
-- min between curves perform similarly to minimizing l1 norm in Rasch case but has clearer solution for 2PL and on
+We put forth a method we call minimizing between curves (MBC) which chooses the model with least amount of total DIF on the test. "Curves" refers to the item characteristic curve which maps a student's ability to their probability of correct response. The amount of DIF on each item is calculated as 
+
+$$
+\text{DIF}_j = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, b_j^{\text{foc}})| g(\theta)d\theta
+$$
+where $g(\theta)$ is a weighting function such that $\int g(\theta)d\theta = 1$. The total DIF on the test, then, is $\text{Total DIF} = \sum_{j} \text{DIF}_j$. Different choices for $\Theta^{\text{foc}}$ lead to different $\mathbf{b}^\text{foc}$, and we select the $\Theta^{\text{foc}}$ that minimizes $\text{Total DIF}$. The idea for considering the difference between item characteristic curves dates back to @stocking1983developing. More recently, @chalmers2016might use the difference between test characteristic curves weighted by $g(\theta)$ as a measure of differential test functioning (DTF). 
+
+The selection of $g(\theta)$ is important and determines where on the ability spectrum to consider DIF. -@chalmers2016might does not discuss how to choose $g(\theta)$ and in practice uses $g(\theta)$ uniform for $-6 \le \theta \le 6$, which seems like an odd choice. It might seem intuitive to choose $g(\theta) \sim N(0, 1)$ because $\mu^\text{ref} = 0$, but this choice doesn't take into account the ability distribution of the focal group. If $\mu^\text{foc} = 3$, wouldn't we also want to prioritize high $\theta$ values? We set $g(\theta)$ to be the average of the reference and focal group ability distributions:
+
+$$
+g(\theta) = \dfrac{N(\mu^{\text{ref}}, \sigma^{\text{ref}^2}) + N(\mu^{\text{foc}}, \sigma^{\text{foc}^2})}{2}.
+$$
 
 ```{r workplease2, fig.cap = 'always need a capt', out.width="70%"}
 # min_bc <-
@@ -159,4 +171,8 @@ min_bc <- read_rds(here("paper", "paper_2_min_bc.rds"))
 
 min_bc$graph
 ```
+
+## Bounds for DIF 
+
+## Summary
 

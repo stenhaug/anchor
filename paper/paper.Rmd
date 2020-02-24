@@ -6,7 +6,7 @@ output:
     latex_engine: xelatex
     number_sections: yes
     toc: yes
-    toc_depth: 2
+    toc_depth: 5
 header-includes: 
 - \usepackage{amsmath}
 - \DeclareMathOperator*{\argmax}{arg\,max}
@@ -67,6 +67,11 @@ theme_set(theme_bw())
 # DIF methods
 
 ```{r child = "paper_2_dif_methods.Rmd"}
+```
+
+# Next steps
+
+```{r child = "paper_3_next_steps.Rmd"}
 ```
 
 \clearpage
