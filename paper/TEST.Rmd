@@ -2,7 +2,7 @@
 output:
   bookdown::pdf_document2:
     includes:
-    keep_tex: no
+    keep_tex: yes
     latex_engine: xelatex
     number_sections: yes
     toc: yes
@@ -15,6 +15,8 @@ header-includes:
 - \usepackage{setspace}\doublespacing
 - \usepackage{amsmath}
 - \DeclareMathOperator*{\argmax}{arg\,max}
+- \AtBeginEnvironment{tabular}{\singlespacing}
+- \usepackage{natbib}
 fontsize: 11pt
 link-citations: yes
 title: "Measurement invariance"
@@ -53,8 +55,23 @@ R.utils::sourceDirectory(here("R"))
 theme_set(theme_bw())
 ```
 
-The Gini index is maximized to select the anchor point. The intuition is that we want to find the anchor point such that a small minority of items have bias while the vast majority do not. Denote the easiness difference between the two groups when both group means are fixed to zero as $d_j = {b_j}^\text{ref} - {b_j}^\text{foc}$, a function that calculates the Gini index from a vector of non-negative elements as $G(\mathbf{x})$, and the mean of the focal group ability when the reference group ability is fixed to zero (i.e. the anchor point) as $\Theta$.
+@lord1980
 
-$$
-\argmax_\Theta G(\mathbf{d} + \Theta)
-$$
+@drasgow1987study
+
+\begin{center}
+ \begin{tabular}{|p{2.5cm}|p{6cm}|p{4cm}|} 
+ \toprule
+ Method & Description &  Literature \\
+ \midrule
+ AOAA & Test if each item has DIF by using all of the other items as anchors. Not iterative. & Originally proposed by \cite{lord1980} and formalized by \cite{thissen1993detection} \\ 
+ \hline
+ AOAA-AS & The first iteration is AOAA. All items that test positive for DIF are removed from the anchor set. Continue iterating until no new items test positive for DIF. & Proposed by \cite{drasgow1987study} \\
+ \hline
+ AOAA-OAT & The first iteration is AOAA. However, only the item that shows the most extreme DIF is removed from the anchor set. Continue iterating until no new items test positive for DIF. & To our knowledge, not proposed or used previously. \\
+ \bottomrule
+ \end{tabular}
+\end{center}
+
+\bibliographystyle{apa}
+\bibliography{paper.bib}

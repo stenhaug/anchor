@@ -2,29 +2,38 @@
 output:
   bookdown::pdf_document2:
     includes:
-    keep_tex: no
+    keep_tex: yes
     latex_engine: xelatex
     number_sections: yes
     toc: yes
-    toc_depth: 5
-header-includes: 
-- \usepackage{amsmath}
-- \DeclareMathOperator*{\argmax}{arg\,max}
-- \usepackage{float}
-- \usepackage[autostyle, english = american]{csquotes}
-- \setlength{\parindent}{4em}
-- \setlength{\parskip}{2em}
-- \usepackage{setspace}\doublespacing
+    toc_depth: 5 
+
 fontsize: 11pt
+bibliography: paper.bib
 link-citations: yes
-title: "Measurement invariance"
+
+title: |
+    New and old ways to chase a rabbit:  
+    Differential item functioning detection methods
 subtitle: |
-    Ben Stenhaug & Ben Domingue  
+    Ben Stenhaug  
     Stanford University
 abstract: |
-  ABSTRACT TO DO
+  summarize propose extensions insist as dif as student property and on communicating uncertainty
   <!-- https://tinyurl.com/ybremelq -->
-bibliography: paper.bib
+header-includes: 
+- \usepackage{amsmath}
+- \DeclareMathOperator*{\argmax}{arg\,max} # for gini coefficient
+
+- \usepackage{float}
+- \usepackage[autostyle, english = american]{csquotes}
+
+- \setlength{\parindent}{4em} # all of this for draft, papaja should take care of things
+- \setlength{\parskip}{2em}
+- \usepackage{setspace}\doublespacing
+- \AtBeginEnvironment{tabular}{\singlespacing} # this makes that table single spaced
+
+- \usepackage{natbib} # citations in that table were a hassle. this is still a bit broken. remember can always change tex file.
 ---
 
 ```{r setup, include = FALSE}
@@ -82,4 +91,15 @@ theme_set(theme_bw())
 
 # References
 
-<!-- weird formatting, solution is to use papaja (look at paper_apa.Rmd) or this might also be helpful https://stackoverflow.com/questions/4073674/how-to-disable-indentation-in-particular-section-in-latex-->
+<!-- weird formatting that isn't apa I don't think and indentation is weird, solution is to use papaja (look at paper_apa.Rmd) or this might also be helpful https://stackoverflow.com/questions/4073674/how-to-disable-indentation-in-particular-section-in-latex-->
+
+<!-- hopefully all of this below goes away with papaja and other solutions. but remember if it can't editing the latek file is always an option on the final draft! 
+https://github.com/haozhu233/kableExtra/issues/214
+https://stackoverflow.com/questions/51613152/citing-within-an-rmarkdown-table
+https://tex.stackexchange.com/questions/272475/citations-in-tabular-environment-not-working
+https://tex.stackexchange.com/questions/359872/is-it-possible-to-use-cite-inside-xtable
+https://github.com/yihui/rmarkdown-cookbook/issues/71
+-->
+
+\bibliographystyle{apa}
+\bibliography{paper.bib}
