@@ -14,8 +14,10 @@ min_between_curves <- function(intuitive_mod, lo, hi, by){
     weights_ref <- dnorm(Theta, mu_ref, sd_ref) / sum(dnorm(Theta, mu_ref, sd_ref))
 
     f <- function(intuitive_mod, anchor_point){
+        # was disoriented but the anchor point is what you boost the focal group by
+        # so if anchor_point = 1 then the mean of the focal group is -1
 
-        mu_foc <- anchor_point
+        mu_foc <- -anchor_point
         # assumes cov doesn't change when I shift mean
         # which I mostly cerified for Rasch in
         # R-work-complete > cov_doesnt_change_when_shifting
@@ -51,15 +53,13 @@ min_between_curves <- function(intuitive_mod, lo, hi, by){
         tibble(
             anchor_point = seq(lo, hi, by)
         )  %>%
-        mutate(total_between_curves = anchor_point %>% map_dbl(~ f(intuitive_mod, .)))
+        mutate(
+            total_between_curves = anchor_point %>% map_dbl(~ f(intuitive_mod, .)),
+            anchor_point = -anchor_point
+        )
 
     list(
         grid = grid,
-        graph =
-            grid %>%
-            ggplot(aes(x = anchor_point, y = total_between_curves)) +
-            geom_point() +
-            geom_path(),
         between_curves_anchor_points = grid$anchor_point[grid$total_between_curves == min(grid$total_between_curves)]
     )
 }

@@ -70,6 +70,7 @@
 \setcounter{secnumdepth}{5}
 \usepackage{amsmath}
 \DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
 \usepackage{float}
 \usepackage[autostyle, english = american]{csquotes}
 \setlength{\parindent}{4em}
@@ -129,7 +130,7 @@ summarize propose extensions insist as dif as student property and on communicat
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-Inspired by Camilli (\protect\hyperlink{ref-camilli1992conceptual}{1992}), we view differential item functioning (DIF) as bias against a group of students that manifests when an item response model with too few ability dimensions is imposed. From this perspective, the term \enquote{differential item functioning} is, perhaps, a misnomer as DIF is a property of the student, not the item. For example, Ackerman (\protect\hyperlink{ref-ackerman1992didactic}{1992}) describes a scenario in which a test intends to measure a student's math ability, but performance also depends on their verbal ability. In this case, math ability is the \enquote{target ability,} and verbal ability is the \enquote{nuisance ability.} Fitting a unidimensional item response model to this test results in students with low verbal ability receiving a score systematically lower than their true math ability; therein lies DIF.
+Inspired by Camilli (\protect\hyperlink{ref-camilli1992conceptual}{1992}), we think differential item functioning (DIF) as bias against a group of students that manifests when an item response model with too few ability dimensions is imposed. From this perspective, the term \enquote{differential item functioning} is, perhaps, a misnomer as DIF is a property of the student, not the item. For example, Ackerman (\protect\hyperlink{ref-ackerman1992didactic}{1992}) describes a scenario in which a test intends to measure a student's math ability, but performance also depends on their verbal ability. In this case, math ability is the \enquote{target ability,} and verbal ability is the \enquote{nuisance ability.} Fitting a unidimensional item response model to this test results in students with low verbal ability receiving a score systematically lower than their true math ability; therein lies DIF.
 
 Contrarily, the usual setup of DIF simulation studies frames DIF as a property of the item. For example, Kopf, Zeileis, and Strobl (\protect\hyperlink{ref-kopf2015framework}{2015}) simulate students as belonging to either a reference or focal group. They fix the item easinesses for the reference group, \({b_j}^{\text{ref}}\), to values from a previous study. They set item easinesses for the focal group to \({b_j}^{\text{foc}} = {b_j}^{\text{ref}}\) for items without DIF and \({b_j}^{\text{foc}} = {b_j}^{\text{ref}} + 0.6\) for items with DIF, where 0.6 is the magnitude of DIF in logits. They simulate student ability \({\theta_i}^{\text{ref}} \sim N(0,1)\) for students in the reference group and \({\theta_i}^{\text{foc}} \sim N(-1,1)\) for students in the focal group. They generate item responses according to the Rasch model, which specifies that the probability of student \(i\) responding correctly to item \(j\) is
 \begin{align}
@@ -152,7 +153,7 @@ Psychometricians have long been in search of the perfect DIF detection method. I
 
 We use a simple, one-run simulation to demonstrate the methods: 10,000 reference group students and 10,000 focal group students taking an eight-item test. Target ability is simulated \({\theta_i}^{\text{ref}} \sim N(0,1)\) for students in the reference group and \({\theta_i}^{\text{foc}} \sim N(-1,1)\) for students in the focal group. Nuisance ability is set to \({\eta_i}^{\text{ref}} = 0\) and \({\eta_i}^{\text{ref}} = -1\). The slope on target ability is set to \(a_{1j} = 1\) for all items, and the slope on nuisance ability is set to \(a_{2j} = 0.5\) for the last three items (the items with DIF) and \(a_{2j} = 0\) otherwise. From the DIF-as-item-property view, there is no nuisance ability. Instead, \({b_j}^{\text{foc}} = {b_j}^{\text{ref}}\) for the first five items and \({b_j}^{\text{foc}} = {b_j}^{\text{ref}} - 0.5\) for the last three items.
 
-In general, we denote the mean ability for the reference and focal group as \(\mu^\text{ref}\) and \(\mu^\text{foc}\). We follow the common and inconsequential practice of identifying the scale by setting \(\mu^\text{ref} = 0\). The fundamental challenge for a DIF method is to first estimate \(\mu^\text{foc}\). How can \(\mu^\text{foc}\) be disentangled from the possibility that items are biased? The most common approach is to identify a group of anchor items which are assumed to be DIF-free. The anchor items identify the model because they can be used to estimate \(\mu^\text{foc}\).
+In general, we denote the mean ability of the reference and focal group as \(\mu^\text{ref}\) and \(\mu^\text{foc}\), respectively. We follow the common and inconsequential practice of identifying the scale by setting \(\mu^\text{ref} = 0\). The fundamental challenge for a DIF method is to first get an estimate for \(\mu^\text{foc}\), \(\hat\mu^\text{foc}\). How can group ability be disentangled from the possibility that items are biased? The most common approach is to identify a group of anchor items that are assumed to be DIF-free. These items are used to get \(\hat\mu^\text{foc}\).
 
 \hypertarget{anchor-items}{%
 \subsection{Anchor items}\label{anchor-items}}
@@ -176,7 +177,7 @@ AOAA-AS might seem like an improvement but it doesn't solve a fundamental proble
 \hypertarget{all-other-as-anchors-one-at-a-time}{%
 \paragraph{All-other-as-anchors-one-at-a-time}\label{all-other-as-anchors-one-at-a-time}}
 
-We propose an extension of these methods, all-others-as-anchors-one-at-a-time (AOAA-OAT), which, to our knowledge (and surprise), has not previously been proposed. Like AOAA-AS, AOAA-OAT starts with AOAA, but only the single item exhibiting the most DIF, based on the \(\chi^2\) test statistic, is removed from the anchor set. The process continues iteratively until no new items display DIF. AOAA-OAT and AOAA-AS are similar in that they are both iterative; the difference is that AOAA-OAT takes the more conservative approach of removing only one item in each iteration as opposed to all items that test positive for DIF.
+We propose an extension of these methods, all-others-as-anchors-one-at-a-time (AOAA-OAT), which, to our knowledge (and surprise), has not previously been proposed. Like AOAA-AS, AOAA-OAT starts with AOAA, but only the single item exhibiting the most DIF, based on the \(\chi^2\) test statistic, is removed from the anchor set. The process continues iteratively until no new items display DIF. AOAA-OAT and AOAA-AS are similar in that they are both iterative; the difference is that AOAA-OAT takes the more conservative approach of removing only one item in each iteration as opposed to all items that test positive for DIF. As a result, AOAA-OAT is less likely to arrive at the wrong conclusion because of artifical DIF.
 
 Applying AOAA-OAT to our thought experiment demonstrates its effectiveness. The initial AOAA removes the real DIF item from the anchor set because it exhibits the most DIF. In the next step, both of the other items test negative for DIF, and we arrive at the correct conclusion. AOAA-OAT has two assumptions: First, that at least one item does not have DIF, and second, that the majority of items do not have DIF.
 
@@ -213,11 +214,11 @@ AOAA-OAT & The first iteration is AOAA. Only the item that shows the most extrem
 
 Bechger and Maris (\protect\hyperlink{ref-bechger2015statistical}{2015}) proposed choosing anchor items by identifying clusters of items that function similarly and then choosing one of those clusters to be the \enquote{anchor cluster.} They pointed out that one way around the unidentifiability issue is to consider relative item parameters. For each group, the relative easinesses for each pair of items can be stored in the matrix \(\mathbf{R}^{\text{ref}}\) with entries \({R_{xy}}^{\text{ref}} = {b_x}^{\text{ref}} - {b_y}^{\text{ref}}\). The ultimate matrix of interest is \(\Delta \mathbf{R} \equiv \mathbf{R}^{\text{ref}}-\mathbf{R}^{\text{foc}}\) which is the \enquote{differences between groups in the pairwise differences in (easiness) between items} {[}p.~323{]}.
 
-The general idea of identifying clusters of items is interesting. However, their approach is needlessly complicated and they did not give specific suggestions for moving from \(\Delta \mathbf{R}\) to a set of anchor items. Pohl, Stets, and Carstensen (\protect\hyperlink{ref-pohl2017cluster}{2017}) extended their work by proposing an approach for identifying the anchor cluster. \(\Delta \mathbf{R}\) is skew-symmetric and of rank 1 so that all information is contained in a single row or column. Accordingly, they use k-means clustering on just the first column of \(\Delta \mathbf{R}\) where the number of clusters, k, is chosen by minimizing BIC. They suggest using a combination of cluster size, cluster homogeneity, and cluster parameter precision to choose which of the clusters is the anchor cluster. However, in their simulation study, they find that BIC identifies only a single cluster, so they use all items as anchors.
+The general idea of identifying clusters of items is intriguing. However, their approach is needlessly complicated and they did not describe a process for moving from \(\Delta \mathbf{R}\) to a set of anchor items. Pohl, Stets, and Carstensen (\protect\hyperlink{ref-pohl2017cluster}{2017}) extended their work by proposing one such process. \(\Delta \mathbf{R}\) is skew-symmetric and of rank 1, which means that all information is contained in a single row or column. Accordingly, they use k-means clustering on just the first column of \(\Delta \mathbf{R}\) where the number of clusters, k, is chosen by minimizing BIC. They suggest using a combination of cluster size, cluster homogeneity, and cluster parameter precision to choose which of the clusters is the anchor cluster. Unfortunately, in their simulation study, they find that BIC identifies only a single cluster, so they end up using all of the items as anchors.
 
-We propose a new cluster-based approach which we call \enquote{equal means clustering} (EMC). Instead of working with an arbitrary column from \(\Delta \mathbf{R}\), we work with the vector \(\tilde{\mathbf{d}}\) of differences in item easiness, \(\tilde{d_j} = \tilde{b_j}^\text{ref} - \tilde{b_j}^\text{foc}\), where the model is identified by setting \(\mu^\text{foc} = 0\) (recall \(\mu^\text{ref}\) is always set to \(0\), thus the name \enquote{equal means clustering}). This results in all differences in performance --- either from group ability differences or DIF --- manifesting in the item easiness difference parameter \(\tilde{d_j}\). The tilde is used to denote parameters estimated with \(\mu^\text{foc}\) set to \(0\).
+We propose a new cluster-based approach, which we call \enquote{equal means clustering} (EMC). Instead of working with an arbitrary column from \(\Delta \mathbf{R}\), we work with the vector \(\tilde{\mathbf{d}}\) of differences in item easiness, \(\tilde{d_j} = \tilde{b_j}^\text{ref} - \tilde{b_j}^\text{foc}\), where the model is identified by setting \(\mu^\text{foc} = 0\) (recall \(\mu^\text{ref}\) is always set to \(0\), thus the name \enquote{equal means clustering}). This results in all differences in performance --- either from group ability differences or DIF --- manifesting in the item easiness difference parameter \(\tilde{d_j}\). The tilde is used to denote parameters estimated with \(\mu^\text{foc}\) arbitrarily set to \(0\).
 
-Instead of choosing k with BIC, we use the gap statistic method recommended by Hastie, Tibshirani, and Walther (\protect\hyperlink{ref-hastie2001estimating}{2001}). The largest cluster is chosen as the anchor cluster. If there is a tie for the largest cluster, the cluster with the lowest standard deviation of item easiness differences is selected.
+Instead of choosing k with BIC, we use the gap statistic method recommended by Hastie, Tibshirani, and Walther (\protect\hyperlink{ref-hastie2001estimating}{2001}). The largest cluster is chosen as the anchor cluster. If there is a tie for the largest cluster, the cluster with the lowest standard deviation of \(\tilde{\mathbf{d}}\) is selected. This process makes the assumption that the largest cluster (but necessarily the majority) of items do not contain DIF.
 
 OUR SIMULATION RESULTS
 
@@ -246,116 +247,127 @@ item8 & -1.2953061 & -2.8759098 & 1.5806036 & 2 & FALSE\\
 \hypertarget{analyst-chooses}{%
 \subsubsection{Analyst chooses}\label{analyst-chooses}}
 
-DIF methods, in general, seem to be designed to automatically detect items with DIF without any intervention from a human. We refer to DIF methods that do not use an analyst's judgement as \enquote{algorithmic DIF methods.} On the other hand, it's often useful to present information to the analyst in a way that empowers them to see DIF and potentially choose the anchor items.
+DIF methods are generally designed to automatically detect DIF without any human judgement. On the other hand, it can be useful to present information to the analyst in a way that empowers them to see DIF and potentially even select the anchor items.
 
-We propose a technique, the \enquote{equal means logit graph} (EMLG), where both group means are to 0 so that differences in performance manifest exclusively in the item parameters. Relatedly, Pohl, Stets, and Carstensen (\protect\hyperlink{ref-pohl2017cluster}{2017}) fit a model with both groups means set to 0 in a pedagogical example, and Talbot III (\protect\hyperlink{ref-talbot2013taking}{2013}) fixed both pre-test and post-test means to 0 in order to estimate item-specific learning gains.
+We propose a technique, the \enquote{equal means, multiple imputation logit graph} (EM-MILG), which presents information about potential DIF to the analyst. Like EMC, EM-MILG begins by fitting a unidimensional Rasch model to the data that is identified by setting \(\mu^\text{foc}\) to \(0\). Again, the result is that all differences in performance manifest in \(\tilde{\mathbf{d}}\). To get a sense of variation in each \(\tilde{{d_j}}\), the item parameter covariance matrix is estimated using Oakes' identity (Chalmers \protect\hyperlink{ref-chalmers2018numerical}{2018}). Then, multiple imputations (MI) (Yang, Hansen, and Cai \protect\hyperlink{ref-yang2012characterizing}{2012}) are used to estimate the distribution of \(\tilde{d_j}\) for every item. These are the distributions displayed in the EM-MILG. The method is inspired in part by Pohl, Stets, and Carstensen (\protect\hyperlink{ref-pohl2017cluster}{2017}) who fit a model with both the reference and focal group means set to 0 in a pedagogical example, and Talbot III (\protect\hyperlink{ref-talbot2013taking}{2013}) who fixed both pre-test and post-test means to 0 in order to estimate item-specific learning gains.
 
-We fit a unidimensional Rasch, with both group means fixed to 0, to the simulated item response data. We estimate the item parameter covariance matrix using Oakes' identity (Chalmers \protect\hyperlink{ref-chalmers2018numerical}{2018}). Multiple imputations (MI) (Yang, Hansen, and Cai \protect\hyperlink{ref-yang2012characterizing}{2012}) are used to estimate the distribution of the difference in difficulty, \({b_j}^{\text{foc}} - {b_j}^{\text{ref}}\), for each item. Figure \ref{fig:emlg} shows these distributions in the EMLG.
-
-\begin{figure}[H]
-
-{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/emlg-1} 
-
-}
-
-\caption{Equal means logit graph (EMLG)}\label{fig:emlg}
-\end{figure}
-
-It cannot be stated strongly enough that the EMLG contains all possible information about the difference in group performance. The challenge, then, is to identify the difference in group ability. The analyst might assume that --- because there are five items where the reference group outperforms the focal group by 1 logit and only three items where the difference is 1.5 logits --- items 1-5 are unbiased and should be used as anchor items. At this point, the analyst re-fits the model with the anchor items having fixed parameters across groups so that they are used to estimate the difference in group ability. The parameters of the other items are free to vary across groups, and, indeed, the new model finds that the item easiness difference, \({b_j}^{\text{ref}} - {b_j}^{\text{foc}}\), is about 0.5 logits for each of these items.
-
-One way to show this:
-
-\begin{verbatim}
-## Picking joint bandwidth of 0.00548
-\end{verbatim}
+Figure \ref{fig:emmilg} shows the EM-MILG for our simulated data. It cannot be stated strongly enough that the EM-MILG contains all possible information about the difference in group performance. The challenge, then, is to select the anchor items. The analyst might assume that --- because there are five items where the reference group outperforms the focal group by 1 logit and only three items where the difference is 1.5 logits --- items 1-5 are unbiased and can be used as anchor items.
 
 \begin{figure}[H]
 
-{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/who-1} 
+{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/emmilg-1} 
 
 }
 
-\caption{fix this}\label{fig:who}
+\caption{The equal means multiple imputations logit graph (EM-MILG) shows the distribution of how many logits the reference group outperforms the focal group by on each item.}\label{fig:emmilg}
 \end{figure}
 
-Another way to show this:
+After choosing the anchor items, the model is refit. The new model is identified by setting \(d_j = 0\) for the anchor items, instead of by setting \(\mu^\text{foc}\) to \(0\). The same process of using multiple imputations to estimate the distribution of \(d_j\) can be used with the new model. Because the equal means assumption is not made, we refer to the resulting graph as a multiple imputations logit graph (MILG). In our simulation, selecting the first five items as anchors correctly results in \(\hat d_j \approx 0.5\) for the items with DIF as is shown in the MILG in Figure \ref{fig:milg}.
 
 \begin{figure}[H]
 
-{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/why-1} 
+{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/milg-1} 
 
 }
 
-\caption{fix this}\label{fig:why}
+\caption{The multiple imputations logit graph (MILG) shows the distribution of DIF against the focal group. Anchor items are fixed to 0.}\label{fig:milg}
 \end{figure}
 
-One of our key concerns with algorithmic DIF methods is that they can lull the analyst into a false sense of security. Too often, the analyst chooses a method, implements it, and then proceeds as if the method certainly identified the correct anchor items. The EMLG combats this concern by presenting all information clearly to the analyst. In the previous example, the analyst is may be weary of their results having seen how arbitrary it was to conclude that the first five and not the last three items are unbiased. Even in cases where algorithmic DIF methods are used, the analyst should use the EMLG to give them a sense of their item response data.
+One of our key concerns with typical DIF methods is that they can lull the analyst into a false sense of security. Too often, the analyst chooses a method, implements it, and then proceeds as if the method certainly identified the correct anchor items. The EM-MILG combats this concern by presenting all information clearly to the analyst. In the previous example, the analyst may be weary of their results having seen how arbitrary it was to conclude that the first five and not the last three items are unbiased. Even when other DIF methods are used, the analyst can use the EM-MILG as a first step in order to give them a sense of their item response data. And, of course, the MILG can be used to visualize DIF anytime a model is fit using anchor items, not just when the first step involves the EM-MILG.
 
 \hypertarget{anchor-points}{%
 \subsection{Anchor points}\label{anchor-points}}
 
-All of the previously discussed DIF methods select a set of anchor items, whether that selection is done by an algorithm or the analyst. The difference in group abilities is then estimated using exclusively the anchor items. An alternative strategy is to select an anchor point, which essentially specifies the difference in group abilities directly. Anchor point methods have the advantage of not assuming that any particular item is DIF-free and therefore, all items can be tested for DIF.
+The previously discussed DIF methods select a set of anchor items, whether that selection is done by an algorithm or the analyst. The anchor items are used to estimate \(\hat \mu^\text{foc}\). An alternative strategy is to directly select the anchor point, \(\mu^{\star\text{foc}}\). Anchor point methods have the advantage of not requiring the assumption that any particular item is DIF-free, and, therefore, all items can be tested for DIF. The question then becomes the following: How do we select the anchor point?
 
 \hypertarget{gini-index}{%
 \subsubsection{Gini index}\label{gini-index}}
 
-Strobl et al. (\protect\hyperlink{ref-strobl2018anchor}{2018}) suggest using the Gini index (\protect\hyperlink{ref-gini1912variabilita}{1912}) for selecting anchor points. The Gini index is typically used to measure the inequality of wealth distribution in a country. South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution Chitiga, Sekyere, and Tsoanamatsie (\protect\hyperlink{ref-chitiga2015income}{2015}). In general, the Gini index \enquote{takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little} (Strobl et al. \protect\hyperlink{ref-strobl2018anchor}{2018}, 7).
+Strobl et al. (\protect\hyperlink{ref-strobl2018anchor}{2018}) suggest using the Gini index (\protect\hyperlink{ref-gini1912variabilita}{1912}) to select the anchor point. The Gini index is typically used to measure the inequality of wealth distribution in a country. For example, South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution Chitiga, Sekyere, and Tsoanamatsie (\protect\hyperlink{ref-chitiga2015income}{2015}). In general, the Gini index \enquote{takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little} (Strobl et al. \protect\hyperlink{ref-strobl2018anchor}{2018}, 7).
 
-The Gini index is maximized to select the anchor point. The intuition is that we want to find the anchor point such that a small minority of items have bias while the vast majority do not. Denote the easiness difference between the two groups when both group means are fixed to zero as \(d_j = {b_j}^\text{ref} - {b_j}^\text{foc}\), a function that calculates the Gini index from a vector of non-negative elements as \(G(\mathbf{x})\), and the mean of the focal group ability when the reference group ability is fixed to zero (i.e.~the anchor point) as \(\Theta\). The anchor point is set to
+The anchor point, \(\mu^{\star\text{foc}}\), is selected by maximizing the Gini index. The intuition and assumption is that some items might have bias but the majority do not. Denoting a function that calculates the Gini index from a vector of non-negative elements as \(G(\mathbf{x})\),\\
 \[
-\mathop\mathrm{arg\,max}_\Theta G(\mathbf{d} + \Theta)
+\mu^{\star\text{foc}} = \mathop\mathrm{arg\,max}_{\mu^\text{foc}} G(|\mu^\text{foc} + \tilde{\mathbf{d}}|)
 \]
-where \(\Theta \in (-\infty, \infty)\) and \(\Theta\) is added to each element of \(\mathbf{d}\).
+where \(\mu^\text{foc} \in (-\infty, \infty)\) and \(\mu^\text{foc}\) is added to each element of \(\mathbf{d}\).
 
-Figure \ref{fig:workplease} shows the gini coefficient at a variety of possible values for \(\Theta\). We find that the anchor point is -0.99.
+For the simulated data, Figure \ref{fig:ginipath} shows the gini coefficient at a variety of possible values for \(\mu^\text{foc}\). The anchor point is \(\mu^\text{foc} = -0.99\).
 
 \begin{figure}[H]
 
-{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/workplease-1} 
+{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/ginipath-1} 
 
 }
 
-\caption{always need a capt}\label{fig:workplease}
+\caption{Selecting the anchor point by maximizing the Gini index.}\label{fig:ginipath}
+\end{figure}
+
+We then refit the model with the identifying assumption of \(\mu^{\star\text{foc}} = -0.99\). We test each item for DIF and display the results in a MILG as is shown in Figure \ref{fig:ginimilg}.
+
+\begin{verbatim}
+## Picking joint bandwidth of 0.00544
+\end{verbatim}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/ginimilg-1} 
+
+}
+
+\caption{Selecting the anchor point by maximizing the Gini index.}\label{fig:ginimilg}
 \end{figure}
 
 \hypertarget{minimizing-between-curves}{%
 \subsubsection{Minimizing between curves}\label{minimizing-between-curves}}
 
-Race created a statistical test which was one of the most popular methods used until recently.
+Raju's area method measures the amount of DIF by calculating the area between the item characteristic curve, the function that maps ability to probability correct response, for each group (Raju \protect\hyperlink{ref-raju1988area}{1988}):
 
-Imagine multigroup item response data where \(\Theta^{\text{foc}} = \Theta^{\text{ref}}\) and \(d_j = 0 \forall j\) so that there is no DIF. The fundamental identification problem of DIF in multipgroup IRT models is that
-there are an infinite number of models with the same likelihood from which to choose. For example, we could correctly assume that the focal group has the same ability as the reference group and fix \(\Theta^{\text{foc}} = 0\). The model would then estimate \(d_j \approx 0 \forall j\), and we would correctly conclude the groups have the same ability and there is no DIF. Alternatively, we could assume that the focal group has very high ability and fix \(\Theta^{\text{foc}} = 3\). The model would then compensate by finding \(d_j \approx -3 \forall j\), and we would incorrectly conclude that the the focal group is high ability but each item contains DIF against the focal group. Both of these models have the same likelihood, so how should we choose which model to believe? This is the fundamental identification problem.
+\begin{align}
+    \text{Area Between Curves} = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, b_j^{\text{foc}})|
+\end{align}
 
-We put forth a method we call minimizing between curves (MBC) which chooses the model with least amount of total DIF on the test. \enquote{Curves} refers to the item characteristic curve which maps a student's ability to their probability of correct response. The amount of DIF on each item is calculated as
+Raju's area method, along with AOAA, have been cited as the two most commonly used IRT-based DIF detection methods (Magis et al. \protect\hyperlink{ref-magis2011generalized}{2011}). We see two weakness of Raju's area method: First, the item characteric curves still need to be linked by anchor items, which the method does not help to identify. Second, the area is unweighted so all values of \(\theta\) matter equally, despite some being much more realistic than others.
 
+Inspired by Raju's area method, we propose a new method, which we call \enquote{minimizing the area between curves} (MABC). To understand MABC, imagine multigroup item response data where \(\mu^{\text{foc}} = \mu^{\text{ref}}\) and \(d_j = 0 \forall j\) so that there is no DIF. The fundamental identification problem of DIF in multigroup IRT models is that there are an infinite number of models with the same likelihood from which to choose. For example, we could correctly assume that the focal group has the same ability as the reference group and fix \(\mu^{\star\text{foc}} = 0\). The model would then estimate \(\hat d_j \approx 0 \forall j\), and we would correctly conclude the groups have the same ability and there is no DIF. Alternatively, we could assume that the focal group has \(\mu^{\star\text{foc}} = 3\). The model would then compensate by finding \(\hat d_j \approx -3 \forall j\), and we would incorrectly conclude that the focal group is high ability but every item contains DIF against them. Both of these models have the same likelihood, so how should one choose which model to believe? MABC chooses the model with the least amount of total DIF, as measured by the total area between the item characteric curves. This is another, perhaps clearer, way of assuming that the majority of items do not contain DIF.
+
+Denote a function that estimates \(\hat b_j^\text{foc}\) by fitting a unidimensional Rasch model where the value of \(\mu^\text{foc}\) is fixed as \(m_j(\mu^\text{foc})\). The amount of DIF on each item is calculated as
 \[
-\text{DIF}_j = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, b_j^{\text{foc}})| g(\theta)d\theta
+\text{DIF}_j(\mu^\text{foc}) = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, m_j(\mu^\text{foc}))| g(\theta)d\theta
 \]
-where \(g(\theta)\) is a weighting function such that \(\int g(\theta)d\theta = 1\). The total DIF on the test, then, is \(\text{Total DIF} = \sum_{j} \text{DIF}_j\). Different choices for \(\Theta^{\text{foc}}\) lead to different \(\mathbf{b}^\text{foc}\), and we select the \(\Theta^{\text{foc}}\) that minimizes \(\text{Total DIF}\). The idea for considering the difference between item characteristic curves dates back to Stocking and Lord (\protect\hyperlink{ref-stocking1983developing}{1983}). More recently, Chalmers, Counsell, and Flora (\protect\hyperlink{ref-chalmers2016might}{2016}) use the difference between test characteristic curves weighted by \(g(\theta)\) as a measure of differential test functioning (DTF).
-
-The selection of \(g(\theta)\) is important and determines where on the ability spectrum to consider DIF. (\protect\hyperlink{ref-chalmers2016might}{2016}) does not discuss how to choose \(g(\theta)\) and in practice uses \(g(\theta)\) uniform for \(-6 \le \theta \le 6\), which seems like an odd choice. It might seem intuitive to choose \(g(\theta) \sim N(0, 1)\) because \(\mu^\text{ref} = 0\), but this choice doesn't take into account the ability distribution of the focal group. If \(\mu^\text{foc} = 3\), wouldn't we also want to prioritize high \(\theta\) values? We set \(g(\theta)\) to be the average of the reference and focal group ability distributions:
-
+where \(g(\theta)\) is a weighting function such that \(\int g(\theta)d\theta = 1\). The total DIF on the test, then, is
+\[
+\text{Total DIF}(\mu^\text{foc}) = \sum_{j} \text{DIF}_j(\mu^\text{foc})
+\]
+In this way, \(\text{Total DIF}(\mu^\text{foc})\) is a function where the input is \(\mu^\text{foc}\) and the output is the total amount of DIF on the test. MABC sets
+\[
+\mu^{\star\text{foc}} = \mathop\mathrm{arg\,min}_{\mu^\text{foc}} \text{Total DIF}(\mu^\text{foc}).
+\]
+MABC is inspired in part by Chalmers, Counsell, and Flora (\protect\hyperlink{ref-chalmers2016might}{2016}) who uses the difference between test characteristic curves weighted by \(g(\theta)\) as a measure of differential test functioning (DTF). The selection of \(g(\theta)\) is important and determines where on the ability spectrum to consider DIF. (\protect\hyperlink{ref-chalmers2016might}{2016}) does not discuss how to choose \(g(\theta)\) and in practice uses \(g(\theta)\) uniform for \(-6 \le \theta \le 6\), which seems like an odd choice. It might seem intuitive to choose \(g(\theta) \sim N(0, 1)\) because \(\mu^\text{ref} = 0\), but this choice doesn't take into account the ability distribution of the focal group. If \(\mu^\text{foc} = 3\), wouldn't we also want to prioritize high \(\theta\) values? We set \(g(\theta)\) to be the average of the reference and focal group ability distributions:
 \[
 g(\theta) = \dfrac{N(\mu^{\text{ref}}, \sigma^{\text{ref}^2}) + N(\mu^{\text{foc}}, \sigma^{\text{foc}^2})}{2}.
 \]
 
+For the simulated data, Figure \ref{fig:mabc} shows Total DIF at a variety of possible values for \(\mu^\text{foc}\). The anchor point is \(\mu^\text{foc} = -1\).
+
 \begin{figure}[H]
 
-{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/workplease2-1} 
+{\centering \includegraphics[width=0.7\linewidth]{paper_files/figure-latex/mabc-1} 
 
 }
 
-\caption{always need a capt}\label{fig:workplease2}
+\caption{Selecting the anchor point by minimizing the total amount of DIF.}\label{fig:mabc}
 \end{figure}
-
-\hypertarget{bounds-for-dif}{%
-\subsection{Bounds for DIF}\label{bounds-for-dif}}
 
 \hypertarget{summary}{%
 \subsection{Summary}\label{summary}}
 
+{[}ADD A TABLE OF METHODS? OR THAT CAN SORT OF BE DONE IN THE SIMULATION RESULTS?{]}
+
 \hypertarget{next-steps}{%
 \section{Next steps}\label{next-steps}}
+
+\hypertarget{remember-my-bounds-idea-i-like-that}{%
+\section{Remember my bounds idea I like that}\label{remember-my-bounds-idea-i-like-that}}
 
 \hypertarget{simulate-and-then-walk-through-as-the-analyst-would-with-each-method}{%
 \section{Simulate and then walk through as the analyst would with each method}\label{simulate-and-then-walk-through-as-the-analyst-would-with-each-method}}
@@ -430,17 +442,20 @@ Holland, Paul W, and Dorothy T Thayer. 1986. ``Differential Item Functioning and
 \leavevmode\hypertarget{ref-kopf2015framework}{}%
 Kopf, Julia, Achim Zeileis, and Carolin Strobl. 2015. ``A Framework for Anchor Methods and an Iterative Forward Approach for Dif Detection.'' \emph{Applied Psychological Measurement} 39 (2): 83--103.
 
+\leavevmode\hypertarget{ref-magis2011generalized}{}%
+Magis, David, Gilles Raı̂che, Sébastien Béland, and Paul Gérard. 2011. ``A Generalized Logistic Regression Procedure to Detect Differential Item Functioning Among Multiple Groups.'' \emph{International Journal of Testing} 11 (4): 365--86.
+
 \leavevmode\hypertarget{ref-meade2012solving}{}%
 Meade, Adam W, and Natalie A Wright. 2012. ``Solving the Measurement Invariance Anchor Item Problem in Item Response Theory.'' \emph{Journal of Applied Psychology} 97 (5): 1016.
 
 \leavevmode\hypertarget{ref-pohl2017cluster}{}%
 Pohl, Steffi, Eric Stets, and Claus H Carstensen. 2017. ``CluStEr-baSEd anCHor Item Identification and Selection.'' NEPS Working Paper.
 
+\leavevmode\hypertarget{ref-raju1988area}{}%
+Raju, Nambury S. 1988. ``The Area Between Two Item Characteristic Curves.'' \emph{Psychometrika} 53 (4): 495--502.
+
 \leavevmode\hypertarget{ref-stark2006detecting}{}%
 Stark, Stephen, Oleksandr S Chernyshenko, and Fritz Drasgow. 2006. ``Detecting Differential Item Functioning with Confirmatory Factor Analysis and Item Response Theory: Toward a Unified Strategy.'' \emph{Journal of Applied Psychology} 91 (6): 1292.
-
-\leavevmode\hypertarget{ref-stocking1983developing}{}%
-Stocking, Martha L, and Frederic M Lord. 1983. ``Developing a Common Metric in Item Response Theory.'' \emph{Applied Psychological Measurement} 7 (2): 201--10.
 
 \leavevmode\hypertarget{ref-strobl2018anchor}{}%
 Strobl, Carolin, Julia Kopf, Raphael Hartmann, and Achim Zeileis. 2018. ``Anchor Point Selection: An Approach for Anchoring Without Anchor Items.'' Working Papers in Economics; Statistics.

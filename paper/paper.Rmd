@@ -24,6 +24,7 @@ abstract: |
 header-includes: 
 - \usepackage{amsmath}
 - \DeclareMathOperator*{\argmax}{arg\,max} # for gini coefficient
+- \DeclareMathOperator*{\argmin}{arg\,min} # for gini coefficient
 
 - \usepackage{float}
 - \usepackage[autostyle, english = american]{csquotes}
@@ -75,7 +76,12 @@ theme_set(theme_bw())
 
 # DIF methods
 
-```{r child = "paper_2_dif_methods.Rmd"}
+```{r child = "paper_2a_anchor_items.Rmd"}
+```
+
+## Anchor points
+
+```{r child = "paper_2b_anchor_points.Rmd"}
 ```
 
 # Next steps

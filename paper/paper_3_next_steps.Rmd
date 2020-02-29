@@ -1,3 +1,5 @@
+# Remember my bounds idea I like that
+
 # Simulate and then walk through as the analyst would with each method
 
 # Mike Frank example

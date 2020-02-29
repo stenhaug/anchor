@@ -1,3 +1,16 @@
+# the way i am thinking about this is that we always start wtih all as anchors
+
+# start by doing AOAA
+
+# AS: make all p < 0.05 flex and then keep going
+
+# OAT: make min(p) flex and then keep going
+
+# For both, whenever all p > 0.05 everything in the anchor set is anchors and you are done
+
+# Potential problem: what if in the first AOAA all p < 0.05? this can also happen
+# in future iterations of AS but can never happen with OAT
+
 # data <- out_3_biased_items$sim[[1]]$data
 # groups <- out_3_biased_items$sim[[1]]$groups
 # dif_aoaa <- dif_AOAA(data, groups)
