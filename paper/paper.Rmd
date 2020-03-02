@@ -63,11 +63,9 @@ R.utils::sourceDirectory(here("R"))
 theme_set(theme_bw())
 ```
 
+<!-- the literature basically talks separately about anchor selection and DIF methods. much more literature is on DIF methods and less is on anchor selection. I'm basically writing a paper about anchor selection and just calling it DIF methods because that seems like where the action is. I'm taking fixed at that the likelihood ratio test is the way to go (and perhaps that deserves more detail)? -->
+
 \clearpage
-
-# TO DO
-
-- be sure all my directions match. i think i switched everything to be item easiness at some point but not sure if i did it throughout
 
 # Introduction
 

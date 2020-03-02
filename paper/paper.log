@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.8)  28 FEB 2020 19:07
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.8)  28 FEB 2020 20:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1215,7 +1215,7 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 [2] [3
 
 ] [4] [5] [6] [7]
-Underfull \hbox (badness 1817) in paragraph at lines 201--201
+Underfull \hbox (badness 1817) in paragraph at lines 197--197
 []|\TU/lmr/m/n/10.95 Proposed by []Drasgow[]
  []
 
@@ -1225,10 +1225,6 @@ File: paper_files/figure-latex/emmilg-1.pdf Graphic file (type pdf)
 File: paper_files/figure-latex/milg-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/milg-1.pdf>
 [11] [12]
-Underfull \hbox (badness 10000) in paragraph at lines 288--289
-
- []
-
 File: paper_files/figure-latex/ginipath-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/ginipath-1.pdf>
 [13]
@@ -1240,17 +1236,17 @@ File: paper_files/figure-latex/mabc-1.pdf Graphic file (type pdf)
 [16] [17] [18] (./paper.bbl) [19
 
 ] [20] [21]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 478.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 472.
 [22]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 478.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 472.
 (./paper.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 478.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 478.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 472.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 472.
  ) 
 Here is how much of TeX's memory you used:
  29835 strings out of 492916
  536589 string characters out of 6133346
- 777692 words of memory out of 5000000
+ 776692 words of memory out of 5000000
  33550 multiletter control sequences out of 15000+600000
  538844 words of font info for 79 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

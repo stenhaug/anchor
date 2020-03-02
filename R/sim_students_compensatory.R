@@ -5,7 +5,7 @@
 #
 # sim_bias(pars = pars, n_ref = 100000, n_foc = 100000, mean_foc = -1)
 
-sim_bias <- function(pars, n_ref, n_foc, mean_foc){
+sim_students_compensatory <- function(pars, n_ref, n_foc, mean_foc){
 
     theta_ref <-
         tibble(

@@ -4,7 +4,7 @@ The previously discussed DIF methods select a set of anchor items, whether that 
 
 @strobl2018anchor suggest using the Gini index -@gini1912variabilita to select the anchor point. The Gini index is typically used to measure the inequality of wealth distribution in a country. For example, South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution @chitiga2015income. In general, the Gini index "takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little" [@strobl2018anchor, p. 7].
 
-The anchor point, $\mu^{\star\text{foc}}$, is selected by maximizing the Gini index. The intuition and assumption is that some items might have bias but the majority do not. Denoting a function that calculates the Gini index from a vector of non-negative elements as $G(\mathbf{x})$,  
+The anchor point, $\mu^{\star\text{foc}}$, is selected by maximizing the Gini index. The intuition and assumption is that some items might have bias but the majority do not. Denoting a function that calculates the Gini index from a vector of non-negative elements as $G(\mathbf{x})$,
 $$
 \mu^{\star\text{foc}} = \argmax_{\mu^\text{foc}} G(|\mu^\text{foc} + \tilde{\mathbf{d}}|)
 $$
@@ -42,7 +42,7 @@ gini_results$grid %>%
 
 We then refit the model with the identifying assumption of $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$. We test each item for DIF and display the results in a MILG as is shown in Figure \ref{fig:ginimilg}.
 
-```{r ginimilg, fig.cap = 'Selecting the anchor point by maximizing the Gini index.', out.width="70%"}
+```{r ginimilg, fig.cap = 'Selecting the anchor point by maximizing the Gini index.', out.width="70%", warning = FALSE, message = FALSE}
 
 data <- out_3_biased_items$sim[[1]]$data
 groups <- out_3_biased_items$sim[[1]]$groups
@@ -83,14 +83,10 @@ mod %>%
 
 ### Minimizing between curves
 
-Raju's area method measures the amount of DIF by calculating the area between the item characteristic curve, the function that maps ability to probability correct response, for each group [@raju1988area]:
-```{r}
-# {-\infty}^{\infty}
-```
-\begin{align}
-    \text{Area Between Curves} = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, b_j^{\text{foc}})|
-\end{align}
-
+Raju's area method [@raju1988area] measures the amount of DIF by calculating the area between the item characteristic curve, the function that maps ability to probability correct response, for each group:
+$$
+\text{Area Between Curves} = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, b_j^{\text{foc}})|
+$$
 Raju's area method, along with AOAA, have been cited as the two most commonly used IRT-based DIF detection methods [@magis2011generalized]. We see two weakness of Raju's area method: First, the item characteric curves still need to be linked by anchor items, which the method does not help to identify. Second, the area is unweighted so all values of $\theta$ matter equally, despite some being much more realistic than others. 
 
 Inspired by Raju's area method, we propose a new method, which we call "minimizing the area between curves" (MABC). To understand MABC, imagine multigroup item response data where $\mu^{\text{foc}} = \mu^{\text{ref}}$ and $d_j = 0 \forall j$ so that there is no DIF. The fundamental identification problem of DIF in multigroup IRT models is that there are an infinite number of models with the same likelihood from which to choose. For example, we could correctly assume that the focal group has the same ability as the reference group and fix $\mu^{\star\text{foc}} = 0$. The model would then estimate $\hat d_j \approx 0 \forall j$, and we would correctly conclude the groups have the same ability and there is no DIF. Alternatively, we could assume that the focal group has $\mu^{\star\text{foc}} = 3$. The model would then compensate by finding $\hat d_j \approx -3 \forall j$, and we would incorrectly conclude that the focal group is high ability but every item contains DIF against them. Both of these models have the same likelihood, so how should one choose which model to believe? MABC chooses the model with the least amount of total DIF, as measured by the total area between the item characteric curves. This is another, perhaps clearer, way of assuming that the majority of items do not contain DIF.

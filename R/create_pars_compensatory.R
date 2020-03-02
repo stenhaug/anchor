@@ -1,4 +1,4 @@
-create_pars_1_biased_item <- function(){
+create_pars_compensatory_1_biased_item <- function(){
     tibble(
         item = 1:8,
         easy = rnorm(8, 0, 1),
@@ -7,7 +7,7 @@ create_pars_1_biased_item <- function(){
     )
 }
 
-create_pars_3_biased_items <- function(){
+create_pars_compensatory_3_biased_items <- function(){
     tibble(
         item = 1:8,
         easy = rnorm(8, 0, 1),
@@ -16,7 +16,7 @@ create_pars_3_biased_items <- function(){
     )
 }
 
-create_pars_4_biased_items_balanced <- function(){
+create_pars_4_compensatory_biased_items_balanced <- function(){
     tibble(
         item = 1:8,
         easy = rnorm(8, 0, 1),

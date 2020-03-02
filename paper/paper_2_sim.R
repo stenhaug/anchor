@@ -1,10 +1,10 @@
 out_3_biased_items <-
     tibble(
-        pars = rerun(1, create_pars_3_biased_items())
+        pars = rerun(1, create_pars_compensatory_3_biased_items())
     ) %>%
     # sim and fit intuitive
     mutate(
-        sim = pars %>% map(~ sim_bias(pars = ., n_ref = 10000, n_foc = 10000, mean_foc = -1)),
+        sim = pars %>% map(~ sim_students_compensatory(pars = ., n_ref = 10000, n_foc = 10000, mean_foc = -1)),
         intuitive_mod = sim %>% map(~ fit_mod_intuitive(.$data, .$groups))
     ) %>%
     # dif: AOAA
