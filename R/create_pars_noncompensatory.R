@@ -7,7 +7,7 @@ angle_to_a_nuisance <- function(angle){
     sqrt((1 - cos(angle * pi / 180)^2) / cos(angle * pi / 180)^2)
 }
 
-create_pars_noncompensatory <- function(n_items, n_dif_items){
+create_pars_noncompensatory <- function(n_items, n_dif_items, angle_start, b_nuisance_with_dif_sd){
     # create item parameters. all target disc is 1 and nuisance disc is 0 for non-dif items and has angle that
     # is lattice from 30 to 60 for dif items
     tibble(
@@ -16,10 +16,10 @@ create_pars_noncompensatory <- function(n_items, n_dif_items){
     ) %>%
         mutate(
             a_target = 1,
-            angle = ifelse(dif == "no", 0, seq(30, 60, length.out = n_dif_items)),
+            angle = c(rep(0, n_items - n_dif_items), seq(angle_start, 60, length.out = n_dif_items)),
             a_nuisance = angle_to_a_nuisance(angle),
-            b_target = rnorm(n_items, 0.5, 0.5),
-            b_nuisance = 1
+            b_target = rnorm(n_items, 0, 0.0001), # CHANGE THIS BACK
+            b_nuisance = c(rep(999, n_items - n_dif_items), rnorm(n_dif_items, 0, b_nuisance_with_dif_sd))
         )
 }
 

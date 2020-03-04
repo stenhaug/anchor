@@ -47,30 +47,7 @@ We then refit the model with the identifying assumption of $\mu^{\star\text{foc}
 data <- out_3_biased_items$sim[[1]]$data
 groups <- out_3_biased_items$sim[[1]]$groups
 
-tmp <- 
-    multipleGroup(
-        data,
-        1,
-        itemtype = "Rasch",
-        groups,
-        invariance = c("free_var"),
-        pars = "values"
-    ) %>% 
-    as_tibble()
-
-tmp$value[length(tmp$value) - 1] <- gini_results$gini_anchor_points
-
-mod <- 
-    multipleGroup(
-        data,
-        1,
-        itemtype = "Rasch",
-        groups,
-        pars = tmp %>% as.data.frame(),
-        SE = TRUE,
-        technical = list(NCYCLES = 500),
-        verbose = FALSE,
-    )
+mod <- gini_results_to_final_mod(gini_results$gini_anchor_points, data, groups)
 
 mod %>% 
     mod_to_draws_df(n = 10000) %>% 

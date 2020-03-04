@@ -17,6 +17,9 @@
 # sim <- students_p_to_sim(students, p)
 
 sim_students_2d <- function(n_ref, n_foc, ref_target_ability_mu, ref_nuisance_ability_mu, foc_target_ability_mu, foc_nuisance_ability_mu){
+
+    sigma <- matrix(c(1, 0.5, 0.5, 1), ncol = 2)
+
     bind_rows(
         MASS::mvrnorm(n_ref, mu = c(ref_target_ability_mu, ref_nuisance_ability_mu), Sigma = sigma) %>% as.data.frame() %>% as_tibble(),
         MASS::mvrnorm(n_foc, mu = c(foc_target_ability_mu, foc_nuisance_ability_mu), Sigma = sigma) %>% as.data.frame() %>% as_tibble()
@@ -26,8 +29,10 @@ sim_students_2d <- function(n_ref, n_foc, ref_target_ability_mu, ref_nuisance_ab
 }
 
 get_p_noncomp <- function(a_target, a_nuisance, b_target, b_nuisance, target_ability, nuisance_ability){
-    sigmoid(a_target * target_ability + b_target) *
-    sigmoid(a_nuisance * nuisance_ability + b_nuisance)
+    target <- sigmoid(a_target * target_ability + b_target)
+    nuisance <- sigmoid(a_nuisance * nuisance_ability + b_nuisance)
+    nuisance <- ifelse(is.nan(nuisance), 1, nuisance)
+    target * nuisance
 }
 
 pars_students_to_p_noncomp <- function(pars, students){

@@ -23,8 +23,14 @@ mod_intuitive_to_draws_df <- function(mod){
 draws_df_to_logit_plot <- function(draws_df){
     draws_df %>%
         select(-run) %>%
-        gather(var, val) %>%
+        gather(var, val, factor_key = TRUE) %>%
         ggplot(aes(x = val, y = var)) +
         ggridges::geom_density_ridges() +
         labs(x = "", y = "")
+}
+
+intuitive_mod_to_emlg_summary <- function(intuitive_mod){
+    coef_1f(out_noncomp$intuitive_mod[[1]])$items %>%
+        select(item, ref_easy = a_ref_easy, foc_easy = b_foc_easy) %>%
+        mutate(difference_in_easy = ref_easy - foc_easy)
 }
