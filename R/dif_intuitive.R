@@ -30,7 +30,7 @@ draws_df_to_logit_plot <- function(draws_df){
 }
 
 intuitive_mod_to_emlg_summary <- function(intuitive_mod){
-    coef_1f(out_noncomp$intuitive_mod[[1]])$items %>%
+    coef_1f(intuitive_mod)$items %>%
         select(item, ref_easy = a_ref_easy, foc_easy = b_foc_easy) %>%
         mutate(difference_in_easy = ref_easy - foc_easy)
 }

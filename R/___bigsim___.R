@@ -1,16 +1,22 @@
 bigsim <- function(runs, n_dif_items){
     tibble(
-        pars = rerun(runs, create_pars_noncompensatory(n_items = 20, n_dif_items = n_dif_items, angle_start = 10, b_nuisance_with_dif_sd = 0)),
+        pars = rerun(runs,
+                     create_pars_noncompensatory(
+                         n_items = 20,
+                         n_dif_items = n_dif_items,
+                         angle_start = 30,
+                         angle_end = 60,
+                         b_nuisance_with_dif_sd = 0)),
         students =
             rerun(
                 1,
                 sim_students_2d(
-                    n_ref = 1000,
-                    n_foc = 1000,
+                    n_ref = 5000,
+                    n_foc = 5000,
                     ref_target_ability_mu = 0,
                     ref_nuisance_ability_mu = 0,
                     foc_target_ability_mu = -0.5,
-                    foc_nuisance_ability_mu = -1
+                    foc_nuisance_ability_mu = -2
                 )
             )
     ) %>%
@@ -100,7 +106,7 @@ bigsim <- function(runs, n_dif_items){
             gini_mod = map2(gini_results, sim, ~ anchptfocmean_to_final_mod(.x$gini_anchor_points, .y$data, .y$groups))
         ) %>%
         mutate(
-            minbc = intuitive_mod %>% map(min_between_curves, 0, 2, 0.5),
+            minbc = intuitive_mod %>% map(min_between_curves, 0.25, 1.25, 0.01),
             minbc_mod = map2(minbc, sim, ~ anchptfocmean_to_final_mod(.x$between_curves_anchor_points, .y$data, .y$groups))
         )
 }
