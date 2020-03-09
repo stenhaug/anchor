@@ -31,7 +31,6 @@ sim_students_2d <- function(n_ref, n_foc, ref_target_ability_mu, ref_nuisance_ab
 get_p_noncomp <- function(a_target, a_nuisance, b_target, b_nuisance, target_ability, nuisance_ability){
     target <- sigmoid(a_target * target_ability + b_target)
     nuisance <- sigmoid(a_nuisance * nuisance_ability + b_nuisance)
-    nuisance <- ifelse(is.nan(nuisance), 1, nuisance)
     target * nuisance
 }
 

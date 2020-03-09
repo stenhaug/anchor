@@ -27,7 +27,21 @@ For DIF items, we set $a_{2j}$ based on angles with equal intervals between 30$^
 ## Visualizing a run
 ```{r}
 # ADD IN CODE THAT GENERATES THIS
-out <- read_rds(here("paper/paper_3_out2.rds"))
+out <- read_rds(here("paper/paper_3_out1.rds"))
+
+out <-
+    out %>%
+    mutate(bigsim = map2(bigsim, n_dif_items, add_foc_mean))
+
+# i have no idea why this is like this...
+out %>% 
+  mutate(bigsim = bigsim %>% map(~ select(., foc_mean))) %>% 
+  unnest(bigsim) %>% 
+  ggplot(aes(x = n_dif_items, y = foc_mean)) +
+  geom_point()
+
+out$bigsim[[4]]$p[[1]] %>% colMeans()
+
 ```
 Figure \ref{fig:difmap} provides intuition about the data generating process by showing the relationship between $\theta_i$ and $Pr(y_{ij} = 1)$ with $\eta_i$ set to the group mean. The items are ordered by the amount of DIF such that $\angle_{j = 11} = 30^\circ$ up to $\angle_{j = 20} = 60^\circ$.
 ```{r difmap, fig.cap = 'For a 20 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
