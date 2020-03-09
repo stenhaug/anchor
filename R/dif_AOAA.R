@@ -39,6 +39,19 @@ get_next_status <- function(status, data, groups){
         select(-status)
 }
 
+get_next_status_OAT <- function(status, data, groups){
+    the_flex <- which(status$status == "flex")
+
+    status %>%
+        filter(status == "unknown") %>%
+        mutate(
+            anova = item %>% map(~ quiet(anova(mod_flexible(data, groups, the_flex), mod_flexible(data, groups, flex_items = c(the_flex, .))))),
+            X2 = anova %>% map_dbl(~ .$X2[2]),
+            p = anova %>% map_dbl(~ .$p[2])
+        ) %>%
+        select(-status)
+}
+
 # AOAA - AS ---------------------------------------------------------------
 dif_AOAA_AS <- function(data, groups, dif_aoaa){
 
@@ -84,7 +97,19 @@ dif_AOAA_AS <- function(data, groups, dif_aoaa){
 }
 
 # AOAA - OAT --------------------------------------------------------------
-dif_AOAA_OAT <- function(data, groups, dif_aoaa){
+dif_AOAA_OAT <- function(data, groups){
+    # I was using p-values but those get to 0 so switched to X2 values
+    # It works but did so in not the absolute best code style
+
+    dif_aoaa <-
+        tibble(
+            item = 1:ncol(data)
+        ) %>%
+        mutate(
+            anova = item %>% map(~ quiet(anova(mod_constrained_baseline(data, groups), mod_flexible(data, groups, flex_items = .)))),
+            X2 = anova %>% map_dbl(~ .$X2[2]),
+            p = anova %>% map_dbl(~ .$p[2])
+        )
 
     # if no items are significant, then they are all anchors and we are done
     if (all(dif_aoaa$p > 0.05)){
@@ -95,24 +120,24 @@ dif_AOAA_OAT <- function(data, groups, dif_aoaa){
     status <-
         dif_aoaa %>%
         mutate(
-            status = ifelse(item == which.min(p), "flex", "unknown")
+            status = ifelse(item == which.max(X2), "flex", "unknown")
         )
 
     while(TRUE){
         # for each unknown item, we use all other unknown items to test it
-        new_status <- get_next_status(status, data, groups)
+        new_status <- get_next_status_OAT(status, data, groups)
 
         # need to update the status df
         status <-
             status %>%
-            select(-p) %>%
+            select(-anova, -X2, -p) %>%
             left_join(new_status, by = "item")
 
         # if no new significant tests then we're done
         if(all(status$p > 0.05, na.rm = TRUE)){break}
 
         # remove just THE MOST significant item from the anchor set
-        status$status[which.min(status$p)] <- "flex"
+        status$status[which.max(status$X2)] <- "flex"
     }
 
     # unknowns become anchors now

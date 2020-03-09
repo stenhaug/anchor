@@ -41,7 +41,7 @@ out_3_biased_items <-
     ) %>%
     # dif: AOAA OAT
     mutate(
-        AOAA_OAT_status = map2(sim, AOAA_status, ~ dif_AOAA_OAT(.x$data, .x$groups, .y)),
+        AOAA_OAT_status = map(sim, ~ dif_AOAA_OAT(.$data, .$groups)),
         AOAA_OAT_mod =
             map2(
                 sim,

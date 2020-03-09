@@ -16,7 +16,7 @@ bigsim <- function(runs, n_dif_items){
                     ref_target_ability_mu = 0,
                     ref_nuisance_ability_mu = 0,
                     foc_target_ability_mu = -0.5,
-                    foc_nuisance_ability_mu = -2
+                    foc_nuisance_ability_mu = -1
                 )
             )
     ) %>%
@@ -63,7 +63,7 @@ bigsim <- function(runs, n_dif_items){
         ) %>%
         # dif: AOAA OAT
         mutate(
-            AOAA_OAT_status = map2(sim, AOAA_status, ~ dif_AOAA_OAT(.x$data, .x$groups, .y)),
+            AOAA_OAT_status = map(sim, ~ dif_AOAA_OAT(.$data, .$groups)),
             AOAA_OAT_mod =
                 map2(
                     sim,

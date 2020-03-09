@@ -1,4 +1,6 @@
-# create_pars_noncompensatory(n_items = 10, n_dif_items = 5) %>%
+# pars <- create_pars_noncompensatory(n_items = 10, n_dif_items = 5, angle_start = 30, angle_end = 60, b_nuisance_with_dif_sd = 0)
+#
+# create_pars_noncompensatory(n_items = 10, n_dif_items = 5, angle_start = 30, angle_end = 60, b_nuisance_with_dif_sd = 0) %>%
 #     graph_pars_noncompensatory(0, -1)
 
 angle_to_a_nuisance <- function(angle){
@@ -39,8 +41,12 @@ graph_pars_noncompensatory <- function(pars, ref_mean_ability_nuisance, foc_mean
                 sigmoid(a_nuisance * foc_mean_ability_nuisance + b_nuisance)
         ) %>%
         dplyr::select(item, ability_target, ref, foc) %>%
-        gather(group, prob, -item, -ability_target) %>%
+        mutate(same = ref == foc) %>%
+        gather(group, prob, -item, -ability_target, -same) %>%
+        filter((same & group == "ref") | !same) %>%
+        mutate(group = ifelse(same, "both", group)) %>%
         ggplot(aes(x = ability_target, y = prob, color = group)) +
         geom_point() +
-        facet_wrap(~ item)
+        facet_wrap(~ item) +
+        scale_color_manual(values = c("black", "darkgreen", "red"))
 }

@@ -5,6 +5,9 @@ quiet <- function(x){
 }
 
 sigmoid <- function(x){
-    exp(x) / (1 + exp(x))
+    tmp <- exp(x) / (1 + exp(x))
+    tmp[is.nan(tmp)] <- 1
+    tmp
 }
+
 

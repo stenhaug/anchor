@@ -38,7 +38,6 @@ header-includes:
 ---
 
 ```{r setup, include = FALSE}
-# 
 # https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html 
 
 knitr::opts_chunk$set(
@@ -67,7 +66,7 @@ theme_set(theme_bw())
 
 \clearpage
 
-# Introduction
+# Introduction {#intro}
 
 ```{r child = "paper_1_intro.Rmd"}
 ```
