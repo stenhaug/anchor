@@ -1,12 +1,13 @@
 bigsim <- function(runs, n_dif_items){
+
     tibble(
         pars =
             rerun(
                 runs,
                 create_pars_noncompensatory(
-                    n_items = 20,
+                    n_items = 12,
                     n_dif_items = n_dif_items,
-                    angle_start = 30,
+                    angle_start = 20,
                     angle_end = 60,
                     b_nuisance_with_dif_sd = 0)
                 ),
@@ -14,8 +15,8 @@ bigsim <- function(runs, n_dif_items){
             rerun(
                 runs,
                 sim_students_2d(
-                    n_ref = 500, # CHANGE THIS
-                    n_foc = 500,
+                    n_ref = 5000,
+                    n_foc = 5000,
                     ref_target_ability_mu = 0,
                     ref_nuisance_ability_mu = 0,
                     foc_target_ability_mu = -0.5,
@@ -80,7 +81,7 @@ bigsim <- function(runs, n_dif_items){
                 ),
             AOAA_OAT_final_dif = AOAA_OAT_mod %>% map(mod_to_final_dif)
         ) %>%
-        # dif: tibs cluster
+        # dif: 3 clusters
         mutate(
             cluster =
                 intuitive_mod %>%
@@ -113,3 +114,4 @@ bigsim <- function(runs, n_dif_items){
             minbc_mod = map2(minbc, sim, ~ anchptfocmean_to_final_mod(.x$between_curves_anchor_points, .y$data, .y$groups))
         )
 }
+

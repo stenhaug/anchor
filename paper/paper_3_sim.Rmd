@@ -55,11 +55,10 @@ out %>%
   unnest(bigsim) %>% 
   ggplot(aes(x = n_dif_items, y = foc_mean)) +
   geom_point()
-
 ```
 Figure \ref{fig:difmap} provides intuition about the data generating process by showing the relationship between $\theta_i$ and $Pr(y_{ij} = 1)$ with $\eta_i$ set to the group mean. The items are ordered by the amount of DIF such that $\angle_{j = 11} = 30^\circ$ up to $\angle_{j = 20} = 60^\circ$.
 ```{r difmap, fig.cap = 'For a 20 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
-out$bigsim[[2]]$pars[[4]] %>% 
+out$bigsim[[2]]$pars[[1]] %>% 
   graph_pars_noncompensatory(0, -1) +
   scale_y_continuous(labels = scales::percent) +
   labs(
@@ -70,7 +69,7 @@ out$bigsim[[2]]$pars[[4]] %>%
 
 Figure \ref{fig:simemmlg} shows the EM-MILG for one run using the same item parameters that generated Figure \ref{fig:difmap}. As expected, $\tilde{d_j}$ is about $\mu_\theta^\text{foc} - \mu_\theta^\text{ref} = -0.5 - 0 = -0.5$ for the first ten items which are DIF free. For the last ten items, $\tilde{d_j}$ increases as $\angle_j$ increases. Of course, we cannot include the "analyst chooses" method in our simulation, but regardless, the EM-MILG is a useful way to visualize the data.
 ```{r simemmlg, fig.cap = 'For a 20 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
-out$bigsim[[2]]$intuitive_mod[[4]] %>%
+out$bigsim[[3]]$intuitive_mod[[1]] %>%
     mod_intuitive_to_draws_df() %>%
     draws_df_to_logit_plot() +
     labs(
@@ -101,6 +100,9 @@ Figure \ref{fig:anchorfalse} shows the mean false anchor counts for each method 
 Performance, then, is driven by which items are included in the anchor set. Accordingly, Figure \ref{fig:anchorhit} shows the number of items without DIF that are included in the anchor set. In general, AOAA-OAT usually fails to include a couple of items in the anchor set that are indeed DIF free. When there are a few items with DIF, the omitted items are more often items in which the focal group happened to, as a result of sampling variability, perform well relative to the reference group. On the other hand, when there are many items with DIF, the omitted items are more often items in which the focal group happened to perform poorly relative to the reference group. This selective omission of DIF free anchors is what drives the positive association between number of DIF items and $\hat\mu_\theta^\text{foc}$.
 
 ```{r achievegap, fig.cap = 'Each method's estimation of the target ability achievement gap.', out.width="70%", warning = FALSE, message = FALSE}
+
+n_items <- 12
+
 final_model_to_anchor_summary <- function(final_model, n_dif_items){
     coef_1f(final_model)$items %>%
         mutate(
@@ -117,28 +119,33 @@ final_model_to_anchor_summary <- function(final_model, n_dif_items){
 
 getfull <- function(one){
     one %>%
-        select(ends_with("mod"), -intuitive_mod) %>%
+        select(foc_mean, ends_with("mod"), -intuitive_mod) %>%
         mutate(run = row_number()) %>%
-        gather(method, model, -run) %>%
+        gather(method, model, -run, -foc_mean) %>%
         mutate(
             n_anchors = model %>% map_int(~ sum(coef_1f(.)$items$anchor)),
-            foc_mean = model %>% map_dbl(~ coef_1f(.)$ability$b_foc[1])
+            est_foc_mean = model %>% map_dbl(~ coef_1f(.)$ability$b_foc[1])
         ) %>%
-        filter(n_anchors != 0 | method %in% c("gini_mod", "minbc_mod"))
+        filter(n_anchors != 0 | method %in% c("gini_mod", "minbc_mod")) %>% 
+    mutate(resid = est_foc_mean - foc_mean)
 }
 
-out %>%
+what <- 
+  out %>%
     mutate(achievegap = bigsim %>% map(getfull)) %>%
     select(-bigsim) %>%
-    unnest(achievegap) %>%
-    ggplot(aes(x = n_dif_items, y = foc_mean)) +
-    geom_point(alpha = 0.5) +
-    facet_wrap(~ method) +
-    geom_hline(yintercept = -0.5, linetype = "dashed") +
-    labs(
+    unnest(achievegap)
+
+what %>% 
+  ggplot(aes(x = resid, y = as.factor(n_dif_items))) +
+  ggridges::geom_density_ridges() +
+  facet_wrap(~ method) +
+  coord_flip() +
+  geom_hline(yintercept = -0.5, linetype = "dashed") +
+  labs(
       x = "Number of DIF items",
       y = latex2exp::TeX("$\\hat{\\mu}_\\theta^foc$")
-    )
+  )
 ```
 
 ```{r anchorfalse, fig.cap = 'Mean false anchor counts', out.width="70%", warning = FALSE, message = FALSE}

@@ -12,9 +12,9 @@ options(future.fork.enable = TRUE)
 plan(multiprocess)
 
 out <-
-    tibble(n_dif_items = 2:10) %>%
+    tibble(n_dif_items = 2:6) %>%
     mutate(
-        bigsim = n_dif_items %>% future_map(~ bigsim(runs = 5, n_dif_items = .))
+        bigsim = n_dif_items %>% future_map(~ bigsim(runs = 20, n_dif_items = .))
     )
 
 Sys.time()

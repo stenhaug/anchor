@@ -1,3 +1,4 @@
+# test run ----------------------------------------------------------------
 library(furrr)
 options(future.fork.enable = TRUE)
 plan(multiprocess)
@@ -10,7 +11,7 @@ out <-
 
 Sys.time()
 
-
+# dive into test ----------------------------------------------------------
 out$bigsim[[1]]$intuitive_mod[[1]] %>%
     mod_intuitive_to_draws_df() %>%
     draws_df_to_logit_plot() +
@@ -20,8 +21,14 @@ out$bigsim[[1]]$intuitive_mod[[1]] %>%
 
 out$bigsim[[1]]$pars[[1]]
 
-debug(dif)
+out$bigsim[[3]]$AOAA_OAT_final_dif[[1]] %>% View()
 
-a <- dif_AOAA_OAT(out$bigsim[[1]]$sim[[1]]$data, out$bigsim[[1]]$sim[[1]]$groups)
+debug(dif_AOAA_OAT)
+
+a <-
+    dif_AOAA_OAT(
+        data = out$bigsim[[3]]$sim[[1]]$data,
+        groups = out$bigsim[[3]]$sim[[1]]$groups
+    )
 
 

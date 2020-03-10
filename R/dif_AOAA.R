@@ -120,9 +120,11 @@ dif_AOAA_OAT <- function(data, groups){
     status <-
         dif_aoaa %>%
         mutate(
-            status = ifelse(item == which.max(X2), "flex", "unknown")
+            status = ifelse(item == which.max(X2), "flex", "unknown"),
+            order = ifelse(item == which.max(X2), 1, NA)
         )
 
+    track_order <- 2
     while(TRUE){
         # for each unknown item, we use all other unknown items to test it
         new_status <- get_next_status_OAT(status, data, groups)
@@ -131,13 +133,16 @@ dif_AOAA_OAT <- function(data, groups){
         status <-
             status %>%
             select(-anova, -X2, -p) %>%
-            left_join(new_status, by = "item")
+            left_join(new_status %>% select(-order), by = "item")
 
         # if no new significant tests then we're done
         if(all(status$p > 0.05, na.rm = TRUE)){break}
 
         # remove just THE MOST significant item from the anchor set
         status$status[which.max(status$X2)] <- "flex"
+        status$order[which.max(status$X2)] <- track_order
+
+        track_order <- track_order + 1
     }
 
     # unknowns become anchors now

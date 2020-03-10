@@ -56,7 +56,7 @@ library(cluster)
 library(DescTools)
 library(knitr)
 library(kableExtra)
-set.seed(123)
+set.seed(12345)
 R.utils::sourceDirectory(here("R"))
 
 theme_set(theme_bw())
