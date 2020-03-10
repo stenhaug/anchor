@@ -12,11 +12,11 @@ options(future.fork.enable = TRUE)
 plan(multiprocess)
 
 out <-
-    tibble(n_dif_items = c(4, 7, 10)) %>%
+    tibble(n_dif_items = 2:10) %>%
     mutate(
-        bigsim = n_dif_items %>% future_map(~ bigsim(runs = 10, n_dif_items = .))
+        bigsim = n_dif_items %>% future_map(~ bigsim(runs = 5, n_dif_items = .))
     )
 
 Sys.time()
 
-out %>% write_rds("paper/paper_4_out2.rds")
+out %>% write_rds("paper/paper_3_out1.rds")

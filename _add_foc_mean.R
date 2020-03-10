@@ -14,12 +14,19 @@ add_foc_mean <- function(one, n_dif_items){
     mutate(foc_mean = sim %>% map_dbl(sim_n_dif_items_to_foc_mean, n_dif_items))
 }
 
-out <-
+out2 <-
     out %>%
     mutate(bigsim = map2(bigsim, n_dif_items, add_foc_mean))
 
-out$bigsim[[1]]$foc_mean
+out$bigsim[[1]]$intuitive_mod[[1]] %>%
+    mod_intuitive_to_draws_df() %>%
+    draws_df_to_logit_plot() +
+    labs(
+        x = latex2exp::TeX("$\\tilde{d_j} = \\tilde{b_j}^{ref} - \\tilde{b_j}^{foc}$")
+    )
 
-out$bigsim[[2]]$foc_mean
+a <- dif_AOAA_OAT(out$bigsim[[1]]$sim[[1]]$data, out$bigsim[[1]]$sim[[1]]$groups)
 
-out$bigsim[[3]]$foc_mean
+
+
+

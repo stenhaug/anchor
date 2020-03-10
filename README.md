@@ -4,8 +4,6 @@ a bit messy at present.
 
 # careful
 
-https://github.com/stenhaug/anchor-code/search?q=NCYCLES&type=Code
-
 edit big sim back from 20000 to 5000
 
 # notes

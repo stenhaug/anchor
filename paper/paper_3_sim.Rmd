@@ -29,6 +29,22 @@ For DIF items, we set $a_{2j}$ based on angles with equal intervals between 30$^
 # ADD IN CODE THAT GENERATES THIS
 out <- read_rds(here("paper/paper_3_out1.rds"))
 
+sim_n_dif_items_to_foc_mean <- function(sim, n_dif_items){
+    mod <-
+        mod_flexible(
+            sim$data,
+            sim$groups,
+            flex_items = (ncol(sim$data) - n_dif_items + 1):ncol(sim$data)
+        )
+
+    coef_1f(mod)$ability$b_foc[1]
+}
+
+add_foc_mean <- function(one, n_dif_items){
+    one %>%
+    mutate(foc_mean = sim %>% map_dbl(sim_n_dif_items_to_foc_mean, n_dif_items))
+}
+
 out <-
     out %>%
     mutate(bigsim = map2(bigsim, n_dif_items, add_foc_mean))
@@ -39,8 +55,6 @@ out %>%
   unnest(bigsim) %>% 
   ggplot(aes(x = n_dif_items, y = foc_mean)) +
   geom_point()
-
-out$bigsim[[4]]$p[[1]] %>% colMeans()
 
 ```
 Figure \ref{fig:difmap} provides intuition about the data generating process by showing the relationship between $\theta_i$ and $Pr(y_{ij} = 1)$ with $\eta_i$ set to the group mean. The items are ordered by the amount of DIF such that $\angle_{j = 11} = 30^\circ$ up to $\angle_{j = 20} = 60^\circ$.
