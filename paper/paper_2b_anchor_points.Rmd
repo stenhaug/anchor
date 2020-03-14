@@ -1,10 +1,10 @@
-The previously discussed DIF methods select a set of anchor items, whether that selection is done by an algorithm or the analyst. The anchor items are used to estimate $\hat \mu^\text{foc}$. An alternative strategy is to directly select the anchor point, $\mu^{\star\text{foc}}$. Anchor point methods have the advantage of not requiring the assumption that any particular item is DIF-free, and, therefore, all items can be tested for DIF. The question then becomes the following: How do we select the anchor point?
+The previously discussed AI methods select a set of anchor items, whether it is an algorithm or the analyst that makes that selection. The anchor items are used to estimate $\hat \mu^\text{foc}$. An alternative strategy is to directly select the anchor point, $\mu^{\star\text{foc}}$. Anchor point methods have the advantage of not requiring the assumption that any particular item is DIF-free, and, therefore, all items can be tested for DIF. The question then becomes the following: How is the anchor point selected?
 
 ### Gini index
 
-@strobl2018anchor suggest using the Gini index -@gini1912variabilita to select the anchor point. The Gini index is typically used to measure the inequality of wealth distribution in a country. For example, South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution @chitiga2015income. In general, the Gini index "takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little" [@strobl2018anchor, p. 7].
+@strobl2018anchor suggest using the Gini index [@gini1912variabilita] to select the anchor point. The Gini index is typically used to measure the inequality of wealth distribution in a country. For example, South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution [@chitiga2015income]. In general, the Gini index "takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little" [@strobl2018anchor, p. 7].
 
-The anchor point, $\mu^{\star\text{foc}}$, is selected by maximizing the Gini index. The intuition and assumption is that some items might have bias but the majority do not. Denoting a function that calculates the Gini index from a vector of non-negative elements as $G(\mathbf{x})$,
+$\mu^{\star\text{foc}}$ is selected by maximizing the Gini index (which is why we use the abbreviation MGI). The intuition and assumption is that some items might have bias but the majority do not. Denoting a function that calculates the Gini index from a vector of non-negative elements as  $G(\mathbf{x})$, MGI sets <!-- its weird to arg max over a parameter we already have a definition for - maybe switch to t or something -->
 $$
 \mu^{\star\text{foc}} = \argmax_{\mu^\text{foc}} G(|\mu^\text{foc} + \tilde{\mathbf{d}}|)
 $$
@@ -19,9 +19,9 @@ emlg <-
 gini_results <- emlg_to_gini_l1(emlg, lo = -2, hi = 0)
 ```
 
-For the simulated data, Figure \ref{fig:ginipath} shows the gini coefficient at a variety of possible values for $\mu^\text{foc}$. The anchor point is $\mu^\text{foc} = `r round(gini_results$gini_anchor_points, 2)`$.
+For our one-run simulation, Figure \ref{fig:ginipath} shows the gini coefficient at a variety of possible $\mu^\text{foc}$ values. The result of MGI is $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$.
 
-```{r ginipath, fig.cap = 'Selecting the anchor point by maximizing the Gini index.', out.width="70%", warning = FALSE, message = FALSE}
+```{r ginipath, fig.cap = 'Maximizing the Gini index (MGI) to select the anchor point.', out.width="70%", warning = FALSE, message = FALSE}
 gini_results$grid %>% 
     ggplot(aes(x = anchor_point, y = gini)) +
     geom_point() +
@@ -40,14 +40,14 @@ gini_results$grid %>%
     )
 ```
 
-We then refit the model with the identifying assumption of $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$. We test each item for DIF and display the results in a MILG as is shown in Figure \ref{fig:ginimilg}.
+The model is then refit with the model identifying assumption of $\mu^{\text{foc}} = \mu^{\star\text{foc}}$, and the results can be displayed in a MILG as is shown in Figure \ref{fig:ginimilg}.
 
-```{r ginimilg, fig.cap = 'Selecting the anchor point by maximizing the Gini index.', out.width="70%", warning = FALSE, message = FALSE}
-
+```{r ginimilg, fig.cap = "The MILG with $\\mu^{\\text{foc}}$ set to $\\mu^{\\star\\text{foc}} = -0.99$", out.width="70%", warning = FALSE, message = FALSE}
+# notice hard coding in this caption
 data <- out_3_biased_items$sim[[1]]$data
 groups <- out_3_biased_items$sim[[1]]$groups
 
-mod <- gini_results_to_final_mod(gini_results$gini_anchor_points, data, groups)
+mod <- anchptfocmean_to_final_mod(gini_results$gini_anchor_points, data, groups)
 
 mod %>% 
     mod_to_draws_df(n = 10000) %>% 
@@ -60,19 +60,20 @@ mod %>%
 
 ### Minimizing between curves
 
-Raju's area method [@raju1988area] measures the amount of DIF by calculating the area between the item characteristic curve, the function that maps ability to probability correct response, for each group:
+Raju's area method [@raju1988area] measures the amount of DIF by calculating the area between the item characteristic curves, the function that maps the student's ability to their probability of correct response, of the two groups:
 $$
 \text{Area Between Curves} = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, b_j^{\text{foc}})|
 $$
-Raju's area method, along with AOAA, have been cited as the two most commonly used IRT-based DIF detection methods [@magis2011generalized]. We see two weakness of Raju's area method: First, the item characteric curves still need to be linked by anchor items, which the method does not help to identify. Second, the area is unweighted so all values of $\theta$ matter equally, despite some being much more realistic than others. 
+Raju's area method, along with AOAA, has been cited as the two most commonly used IRT-based DIF detection methods [@magis2011generalized]. We see two weakness of Raju's area method: First, the item characteristic curves still need to be linked by anchor items or an anchor point, which the method does not help to identify. Second, the area is unweighted, so all values of $\theta$ matter equally, despite some being much more realistic than others. 
 
-Inspired by Raju's area method, we propose a new method, which we call "minimizing the area between curves" (MABC). To understand MABC, imagine multigroup item response data where $\mu^{\text{foc}} = \mu^{\text{ref}}$ and $d_j = 0 \forall j$ so that there is no DIF. The fundamental identification problem of DIF in multigroup IRT models is that there are an infinite number of models with the same likelihood from which to choose. For example, we could correctly assume that the focal group has the same ability as the reference group and fix $\mu^{\star\text{foc}} = 0$. The model would then estimate $\hat d_j \approx 0 \forall j$, and we would correctly conclude the groups have the same ability and there is no DIF. Alternatively, we could assume that the focal group has $\mu^{\star\text{foc}} = 3$. The model would then compensate by finding $\hat d_j \approx -3 \forall j$, and we would incorrectly conclude that the focal group is high ability but every item contains DIF against them. Both of these models have the same likelihood, so how should one choose which model to believe? MABC chooses the model with the least amount of total DIF, as measured by the total area between the item characteric curves. This is another, perhaps clearer, way of assuming that the majority of items do not contain DIF.
+To build off of Raju's area method, we propose a new method, which we call "minimizing the area between curves" (MABC). To understand MABC, imagine multigroup item response data where $\mu^{\text{foc}} = \mu^{\text{ref}}$ and $d_j = 0 \forall j$ so that there is no DIF. The fundamental identification problem of DIF in multigroup IRT models is that there are an infinite number of models with the same likelihood from which to choose. For example, we could correctly assume that the focal group has the same ability as the reference group and fix $\mu^{\star\text{foc}} = 0$. The model would then estimate $\hat d_j \approx 0 \forall j$, and we would correctly conclude the groups have the same ability and there is no DIF. Alternatively, we could assume that the focal group has $\mu^{\star\text{foc}} = 3$. The model would then compensate by finding $\hat d_j \approx -3 \forall j$, and we would incorrectly conclude that the focal group is high ability, but every item contains DIF against them. Both of these models have the same likelihood, so how should one choose which model to believe? MABC chooses the model with the least amount of total DIF, as measured by the total weighted area between the item characteristic curves. As a result, the likelihood tie is broken by preferring to explain differences in performance across groups by ability differences as opposed to DIF.
 
-Denote a function that estimates $\hat b_j^\text{foc}$ by fitting a unidimensional Rasch model where the value of $\mu^\text{foc}$ is fixed as $m_j(\mu^\text{foc})$. The amount of DIF on each item is calculated as 
+<!-- again might want to choose a different variable for provisional values -->
+Denote a function that takes $\mu^\text{foc}$ as input and estimates $\hat b_j^\text{foc}$ by fitting a unidimensional Rasch model as $m_j(\mu^\text{foc})$. The amount of DIF on each item is calculated as
 $$
 \text{DIF}_j(\mu^\text{foc}) = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, m_j(\mu^\text{foc}))| g(\theta)d\theta
 $$
-where $g(\theta)$ is a weighting function such that $\int g(\theta)d\theta = 1$. The total DIF on the test, then, is 
+where $g(\theta)$ is a weighting function such that $\int g(\theta)d\theta = 1$. The total DIF on the test, then, is
 $$
 \text{Total DIF}(\mu^\text{foc}) = \sum_{j} \text{DIF}_j(\mu^\text{foc})
 $$
@@ -80,23 +81,24 @@ In this way, $\text{Total DIF}(\mu^\text{foc})$ is a function where the input is
 $$
 \mu^{\star\text{foc}} = \argmin_{\mu^\text{foc}} \text{Total DIF}(\mu^\text{foc}).
 $$
-MABC is inspired in part by @chalmers2016might who use the difference between test characteristic curves weighted by $g(\theta)$ as a measure of differential test functioning (DTF). The selection of $g(\theta)$ is important and determines where on the ability spectrum to consider DIF. -@chalmers2016might does not discuss how to choose $g(\theta)$ and in practice uses $g(\theta)$ uniform for $-6 \le \theta \le 6$, which seems like an odd choice. It might seem intuitive to choose $g(\theta) \sim N(0, 1)$ because $\mu^\text{ref} = 0$, but this choice doesn't take into account the ability distribution of the focal group. If $\mu^\text{foc} = 3$, wouldn't we also want to prioritize high $\theta$ values? We set $g(\theta)$ to be the average of the reference and focal group ability distributions:
+MABC is inspired in part by @chalmers2016might, who use the difference between test characteristic curves weighted by $g(\theta)$ as a measure of differential test functioning (DTF). The selection of $g(\theta)$ results in the relative weighting of $\theta$ values. Chalmers, Counsell, and Flora do not discuss how to choose $g(\theta)$ and in their empirical examples use $g(\theta)$ uniform for $-6 \le \theta \le 6$, which seems like an odd choice. It might seem intuitive to choose $g(\theta) \sim N(0, 1)$ because $\mu^\text{ref} = 0$, but this choice doesn't take into account the ability distribution of the focal group. If $\mu^\text{foc} = 3$, wouldn't we also want to prioritize high $\theta$ values? Accordingly, we set $g(\theta)$ to be the average of the reference and focal group ability distributions:
 $$
 g(\theta) = \dfrac{N(\mu^{\text{ref}}, \sigma^{\text{ref}^2}) + N(\mu^{\text{foc}}, \sigma^{\text{foc}^2})}{2}.
 $$
+
 ```{r}
 # not ideal that i input -anchor_point here but can fix later
 # min_bc <-
 #     out_3_biased_items$intuitive_mod[[1]] %>%
-#     min_between_curves(lo = 0, hi = 2, by = 0.1) # future: 0.0001
+#     min_between_curves(lo = 0, hi = 2, by = 0.001)
 # min_bc %>% write_rds(here("paper", "paper_2_min_bc.rds"))
 
 min_bc <- read_rds(here("paper", "paper_2_min_bc.rds"))
 ```
 
-For the simulated data, Figure \ref{fig:mabc} shows Total DIF at a variety of possible values for $\mu^\text{foc}$. The anchor point is $\mu^\text{foc} = `r round(min_bc$between_curves_anchor_points, 2)`$.
+For our one-run simulation, Figure \ref{fig:mabc} shows Total DIF at a variety of possible values for $\mu^\text{foc}$. The anchor point is found to be $\mu^{\star\text{foc}} = `r round(min_bc$between_curves_anchor_points, 2)`$. As with MGI, the model should then be refit using the identifying assumption that $\mu^{\text{foc}} = \mu^{\star\text{foc}}$.
 
-```{r mabc, fig.cap = 'Selecting the anchor point by minimizing the total amount of DIF.', out.width="70%"}
+```{r mabc, fig.cap = 'Minimizing the area between curves (MABC) to select the anchor point.', out.width="70%"}
 min_bc$grid %>% 
     ggplot(aes(x = anchor_point, y = total_between_curves)) +
     geom_point() +
@@ -110,7 +112,33 @@ min_bc$grid %>%
     )
 ```
 
-## Summary
+## Summary of AI methods
 
-[ADD A TABLE OF METHODS? OR THAT CAN SORT OF BE DONE IN THE SIMULATION RESULTS?]
+We have described a variety of AI methods and their corresponding acronymns. Some of these methods, such as AOAA and EMC, select anchor items, while others, such as MGI and MABC, select an anchor point. Table \ref{table:allmethods} summarizes all of these methods.
 
+\begin{table}[H]
+\caption{Summary of assumptionless identification methods}
+\centering
+\begin{tabular}{|p{4cm}|p{6cm}|p{4cm}|}
+\toprule
+
+Method & Description & Literature \\
+
+\midrule
+
+all-others-as-anchors (AOAA) & See Table \ref{table:themethods} for a summary of all three AOAA methods. &  \\\hline
+
+equal means clustering (EMC) & Cluster items based on differences in performance across groups and choose one of the clusters to be the anchor cluster. & Proposed by \cite{bechger2015statistical} and refined by \cite{pohl2017cluster} \\\hline
+
+equal means, multiple imputation logit graph (EM-MILG) & Arbitrarily set both group means to 0, which pushes all group performance differences to the item paramaters, measure variability using multiple imputations, and graph the result. Can be used by an analyst to hand select anchor items & Inspired by pedagolical examples \cite{pohl2017cluster} and \cite{talbot2013taking} \\\hline
+
+multiple imputation logit graph (MILG) & Similar to EM-MILG but used to visualize potential DIF once the model is already identified &  \\\hline
+
+maximizing Gini index (MGI) & Arbitrarily set both group means to 0 and then choose an anchor point by maximizing the Gini index & Adapted from work by \cite{strobl2018anchor} \\\hline
+
+minimizing the area between curves (MABC) & Of the infinite number of model that maximizes the likelihood of the data, choose the one with the minimum total area between the two groups' item characteristic curves & Built on and inspired by work by \cite{raju1988area} and more recently, \cite{chalmers2016might} \\
+
+\bottomrule
+\end{tabular}
+\label{table:allmethods}
+\end{table}

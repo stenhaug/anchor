@@ -1,20 +1,23 @@
-\contentsline {section}{\numberline {1}TO DO}{3}{section.1}% 
-\contentsline {section}{\numberline {2}Introduction}{3}{section.2}% 
-\contentsline {section}{\numberline {3}DIF methods}{5}{section.3}% 
-\contentsline {subsection}{\numberline {3.1}Anchor items}{6}{subsection.3.1}% 
-\contentsline {subsubsection}{\numberline {3.1.1}All-others-as-anchors}{6}{subsubsection.3.1.1}% 
-\contentsline {paragraph}{\numberline {3.1.1.1}All-others-as-anchors-all-significant}{7}{paragraph.3.1.1.1}% 
-\contentsline {paragraph}{\numberline {3.1.1.2}All-other-as-anchors-one-at-a-time}{7}{paragraph.3.1.1.2}% 
-\contentsline {paragraph}{\numberline {3.1.1.3}Summary and performance}{8}{paragraph.3.1.1.3}% 
-\contentsline {subsubsection}{\numberline {3.1.2}Clustering items}{9}{subsubsection.3.1.2}% 
-\contentsline {subsubsection}{\numberline {3.1.3}Analyst chooses}{10}{subsubsection.3.1.3}% 
-\contentsline {subsection}{\numberline {3.2}Anchor points}{12}{subsection.3.2}% 
-\contentsline {subsubsection}{\numberline {3.2.1}Gini index}{13}{subsubsection.3.2.1}% 
-\contentsline {subsubsection}{\numberline {3.2.2}Minimizing between curves}{15}{subsubsection.3.2.2}% 
-\contentsline {subsection}{\numberline {3.3}Summary}{17}{subsection.3.3}% 
-\contentsline {section}{\numberline {4}Next steps}{17}{section.4}% 
-\contentsline {section}{\numberline {5}Remember my bounds idea I like that}{17}{section.5}% 
-\contentsline {section}{\numberline {6}Simulate and then walk through as the analyst would with each method}{17}{section.6}% 
-\contentsline {section}{\numberline {7}Mike Frank example}{17}{section.7}% 
-\contentsline {section}{\numberline {8}Notes}{19}{section.8}% 
-\contentsline {section}{\numberline {9}References}{19}{section.9}% 
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}% 
+\contentsline {section}{\numberline {2}Assumptionless identification methods}{4}{section.2}% 
+\contentsline {subsection}{\numberline {2.1}Anchor items}{6}{subsection.2.1}% 
+\contentsline {subsubsection}{\numberline {2.1.1}All-others-as-anchors}{6}{subsubsection.2.1.1}% 
+\contentsline {paragraph}{\numberline {2.1.1.1}All-others-as-anchors-all-significant}{7}{paragraph.2.1.1.1}% 
+\contentsline {paragraph}{\numberline {2.1.1.2}All-other-as-anchors-one-at-a-time}{8}{paragraph.2.1.1.2}% 
+\contentsline {paragraph}{\numberline {2.1.1.3}Summary and performance}{8}{paragraph.2.1.1.3}% 
+\contentsline {subsubsection}{\numberline {2.1.2}Clustering items}{9}{subsubsection.2.1.2}% 
+\contentsline {subsubsection}{\numberline {2.1.3}The equal means, multiple imputation logit graph}{10}{subsubsection.2.1.3}% 
+\contentsline {subsection}{\numberline {2.2}Anchor points}{12}{subsection.2.2}% 
+\contentsline {subsubsection}{\numberline {2.2.1}Gini index}{13}{subsubsection.2.2.1}% 
+\contentsline {subsubsection}{\numberline {2.2.2}Minimizing between curves}{15}{subsubsection.2.2.2}% 
+\contentsline {subsection}{\numberline {2.3}Summary of AI methods}{17}{subsection.2.3}% 
+\contentsline {section}{\numberline {3}Simulation study}{18}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}Drawing parameters}{19}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.2}Visualizing a run}{20}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.3}Outcomes}{21}{subsection.3.3}% 
+\contentsline {subsubsection}{\numberline {3.3.1}Achievement gap residual}{21}{subsubsection.3.3.1}% 
+\contentsline {subsubsection}{\numberline {3.3.2}Individual abilities}{22}{subsubsection.3.3.2}% 
+\contentsline {subsubsection}{\numberline {3.3.3}Anchor items.}{22}{subsubsection.3.3.3}% 
+\contentsline {subsection}{\numberline {3.4}Results}{22}{subsection.3.4}% 
+\contentsline {section}{\numberline {4}Discussion and summary}{24}{section.4}% 
+\contentsline {section}{\numberline {5}References}{26}{section.5}% 

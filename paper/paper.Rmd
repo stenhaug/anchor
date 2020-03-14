@@ -13,14 +13,13 @@ bibliography: paper.bib
 link-citations: yes
 
 title: |
-    New and old ways to chase a rabbit:  
-    Differential item functioning detection methods
+    Promise and peril: Agnostic identification methods  
+    for detecting differential item functioning
 subtitle: |
-    Ben Stenhaug  
+    Ben Stenhaug, Ben Domingue, and Mike Frank  
     Stanford University
 abstract: |
-  summarize propose extensions insist as dif as student property and on communicating uncertainty
-  <!-- https://tinyurl.com/ybremelq -->
+  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use an LRT, the model needs to be identified so that differences in group ability can be disentangled from potential DIF. We summarize existing assumptionless identification (AI) methods and propose a variety of new methods. We conduct a simulation study — which we believe to be more realistic than most DIF simulation studies in the literature — and find that one of the proposed new AI methods, All-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also offer a new method, the equal means, multiple imputation logit graph (EM-MILG), that presents clearly all information about possible DIF, including sampling variability in item parameters, to the analyst. \clearpage <!-- https://tinyurl.com/ybremelq -->
 header-includes: 
 - \usepackage{amsmath}
 - \DeclareMathOperator*{\argmax}{arg\,max} # for gini coefficient
@@ -71,7 +70,7 @@ theme_set(theme_bw())
 ```{r child = "paper_1_intro.Rmd"}
 ```
 
-# DIF methods
+# Assumptionless identification methods
 
 ```{r child = "paper_2a_anchor_items.Rmd"}
 ```
@@ -81,18 +80,12 @@ theme_set(theme_bw())
 ```{r child = "paper_2b_anchor_points.Rmd"}
 ```
 
-# Next steps
+# Simulation study
 
-```{r child = "paper_3_next_steps.Rmd"}
+```{r child = "paper_3_sim.Rmd"}
 ```
 
 \clearpage
-
-# Notes
-
-- adjust to all be easiness including multidimensional talk
-
-# References
 
 <!-- weird formatting that isn't apa I don't think and indentation is weird, solution is to use papaja (look at paper_apa.Rmd) or this might also be helpful https://stackoverflow.com/questions/4073674/how-to-disable-indentation-in-particular-section-in-latex-->
 

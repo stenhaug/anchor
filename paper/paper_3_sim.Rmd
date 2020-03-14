@@ -1,6 +1,6 @@
-To compare each of the methods in table TODO, we conducted a simulated study. Our goal was to make the data generating process as realistic to the scenario described by @ackerman1992didactic in which some items on a math test also depend on a student’s verbal ability (the target ability is math ability and the nuisance ability is verbal ability). As described in [the introduction](#intro), nearly all DIF simulation studies simply generate data where the item easiness parameters are different for the reference and focal groups. This setup can be re-written as a two-dimensional compensatory item response model where nuisance ability is the same for all students from the same group. One exception is @walker2017using who draws each student's target and nuisance ability from a two-dimensional normal distribution with varying covariance matrices. 
+To compare each of the methods in table TODO, we conducted a simulated study. Our goal was to make the data generating process as realistic to the scenario described by @ackerman1992didactic in which some items on a math test also depend on a student’s verbal ability (the target ability is math ability, and the nuisance ability is verbal ability). As described in [the introduction](#intro), nearly all DIF simulation studies in the literature generate data by simply altering the item easiness parameters for the focal group. This setup can be re-written as a two-dimensional compensatory item response model where nuisance ability is the same for all students from the same group. One exception is @walker2017using who draws each student's target and nuisance ability from a two-dimensional normal distribution with varying covariance matrices.
 
-In our simulation study, it was critical that student ability was drawn in a realistic way similar to @walker2017using. However, we don’t believe that a compensatory model is realistic in describing the a math test where some items depend on verbal ability. For example, it’s hard to imagine that a student without the verbal ability to parse a word problem could fully compensate by having a higher math ability. Accordingly, we generate item responses using an adapted version of Sympson’s -@sympson1978model noncompensatory item response model in which 
+In our simulation study, it was critical that student ability was drawn in a realistic way similar to @walker2017using. However, we don’t believe that a compensatory model is realistic in describing the a math test where some items depend on verbal ability. For example, it’s hard to imagine that a student without the verbal ability to parse a word problem could fully compensate by having a higher math ability. Accordingly, we generate item responses using a simplified version of Sympson’s -@sympson1978model noncompensatory item response model in which
 $$
 \text{Pr}(y_{ij} = 1 | \theta_i, \eta_i, a_{2j}) = \sigma(\theta_i) \cdot \sigma(a_{2j}\eta_i)
 $$
@@ -8,23 +8,24 @@ where, as before, $\theta_i$ is target ability, $\eta_i$ is nuisance ability, an
 
 ## Drawing parameters
 
-In each run, we simulate 10,000 students with half coming from each of the reference and focal groups. For students from the reference group, target ability and nuisance ability are drawn from the two-dimensional normal distribution with mean [$\mu_\theta^\text{ref} = 0$, $\mu_\eta^\text{ref} = 0$] and covariance matrix $\begin{bmatrix} 1 & 0.5 \\ 0.5 & 1 \end{bmatrix}$. Abilities for students from the focal group are drawn using the same covariance matrix but with means [$\mu_\theta^\text{foc} = -0.5$, $\mu_\eta^\text{foc} = -1$].
+In each run, we simulate 10,000 students with half coming from each of the reference and focal groups. For students from the reference group, target ability and nuisance ability are drawn from the two-dimensional normal distribution with mean [$\mu_\theta^\text{ref} = 0$, $\mu_\eta^\text{ref} = 0$] and covariance matrix $\begin{bmatrix} 1 & 0.5 \\ 0.5 & 1 \end{bmatrix}$. Abilities for students from the focal group are drawn using the same covariance matrix, but with means [$\mu_\theta^\text{foc} = -0.5$, $\mu_\eta^\text{foc} = -1$].
 
-The test always has 20 items, but we vary the number of items with DIF from two to ten. For items without DIF, $a_{2j} = \infty$ so that the model reduces to $\text{Pr}(y_{ij} = 1 | \theta_i) = \sigma(\theta_i)$. For items with DIF, $a_{2j}$ is calculated based on Ackerman's -@ackerman1994using angle equation as described in @walker2017using:
+The test always has 12 items, but we vary the number of items with DIF from two to six. For items without DIF, $a_{2j} = \infty$ so that the model reduces to $\text{Pr}(y_{ij} = 1 | \theta_i) = \sigma(\theta_i)$. For items with DIF, $a_{2j}$ is calculated based on Ackerman's -@ackerman1994using angle equation as described in @walker2017using:
 $$
 \angle_j = \arccos \dfrac{a_{1j}^2}{a_{1j}^2 + a_{2j}^2}.
 $$
-The angle for an item measure the relative loading of the item on the two dimensions. For example, an angle of 45$^\circ$ indicates that the item loads equally on the target and nuisance ability dimensions. We are using a simple compensatory model in which $a_{1j} = 1$ for all items so the angle equation reduces to 
+The angle for an item measure the relative loading of the item on the two dimensions. For example, an angle of 45$^\circ$ indicates that the item loads equally on the target and nuisance abilities. Our simple compensatory model has $a_{1j} = 1$ for all items so the angle equation reduces to
 $$
 \angle_j = \arccos \dfrac{1}{1 + a_{2j}^2}.
 $$
-We are interested in specifying the angle of an item, so the relevant equation becomes 
+We are interested in specifying the angle of an item, so the relevant equation becomes
 $$
 a_{2j} = \sqrt{\dfrac{1 - \cos(\angle_j)^2}{\cos(\angle_j)^2}}.
 $$
-For DIF items, we set $a_{2j}$ based on angles with equal intervals between 30$^\circ$ and 60$^\circ$. For example, for a test with four DIF items the angles are 30$^\circ$, 40$^\circ$, 50$^\circ$, and 60$^\circ$.
+For DIF items, we set $a_{2j}$ based on angles with equal intervals between 20$^\circ$ and 60$^\circ$. For example, for a test with three DIF items the angles are 20$^\circ$, 40$^\circ$, and 60$^\circ$.
 
 ## Visualizing a run
+
 ```{r}
 # ADD IN CODE THAT GENERATES THIS
 out <- read_rds(here("paper/paper_3_out1.rds"))
@@ -49,16 +50,18 @@ out <-
     out %>%
     mutate(bigsim = map2(bigsim, n_dif_items, add_foc_mean))
 
-# i have no idea why this is like this...
-out %>% 
-  mutate(bigsim = bigsim %>% map(~ select(., foc_mean))) %>% 
-  unnest(bigsim) %>% 
-  ggplot(aes(x = n_dif_items, y = foc_mean)) +
-  geom_point()
+# this use to seem off and is a good check but seems fine now
+# out %>% 
+#   mutate(bigsim = bigsim %>% map(~ select(., foc_mean))) %>% 
+#   unnest(bigsim) %>% 
+#   ggplot(aes(x = n_dif_items, y = foc_mean)) +
+#   geom_point()
 ```
-Figure \ref{fig:difmap} provides intuition about the data generating process by showing the relationship between $\theta_i$ and $Pr(y_{ij} = 1)$ with $\eta_i$ set to the group mean. The items are ordered by the amount of DIF such that $\angle_{j = 11} = 30^\circ$ up to $\angle_{j = 20} = 60^\circ$.
-```{r difmap, fig.cap = 'For a 20 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
-out$bigsim[[2]]$pars[[1]] %>% 
+
+Figure \ref{fig:difmap} provides intuition about the data generating process by showing the relationship between $\theta_i$ and $Pr(y_{ij} = 1)$ with $\eta_i$ set to the group mean for a test with six items with DIF. The items are ordered by the amount of DIF such that $\angle_{j = 7} = 20^\circ$ up to $\angle_{j = 12} = 60^\circ$.
+
+```{r difmap, fig.cap = 'For a 12 item test containing 6 items with DIF, the relationship between target ability and probability of correct response with nuisance abilities fixed to the group mean.', out.width="70%", warning = FALSE, message = FALSE}
+out$bigsim[[5]]$pars[[1]] %>% 
   graph_pars_noncompensatory(0, -1) +
   scale_y_continuous(labels = scales::percent) +
   labs(
@@ -67,9 +70,10 @@ out$bigsim[[2]]$pars[[1]] %>%
   )
 ```
 
-Figure \ref{fig:simemmlg} shows the EM-MILG for one run using the same item parameters that generated Figure \ref{fig:difmap}. As expected, $\tilde{d_j}$ is about $\mu_\theta^\text{foc} - \mu_\theta^\text{ref} = -0.5 - 0 = -0.5$ for the first ten items which are DIF free. For the last ten items, $\tilde{d_j}$ increases as $\angle_j$ increases. Of course, we cannot include the "analyst chooses" method in our simulation, but regardless, the EM-MILG is a useful way to visualize the data.
+Figure \ref{fig:simemmlg} shows the EM-MILG — generated using a Rasch model where both group means are fixed to 0 and item parameters are estimated freely as described in the [the anchor items section](#anchoritems) — for one run using the same item parameters that generated Figure \ref{fig:difmap}. As expected, $\tilde{d_j}$ is about $\mu_\theta^\text{foc} - \mu_\theta^\text{ref} = -0.5 - 0 = -0.5$ for the first six items which are DIF free. For the last six items, $\tilde{d_j}$ increases as $\angle_j$ increases.
+
 ```{r simemmlg, fig.cap = 'For a 20 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
-out$bigsim[[3]]$intuitive_mod[[1]] %>%
+out$bigsim[[5]]$intuitive_mod[[1]] %>%
     mod_intuitive_to_draws_df() %>%
     draws_df_to_logit_plot() +
     labs(
@@ -79,28 +83,21 @@ out$bigsim[[3]]$intuitive_mod[[1]] %>%
 
 ## Outcomes
 
-### Target ability achievement gap
-An effective method, should find $\hat\mu_\theta^\text{foc}$ close to 0.5. This outcome measures a method’s ability to disentangle differences in target ability from nuisance ability at the group level.
+### Achievement gap residual
+
+An effective method should accurately estimate the group-level target ability gap, which we refer to as the achievement gap. The data-generating value of $\mu_\theta^\text{foc}$ is 0.5, but each run will include sampling variability. To get at the heart of how well a method is doing, we calculate the achievement gap residual as the method's estimated achievement gap, $\hat\mu_\theta^\text{foc}$, minus the achievement gap estimated when using only the DIF-free items as anchors. In summary, this outcome measures a method’s ability to disentangle differences in target ability from nuisance ability at the group level.
 
 ### Individual abilities
-Assessments are frequently used to make decisions about individual student abilities. We measure a method’s ability to do so by calculating the rank correlation between the vector estimated abilities and true abilities. This is done both for all students combined and just for students in the focal group. We use rank correlation as opposed to the more typically used RMSE as a result of our agreement with Lord's -@lord1986maximum argument that RMSE can be inflated by poor performance at the extremes of ability for which the test was not designed to measure precisely.
+
+Assessments are frequently used to make decisions about individual student abilities. We measure a method’s ability to do so by calculating the rank correlation between the vector estimated abilities and true abilities. This is done both for all students combined and just for students in the focal group. We use rank correlation as opposed to the more typically used RMSE as a result of our agreement with Lord's -@lord1986maximum argument that RMSE can be inflated by poor performance at the extremes of ability for which the test was not designed to measure precisely. *(Note that this isn't included in this current draft.)*
 
 ### Anchor items. 
+
 For the methods that choose a set of anchor items, we look directly at which anchor items are selected. An effective method should use most of the non-DIF items as anchors (the anchor hit rate) while avoiding including items with DIF in the anchor set (the false anchor rate).
 
 ## Results
-In total, we executed 100 runs for each number of two to ten DIF items. This multiplies to a total of 900 runs. Figure \ref{fig:achievegap} shows each method's performance on estimating the target ability achievement gap. 
 
-As expected, artificial DIF causes AOAA and AOAA-AS to go off the rails as the number of DIF items increases. CLUSTERING typically performs well but has a higher variance because the anchor cluster sometimes contains as few as half of the DIF-free items. 
-
-AOAA-OAT, GINI, and MINBC all perform similarly well. MINBC has a tendency to slightly overestimate the achievement gap. There is an interesting pattern, not previously described in the literature, where AOAA-OAT and GINI of overestimate the achievement gap when there are few items with DIF and underestimate the achivement gap when there are many items with DIF. The cause is more easily understood with AOAA-OAT where we can inspect which items are included in the anchor set.
-
-Figure \ref{fig:anchorfalse} shows the mean false anchor counts for each method and number of items with DIF. For example, when there are 10 items with DIF on the test, AOAA-AS incorrectly includes an average of 1.8 of those items in the anchor set. AOAA-OAT remarkably never includes an item with DIF in the anchor set (i.e., a false anchor rate of 0\%). 
-
-Performance, then, is driven by which items are included in the anchor set. Accordingly, Figure \ref{fig:anchorhit} shows the number of items without DIF that are included in the anchor set. In general, AOAA-OAT usually fails to include a couple of items in the anchor set that are indeed DIF free. When there are a few items with DIF, the omitted items are more often items in which the focal group happened to, as a result of sampling variability, perform well relative to the reference group. On the other hand, when there are many items with DIF, the omitted items are more often items in which the focal group happened to perform poorly relative to the reference group. This selective omission of DIF free anchors is what drives the positive association between number of DIF items and $\hat\mu_\theta^\text{foc}$.
-
-```{r achievegap, fig.cap = 'Each method's estimation of the target ability achievement gap.', out.width="70%", warning = FALSE, message = FALSE}
-
+```{r}
 n_items <- 12
 
 final_model_to_anchor_summary <- function(final_model, n_dif_items){
@@ -135,20 +132,40 @@ what <-
     mutate(achievegap = bigsim %>% map(getfull)) %>%
     select(-bigsim) %>%
     unnest(achievegap)
+```
 
+In total, we executed 100 runs for each of two, three, four, five, and six DIF items. Figure \ref{fig:achievegap} shows each method's performance on the achievement gap residual. As expected, artificial DIF causes AOAA and AOAA-AS to go off the rails as the number of DIF items increases. CLUSTER performs better than AOAA and AOAA-AS but worse than the other methods. GINI and MINBC perform similarly well with GINI having a higher variance, while MINBC has more bias, especially for tests with a greater number of DIF items. This bias results from MINBC considering every item, including the items with DIF, whereas as soon as, for example, AOAA-OAT, removes an item from the anchor set, it is thereafter completely disregarded by the method. AOAA-OAT is the clear winner. It performs nearly perfectly for two, three, or four DIF items, and even on its worst run, underestimates $\mu_\theta^\text{foc}$ by 0.05 standard deviations.
+
+```{r achievegap, fig.cap = 'Target ability achievement gap estimates for each method.', out.width="70%", warning = FALSE, message = FALSE}
 what %>% 
+  mutate(
+    method = 
+      factor(
+        method,
+        levels = c("AOAA_OAT_mod", "cluster_mod", "gini_mod", "AOAA_AS_mod", "AOAA_mod", "minbc_mod"),
+        labels = c("AOAA-OAT", "CLUSTER", "GINI", "AOAA-AS", "AOAA", "MINBC")
+      )
+  ) %>% 
   ggplot(aes(x = resid, y = as.factor(n_dif_items))) +
   ggridges::geom_density_ridges() +
   facet_wrap(~ method) +
   coord_flip() +
   geom_hline(yintercept = -0.5, linetype = "dashed") +
   labs(
-      x = "Number of DIF items",
-      y = latex2exp::TeX("$\\hat{\\mu}_\\theta^foc$")
+      y = "Number of DIF items",
+      x = latex2exp::TeX("Achievement gap residual")
   )
 ```
 
-```{r anchorfalse, fig.cap = 'Mean false anchor counts', out.width="70%", warning = FALSE, message = FALSE}
+Figure \ref{fig:anchorfalse} shows the mean false anchor rates for each method and number of items with DIF. For example, when there are two items with DIF on the test, those two items have $\angle_{11} = 20^\circ$ and $\angle_{12} = 60^\circ$. AOAA-OAT never includes item 12 in the anchor set, but incorrectly includes item 11 in 60 out of the 100 runs. Accordingly, the mean false anchor rate for two DIF items and the AOAA-OAT method is
+$$
+\dfrac{\text{Total number of DIF items in the anchor set}}{\text{Number of DIF items on each test} \cdot \text{Number of runs}} = \dfrac{60}{2 \cdot 100} = 30\%.
+$$
+The fact that the item with 20$^\circ$ of DIF is most commonly incorrectly included in the anchor set is what drives the counterintuitive result that the mean false anchor rate decreases with more DIF items.
+
+Similarly, Figure \ref{fig:anchorhit} shows the mean anchor hit rates. Remarkably, AOAA-OAT includes an average of over $90\%$ of DIF-free items in the anchor set regardless of the number of DIF items on the test. Interestingly, CLUSTER has a better anchor hit rate on tests with more DIF items. This result appears to be driven by the clustering algorithm sometimes splitting all of the DIF-free items into two separate clusters, especially when most of the items are DIF-free.
+
+```{r anchorfalse, fig.cap = 'Mean false anchor rates across 100 runs for each number of DIF items', out.width="70%", warning = FALSE, message = FALSE}
 one_to_anchors <- function(one, n_dif_items){
     one %>%
         select(ends_with("mod"), -intuitive_mod, -gini_mod, -minbc_mod) %>%
@@ -172,36 +189,57 @@ temp %>%
     filter(true_anchor != "no dif") %>%
     group_by(n_dif_items, method) %>%
     summarize(total = sum(total), mean_selected = sum(mean_selected)) %>%
-    gather(var, val, -n_dif_items, -method) %>%
-    mutate(var = factor(var, 
-                        levels = c("total", "mean_selected"),
-                        labels = c("Total possible", "Mean selected to anchor set"))) %>% 
-  filter(var == "Mean selected to anchor set") %>% 
-    ggplot(aes(x = n_dif_items, y = val)) +
+    ungroup() %>% 
+    mutate(rate = mean_selected / total) %>% 
+    mutate(
+      method = 
+        factor(
+          method,
+          levels = c("AOAA_OAT_mod", "cluster_mod", "AOAA_AS_mod", "AOAA_mod"),
+          labels = c("AOAA-OAT", "CLUSTER", "AOAA-AS", "AOAA")
+        )
+    ) %>% 
+    ggplot(aes(x = n_dif_items, y = rate)) +
     geom_point() +
-    ylim(0, 20) +
     facet_wrap(~ method) +
     labs(
-      x = "Number of items with DIF on the test",
-      y = "Mean number of items with DIF in the anchor set",
-      color = ""
-    )
+      x = "Number of DIF items",
+      y = "Mean false anchor rate"
+    ) +
+    scale_y_continuous(labels = scales::percent, limits = c(0, 0.5))
 ```
 
-```{r anchorhit, fig.cap = 'Mean anchor hit counts', out.width="70%", warning = FALSE, message = FALSE}
+```{r anchorhit, fig.cap = 'Mean anchor hit rates across 100 runs for each number of DIF items', out.width="70%", warning = FALSE, message = FALSE}
 temp %>%
     filter(true_anchor == "no dif") %>%
-    gather(var, val, -n_dif_items, -method, -true_anchor) %>%
-    mutate(var = factor(var, 
-                        levels = c("total", "mean_selected"),
-                        labels = c("Total possible", "Mean selected to anchor set"))) %>% 
-    ggplot(aes(x = n_dif_items, y = val, color = var)) +
+    mutate(rate = mean_selected / total) %>% 
+    mutate(
+        method = 
+          factor(
+            method,
+            levels = c("AOAA_OAT_mod", "cluster_mod", "AOAA_AS_mod", "AOAA_mod"),
+            labels = c("AOAA-OAT", "CLUSTER", "AOAA-AS", "AOAA")
+          )
+    ) %>%  
+    ggplot(aes(x = n_dif_items, y = rate)) +
     geom_point() +
-    ylim(0, 20) +
     facet_wrap(~ method) +
     labs(
-      x = "Number of items with DIF on the test",
-      y = "Number of items without DIF",
+      x = "Number of DIF items",
+      y = "Mean anchor hit rate",
       color = ""
-    )
+    ) +
+    scale_y_continuous(labels = scales::percent, limits = c(0, 1))
 ```
+
+# Discussion and summary
+
+Measurement instruments need to be inspected for DIF so that we can be sure of the validity of the conclusions that we draw regardless of the group membership of each student. Inspired by @ackerman1992didactic, we have resurrected the DIF-as-student-property view and shown its connection to the typical way in which AI methods and DIF simulation studies have been conceptualized.
+
+More importantly, we have reviewed a variety of AI methods, proposed new AI methods, and tested their performance in a simulation study that we believe is more realistic than the typical DIF simulation study. In particular, we simulated student ability as drawn from a two-dimensional distribution representing a student's target and nuisance ability, and then generated data using a noncompensatory item response model. Our simulation results showed that two of the most common AI methods, AOAA and AOAA-AS, perform quite poorly, especially as the number of items containing DIF grows. On the other hand, selecting anchor items using either AOAA-OAT or clustering and selecting an anchor point using either GINI or MINBC all performed reasonably.
+
+However, AOAA-OAT was the clear winner in terms of performance and we recommend its use whenever possible. One reason AOAA-OAT might not always be possible is that it can be computationally expensive. For example, finding three items containing DIF on a 12-item test requires fitting 46 item response models, and that number grows as either the test length or the number of items testing positive for DIF grows. To increase AOAA-OAT's use, we recommend its implementation (perhaps as the default) in popular IRT software such as the mirt R package.
+
+In addition to exploring and testing algorithmic AI methods, we introduced a method, the EM-MILG, that an analyst can use to visualize the amount of potential DIF in their data. This method can be used either to build their intuition or as a way in which they can select anchor items by hand. The EM-MILG's sibling method, the MILG, is, we believe, the best way to visualize the results of a DIF analysis after anchor items have been selected.    
+
+Future work should test these methods' performance under a greater variety of data-generating conditions. For example, changing the compensatory nature of the data generating model or adding additional nuisance ability dimensions. Furthermore, our work focused on the Rasch model, and it will be of great interest to consider how these methods extend and perform when the goal is to detect and correct for DIF when fitting a 2PL or 3PL item response model.
