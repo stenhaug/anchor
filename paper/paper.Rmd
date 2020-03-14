@@ -19,7 +19,7 @@ subtitle: |
     Ben Stenhaug, Ben Domingue, and Mike Frank  
     Stanford University
 abstract: |
-  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use an LRT, the model needs to be identified so that differences in group ability can be disentangled from potential DIF. We summarize existing assumptionless identification (AI) methods and propose a variety of new methods. We conduct a simulation study — which we believe to be more realistic than most DIF simulation studies in the literature — and find that one of the proposed new AI methods, All-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also offer a new method, the equal means, multiple imputation logit graph (EM-MILG), that presents clearly all information about possible DIF, including sampling variability in item parameters, to the analyst. \clearpage <!-- https://tinyurl.com/ybremelq -->
+  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use an LRT, the model needs to be identified so that differences in group ability can be disentangled from potential DIF. We summarize existing agnostic identification (AI) methods and propose a variety of new methods. We conduct a simulation study — which we believe to be more realistic than most DIF simulation studies in the literature — and find that one of the proposed new AI methods, All-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also offer a new method, the equal means, multiple imputation logit graph (EM-MILG), that presents clearly all information about possible DIF, including sampling variability in item parameters, to the analyst. \clearpage <!-- https://tinyurl.com/ybremelq -->
 header-includes: 
 - \usepackage{amsmath}
 - \DeclareMathOperator*{\argmax}{arg\,max} # for gini coefficient
@@ -70,7 +70,7 @@ theme_set(theme_bw())
 ```{r child = "paper_1_intro.Rmd"}
 ```
 
-# Assumptionless identification methods
+# Agnostic identification methods
 
 ```{r child = "paper_2a_anchor_items.Rmd"}
 ```
