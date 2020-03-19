@@ -1,27 +1,27 @@
 To compare each of the methods in Table \ref{table:allmethods}, we conducted a simulated study. Our goal was to make the data generating process as realistic to the scenario described by @ackerman1992didactic in which some items on a math test also depend on a student’s verbal ability (the target ability is math ability, and the nuisance ability is verbal ability). As described in [the introduction](#intro), nearly all DIF simulation studies in the literature generate data by simply altering the item easiness parameters for the focal group. This setup can be re-written as a two-dimensional compensatory item response model where nuisance ability is the same for all students from the same group. One exception is @walker2017using who draw each student's target ability and nuisance ability from a two-dimensional normal distribution with varying covariance matrices.
 
-In our simulation study, it was critical that student ability was drawn in a realistic way similar to @walker2017using. However, we don’t believe that a compensatory model is realistic in describing a math test where some items depend on verbal ability. For example, it’s hard to imagine that a student without the verbal ability to parse a word problem could fully compensate by having a higher math ability. Accordingly, we generate item responses using a simplified version of Sympson’s -@sympson1978model noncompensatory item response model in which
-$$
+In our simulation study, it was critical that student ability was drawn in a realistic way similar to @walker2017using. However, we don’t believe that a compensatory model is realistic in describing a math test where some items depend on verbal ability. For example, it’s hard to imagine that a student without the verbal ability to parse a word problem could fully compensate by having a higher math ability. Accordingly, we generated item responses using a simplified version of Sympson’s -@sympson1978model noncompensatory item response model in which
+\begin{align}
 \text{Pr}(y_{ij} = 1 | \theta_i, \eta_i, a_{2j}) = \sigma(\theta_i) \cdot \sigma(a_{2j}\eta_i)
-$$
+\end{align}
 where, as before, $\theta_i$ is target ability, $\eta_i$ is nuisance ability, and $\sigma(a_{2j})$ is the item's loading on nuisance ability [@demars2016partially].
 
 ## Drawing parameters
 
-In each run, we simulate 10,000 students with half coming from each of the reference and focal groups. For students from the reference group, target ability and nuisance ability are drawn from the two-dimensional normal distribution with mean [$\mu_\theta^\text{ref} = 0$, $\mu_\eta^\text{ref} = 0$] and covariance matrix $\begin{bmatrix} 1 & 0.5 \\ 0.5 & 1 \end{bmatrix}$. Abilities for students from the focal group are drawn using the same covariance matrix, but with means [$\mu_\theta^\text{foc} = -0.5$, $\mu_\eta^\text{foc} = -1$].
+In each run, we simulated 10,000 students with half coming from each of the reference and focal groups. For students from the reference group, target ability and nuisance ability are drawn from the two-dimensional normal distribution with mean [$\mu_\theta^\text{ref} = 0$, $\mu_\eta^\text{ref} = 0$] and covariance matrix $\begin{bmatrix} 1 & 0.5 \\ 0.5 & 1 \end{bmatrix}$. Abilities for students from the focal group are drawn using the same covariance matrix, but with means [$\mu_\theta^\text{foc} = -0.5$, $\mu_\eta^\text{foc} = -1$].
 
-The test always has 12 items, but we vary the number of items with DIF from two to six. For items without DIF, $a_{2j} = \infty$ so that the model reduces to $\text{Pr}(y_{ij} = 1 | \theta_i) = \sigma(\theta_i)$. For items with DIF, $a_{2j}$ is calculated based on Ackerman's -@ackerman1994using angle equation as described in @walker2017using:
-$$
+The test always has 12 items, but we varied the number of items with DIF from two to six. For items without DIF, $a_{2j} = \infty$ so that the model reduces to $\text{Pr}(y_{ij} = 1 | \theta_i) = \sigma(\theta_i)$. For items with DIF, $a_{2j}$ is calculated based on Ackerman's -@ackerman1994using angle equation as described in @walker2017using:
+\begin{align}
 \angle_j = \arccos \dfrac{a_{1j}^2}{a_{1j}^2 + a_{2j}^2}.
-$$
+\end{align}
 An item's angle measures the relative loading of the item on the two dimensions. For example, an angle of 45$^\circ$ indicates that the item loads equally on the target ability and nuisance ability. Our simple noncompensatory model has $a_{1j} = 1$ for all items so the angle equation reduces to
-$$
+\begin{align}
 \angle_j = \arccos \dfrac{1}{1 + a_{2j}^2}.
-$$
+\end{align}
 We are interested in specifying the angle of an item, so the relevant equation becomes
-$$
+\begin{align}
 a_{2j} = \sqrt{\dfrac{1 - \cos(\angle_j)^2}{\cos(\angle_j)^2}}.
-$$
+\end{align}
 For DIF items, we set $a_{2j}$ based on angles with equal intervals between 20$^\circ$ and 60$^\circ$. For example, for a test with three DIF items the angles are 20$^\circ$, 40$^\circ$, and 60$^\circ$.
 
 ## Visualizing a run
@@ -162,9 +162,9 @@ what %>%
 ```
 
 Figure \ref{fig:anchorfalse} shows the mean false anchor rates for each method and number of items with DIF. For example, when there were two items with DIF on the test, those two items had $\angle_{11} = 20^\circ$ and $\angle_{12} = 60^\circ$. AOAA-OAT never included item 12 in the anchor set, but incorrectly included item 11 in 60 out of the 100 runs. Accordingly, the mean false anchor rate for two DIF items and the AOAA-OAT method was
-$$
+\begin{align}
 \dfrac{\text{Total number of DIF items in the anchor set}}{\text{Number of DIF items on each test} \cdot \text{Number of runs}} = \dfrac{60}{2 \cdot 100} = 30\%.
-$$
+\end{align}
 The fact that the item with 20$^\circ$ of DIF is most commonly incorrectly included in the anchor set is what drove the counterintuitive result that the mean false anchor rate decreases with more DIF items.
 
 Similarly, Figure \ref{fig:anchorhit} shows the mean anchor hit rates. Remarkably, AOAA-OAT included an average of over $90\%$ of DIF-free items in the anchor set regardless of the number of DIF items on the test. Interestingly, EMC had a better anchor hit rate on tests with more DIF items. This result appears to be driven by the clustering algorithm sometimes splitting all of the DIF-free items into two separate clusters, especially when most of the items are DIF-free.

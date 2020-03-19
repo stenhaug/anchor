@@ -1,0 +1,155 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  11pt,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Promise and peril: Agnostic identification methods for detecting differential item functioning},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs}
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+\usepackage{lineno}
+\linenumbers
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{float}
+\usepackage[autostyle, english = american]{csquotes}
+\setlength{\parindent}{4em}
+\setlength{\parskip}{2em}
+\usepackage{setspace}\doublespacing
+\AtBeginEnvironment{tabular}{\singlespacing}
+\usepackage{natbib}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+
+\title{Promise and peril: Agnostic identification methods\\
+for detecting differential item functioning}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Ben Stenhaug, Ben Domingue, and Mike Frank\\
+Stanford University}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use an LRT, the model needs to be identified so that differences in group ability can be disentangled from potential DIF. We summarize existing agnostic identification (AI) methods and propose a variety of new methods. We conduct a simulation study --- which we believe to be more realistic than most DIF simulation studies in the literature --- and find that one of the proposed new AI methods, All-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also offer a new method, the equal means, multiple imputation logit graph (EM-MILG), that presents clearly all information about possible DIF, including sampling variability in item parameters, to the analyst. \clearpage
+\end{abstract}
+
+{
+\setcounter{tocdepth}{5}
+\tableofcontents
+}
+\begin{table}[H]
+\caption{Summary of agnostic identification methods}
+\centering
+\begin{tabular}{|p{4cm}|p{6cm}|p{4cm}|}
+\toprule
+
+Method & Description & Literature \\
+
+\midrule
+
+AOAA & Test if each item has DIF by using all of the other items as anchors (not iterative). & Originally proposed by \cite{lord1980} and formalized by \cite{thissen1993detection} \\\hline
+
+AOAA-AS & The first iteration is AOAA. All items that test positive for DIF are removed from the anchor set. Continue iterating until no new items test positive for DIF. & Proposed by \cite{drasgow1987study} \\\hline
+
+AOAA-OAT & The first iteration is AOAA. Only the item that shows the most extreme DIF is removed from the anchor set. Continue iterating until no new items test positive for DIF. & To our knowledge, not proposed or used previously \\
+
+equal means clustering (EMC) & Cluster items based on differences in performance across groups and choose one of the clusters to be the anchor cluster. & Proposed by \cite{bechger2015statistical} and refined by \cite{pohl2017cluster} \\\hline
+
+equal means, multiple imputation logit graph (EM-MILG) & Arbitrarily set both group means to 0, which pushes all group performance differences to the item paramaters, measure variability using multiple imputations, and graph the result. Can be used by an analyst to hand select anchor items & Inspired by pedagolical examples \cite{pohl2017cluster} and \cite{talbot2013taking} \\\hline
+
+multiple imputation logit graph (MILG) & Similar to EM-MILG but used to visualize potential DIF once the model is already identified &  \\\hline
+
+maximizing Gini index (MAXGI) & Arbitrarily set both group means to 0 and then choose an anchor point by maximizing the Gini index & Adapted from work by \cite{strobl2018anchor} \\\hline
+
+minimizing the area between curves (MINBC) & Of the infinite number of model that maximizes the likelihood of the data, choose the one with the minimum total area between the two groups' item characteristic curves & Built on and inspired by work by \cite{raju1988area} and more recently, \cite{chalmers2016might} \\
+
+\bottomrule
+\end{tabular}
+\label{table:allmethods}
+\end{table}
+
+\bibliographystyle{apa}
+\bibliography{paper.bib}
+
+\end{document}
