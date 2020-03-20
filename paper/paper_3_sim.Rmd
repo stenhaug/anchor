@@ -4,7 +4,7 @@ In our simulation study, it was critical that student ability was drawn in a rea
 \begin{align}
 \text{Pr}(y_{ij} = 1 | \theta_i, \eta_i, a_{2j}) = \sigma(\theta_i) \cdot \sigma(a_{2j}\eta_i)
 \end{align}
-where, as before, $\theta_i$ is target ability, $\eta_i$ is nuisance ability, and $\sigma(a_{2j})$ is the item's loading on nuisance ability [@demars2016partially].
+where, as before, $\theta_i$ is target ability, $\eta_i$ is nuisance ability, and $a_{2j}$ is the item's loading on nuisance ability [@demars2016partially].
 
 ## Drawing parameters
 
@@ -14,7 +14,7 @@ The test always has 12 items, but we varied the number of items with DIF from tw
 \begin{align}
 \angle_j = \arccos \dfrac{a_{1j}^2}{a_{1j}^2 + a_{2j}^2}.
 \end{align}
-An item's angle measures the relative loading of the item on the two dimensions. For example, an angle of 45$^\circ$ indicates that the item loads equally on the target ability and nuisance ability. Our simple noncompensatory model has $a_{1j} = 1$ for all items so the angle equation reduces to
+An item's angle measures the relative loading of the item on the two dimensions. The lower the angle, the more the item loads on target ability as compared to nuisance ability, which corresponds to less DIF. An angle of 45$^\circ$ indicates that the item loads equally on the target ability and nuisance ability. Our simple noncompensatory model has $a_{1j} = 1$ for all items so the angle equation reduces to
 \begin{align}
 \angle_j = \arccos \dfrac{1}{1 + a_{2j}^2}.
 \end{align}
@@ -72,7 +72,7 @@ out$bigsim[[5]]$pars[[1]] %>%
 
 Figure \ref{fig:simemmlg} shows the EM-MILG — generated using a Rasch model where both group means are fixed to 0 and item parameters are estimated freely as described in the [the anchor items section](#anchoritems) — for one run using the same item parameters that generated Figure \ref{fig:difmap}. As expected, $\tilde{d_j}$ is about $\mu_\theta^\text{foc} - \mu_\theta^\text{ref} = -0.5 - 0 = -0.5$ for the first six items which are DIF free. For the last six items, $\tilde{d_j}$ increases as $\angle_j$ increases.
 
-```{r simemmlg, fig.cap = 'For a 20 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
+```{r simemmlg, fig.cap = 'For a 12 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
 out$bigsim[[5]]$intuitive_mod[[1]] %>%
     mod_intuitive_to_draws_df() %>%
     draws_df_to_logit_plot() +
@@ -87,11 +87,13 @@ For each run, we applied each AI method to find the method's identifying assumpt
 
 ### Achievement gap residual
 
-An effective AI method should lead to a final model that accurately estimates the difference between the reference group's mean target ability and the focal group's mean target ability. We refer to this quantity as the achievement gap. Recall that all models set $\mu_\theta^\text{ref} = 0$, so the achievement gap reduces to $\mu_\theta^\text{ref}$. The data-generating value of $\mu_\theta^\text{foc}$ is 0.5, but each run will include sampling variability. To get at the heart of how well a method is doing, we calculated the achievement gap residual as the method's estimated achievement gap, $\hat\mu_\theta^\text{foc}$, minus the achievement gap estimated when using only the DIF-free items as anchors. In summary, this outcome measures a method’s ability to disentangle differences in target ability from nuisance ability at the group level.
+<!-- Ben didn't totally foll -->
+
+An effective AI method should lead to a final model that accurately estimates the difference between the reference group's mean target ability and the focal group's mean target ability. We refer to this quantity as the achievement gap. Recall that all models set $\mu_\theta^\text{ref} = 0$, so the achievement gap reduces to $\mu_\theta^\text{foc}$. The data-generating value of $\mu_\theta^\text{foc}$ is 0.5, but each run, of course, includes sampling variability. To get at the heart of how well a method is doing, we calculated the achievement gap residual as the method's estimated achievement gap, $\hat\mu_\theta^\text{foc}$, minus the achievement gap estimated when using only the DIF-free items as anchors. In summary, this outcome measures a method’s ability to disentangle differences in target ability from nuisance ability at the group level.
 
 ### Individual abilities
 
-Assessments are frequently used to make decisions about individual student abilities. We measured a method’s ability to do so by calculating the rank correlation between the vector of estimated abilities and the vector of true target abilities. We used rank correlation as opposed to the more typically used RMSE in agreement with Lord's -@lord1986maximum argument that RMSE can be inflated by poor performance at the extremes of ability for which the test was not designed to measure precisely. *(TODO: this isn't included in this current draft, and I'm not actually sure it's necessary. maybe this idea of rank order being better than RMSE is for another paper)*
+Assessments are frequently used to make decisions about individual student abilities. We measured a method’s ability to do so by calculating the rank correlation between the vector of estimated abilities and the vector of true target abilities. We used rank correlation as opposed to the more typically used RMSE in agreement with Lord's -@lord1986maximum argument that RMSE can be inflated by poor performance at the extremes of ability for which the test was not designed to measure precisely. *(TODO: this isn't included in this current draft, and I'm not actually sure it's necessary)*
 
 ### Anchor items. 
 
@@ -242,8 +244,8 @@ Measurement instruments need to be inspected for DIF so that we can be sure of t
 
 More importantly, we reviewed a variety of AI methods, proposed new AI methods, and tested their performance in a simulation study that we believe to be more realistic than the typical DIF simulation study. In particular, we simulated student ability as drawn from a two-dimensional distribution representing a student's target and nuisance ability, and then generated data using a noncompensatory item response model. Our simulation results showed that two of the most common AI methods, AOAA and AOAA-AS, perform quite poorly, especially as the number of items containing DIF grows. On the other hand, AOAA-OAT, EMC, MINGI, and MAXBC all performed reasonably. 
 
-In particular, AOAA-OAT was the clear winner, and we recommend its use whenever possible. One reason AOAA-OAT might not always be possible is that it can be computationally expensive. For example, finding three items containing DIF on a 12-item test requires fitting 46 item response models, and that number grows as either the test length or the number of items testing positive for DIF grows. To increase AOAA-OAT's use, we recommend its implementation (perhaps as the default) in popular IRT software such as the mirt R package.
+The fact that the AOAA-OAT exhibited superior performance is an important finding given that it is, to our knowledge, not used currently. We recommend its use whenever possible. One reason AOAA-OAT might not always be possible is that it can be computationally expensive. For example, finding three items containing DIF on a 12-item test requires fitting 46 item response models, and that number grows as either the test length or the number of items testing positive for DIF grows. To increase AOAA-OAT's use, we recommend its implementation (perhaps as the default) in popular IRT software such as the mirt R package.
 
 In addition to exploring and testing algorithmic AI methods, we introduced a method, the EM-MILG, that an analyst can use to visualize the amount of potential DIF in their data. This method can be used either to build their intuition or as a way in which they can select anchor items by hand. The EM-MILG's sibling method, the MILG, is, we believe, the best way to visualize the results of a DIF analysis after anchor items have been selected.    
 
-Future work should test these methods' performance under a greater variety of data-generating conditions. For example, changing the compensatory nature of the data generating model or adding additional nuisance ability dimensions. Furthermore, our work focused on the Rasch model, and it will be of great interest to consider how these methods extend and perform when the goal is to detect and correct for DIF when fitting a 2PL or 3PL item response model.
+Future work should test these methods' performance under a greater variety of data-generating conditions. For example, changing the compensatory nature of the data generating model or adding additional nuisance ability dimensions. Furthermore, our work focused on the Rasch model, and it is of great interest to consider how these methods extend and perform when the goal is to detect and correct for DIF when fitting a 2PL or 3PL item response model.
