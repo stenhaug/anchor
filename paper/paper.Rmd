@@ -19,7 +19,7 @@ subtitle: |
     Ben Stenhaug, Ben Domingue, and Mike Frank  
     Stanford University
 abstract: |
-  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use an LRT, a model identifying assumption must be made so that differences in group ability can be disentangled from potential DIF. We use the term "agnostic identification" (AI) to describe the process of finding such identifying assumptions without a priori knowledge of relative group ability or items that are DIF-free. We summarize existing AI methods and propose a variety of new methods. We conduct a simulation study — which we argue is more realistic than most DIF simulation studies in the literature — and find that one of the proposed new AI methods, All-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also offer a new method, the equal means, multiple imputation logit graph (EM-MILG), that clearly presents all information about possible DIF, including sampling variability in item parameters, to the analyst. \clearpage <!-- https://tinyurl.com/ybremelq -->
+  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use a LRT, we require an identifying assumption to disentangle differences in group ability from potential DIF. We use the term "agnostic identification" (AI) to describe the process of finding such identifying assumptions without a priori knowledge of relative group ability or items that are DIF-free. We first summarize existing AI methods and propose a variety of new methods. We then conduct a simulation study—which we argue is more realistic than most DIF simulation studies in the literature—and find that one of the proposed new AI methods, all-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also suggest a new approach, the equal means, multiple imputation logit graph (EM-MILG), which clearly presents all information about possible DIF, including sampling variability in item parameters, to the analyst. \clearpage <!-- https://tinyurl.com/ybremelq -->
   
 header-includes: 
 - \usepackage{amsmath}
@@ -65,6 +65,24 @@ theme_set(theme_bw())
 <!-- the literature basically talks separately about anchor selection and DIF methods. much more literature is on DIF methods and less is on anchor selection. I'm basically writing a paper about anchor selection and just calling it DIF methods because that seems like where the action is. I'm taking fixed at that the likelihood ratio test is the way to go (and perhaps that deserves more detail)? -->
 
 \clearpage
+
+# Ben D Notes
+
+- Switch 1 and 2 to theta and eta
+
+- Ben worries that in anchor items in particular having the demonstration data and the the thought experiment is too many threads
+
+- Be clear upfront that there are two ways to identify: anchor items and anchor points (and be sure to define both)
+
+- Explain AOAA-OAT inuition better. Perhaps using an EM-MILG or something? (in reference to the "least homogeneous in the sense of" part)
+
+- Compare performance across all methods at once, not one at a time
+
+- Show a paneled MILG for every method all at once. How cool. 
+
+- About the simulation difmap figure: "It seems to me like more could be set about this. you might want to note, for example, that it need not be the case in general that we have 6 items 'clustering' around the same location of the scale. you could have items 1-6 spread out in same way as items 7-12. much harder in that case. in fact, it seems like there is a geometry problem here we could attempt to solve. there are some item-easiness configureations (in sense of MILG) that we really are probably in bad shape with. if the item easiness params are uniformly distributed between -1 and 1 for example, we're stuck! maybe we could try to think about how to characterize such cases and write about what to do there?"
+
+- Fix that equation to take into account sample sizes 
 
 # Introduction {#intro}
 

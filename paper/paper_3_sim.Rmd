@@ -1,10 +1,12 @@
-To compare each of the methods in Table \ref{table:allmethods}, we conducted a simulated study. Our goal was to make the data generating process as realistic to the scenario described by @ackerman1992didactic in which some items on a math test also depend on a student’s verbal ability (the target ability is math ability, and the nuisance ability is verbal ability). As described in [the introduction](#intro), nearly all DIF simulation studies in the literature generate data by simply altering the item easiness parameters for the focal group. This setup can be re-written as a two-dimensional compensatory item response model where nuisance ability is the same for all students from the same group. One exception is @walker2017using who draw each student's target ability and nuisance ability from a two-dimensional normal distribution with varying covariance matrices.
+To compare each of the methods in Table \ref{table:allmethods}, we conducted a simulated study. Our goal was to use a relatively realistic data generating process motivated by the case study in @ackerman1992didactic wherein some items on a math test also depend on a student’s verbal ability (the target ability is math ability, and the nuisance ability is verbal ability). As described in [the introduction](#intro), nearly all DIF simulation studies in the literature generate data by simply altering the item easiness parameters for the focal group. This setup can be re-written as a two-dimensional compensatory item response model where nuisance ability is the same for all students from the same group. One exception is @walker2017using who draw each student's target ability and nuisance ability from a two-dimensional normal distribution with varying covariance matrices.
 
 In our simulation study, it was critical that student ability was drawn in a realistic way similar to @walker2017using. However, we don’t believe that a compensatory model is realistic in describing a math test where some items depend on verbal ability. For example, it’s hard to imagine that a student without the verbal ability to parse a word problem could fully compensate by having a higher math ability. Accordingly, we generated item responses using a simplified version of Sympson’s -@sympson1978model noncompensatory item response model in which
 \begin{align}
 \text{Pr}(y_{ij} = 1 | \theta_i, \eta_i, a_{2j}) = \sigma(\theta_i) \cdot \sigma(a_{2j}\eta_i)
 \end{align}
 where, as before, $\theta_i$ is target ability, $\eta_i$ is nuisance ability, and $a_{2j}$ is the item's loading on nuisance ability [@demars2016partially].
+
+Computing was done in R [@rcore], model fitting in the mirt R package [@chalmers2012mirt], and data wrangling/visualization in the suite of R packages known as the tidyverse [@tidy]. Code is available at *(TODO)*.
 
 ## Drawing parameters
 
@@ -70,7 +72,7 @@ out$bigsim[[5]]$pars[[1]] %>%
   )
 ```
 
-Figure \ref{fig:simemmlg} shows the EM-MILG — generated using a Rasch model where both group means are fixed to 0 and item parameters are estimated freely as described in the [the anchor items section](#anchoritems) — for one run using the same item parameters that generated Figure \ref{fig:difmap}. As expected, $\tilde{d_j}$ is about $\mu_\theta^\text{foc} - \mu_\theta^\text{ref} = -0.5 - 0 = -0.5$ for the first six items which are DIF free. For the last six items, $\tilde{d_j}$ increases as $\angle_j$ increases.
+Figure \ref{fig:simemmlg} shows the EM-MILG—generated using a Rasch model where both group means are fixed to 0 and item parameters are estimated freely as described in the [the anchor items section](#anchoritems)—for one run using the same item parameters that generated Figure \ref{fig:difmap}. As expected, $\tilde{d_j}$ is about $\mu_\theta^\text{foc} - \mu_\theta^\text{ref} = -0.5 - 0 = -0.5$ for the first six items which are DIF free. For the last six items, $\tilde{d_j}$ increases as $\angle_j$ increases.
 
 ```{r simemmlg, fig.cap = 'For a 12 item test, the relationship between target ability and probability of correct response with nuisance abilities fixed to group means.', out.width="70%", warning = FALSE, message = FALSE}
 out$bigsim[[5]]$intuitive_mod[[1]] %>%
@@ -87,13 +89,9 @@ For each run, we applied each AI method to find the method's identifying assumpt
 
 ### Achievement gap residual
 
-<!-- Ben didn't totally foll -->
-
 An effective AI method should lead to a final model that accurately estimates the difference between the reference group's mean target ability and the focal group's mean target ability. We refer to this quantity as the achievement gap. Recall that all models set $\mu_\theta^\text{ref} = 0$, so the achievement gap reduces to $\mu_\theta^\text{foc}$. The data-generating value of $\mu_\theta^\text{foc}$ is 0.5, but each run, of course, includes sampling variability. To get at the heart of how well a method is doing, we calculated the achievement gap residual as the method's estimated achievement gap, $\hat\mu_\theta^\text{foc}$, minus the achievement gap estimated when using only the DIF-free items as anchors. In summary, this outcome measures a method’s ability to disentangle differences in target ability from nuisance ability at the group level.
 
-### Individual abilities
-
-Assessments are frequently used to make decisions about individual student abilities. We measured a method’s ability to do so by calculating the rank correlation between the vector of estimated abilities and the vector of true target abilities. We used rank correlation as opposed to the more typically used RMSE in agreement with Lord's -@lord1986maximum argument that RMSE can be inflated by poor performance at the extremes of ability for which the test was not designed to measure precisely. *(TODO: this isn't included in this current draft, and I'm not actually sure it's necessary)*
+<!-- remember i removed rank order of abilities. in response, ben said "rather than abilities, i would argue in favor of proper estimation of measurement error as a function of theta?"  -->
 
 ### Anchor items. 
 
@@ -138,7 +136,9 @@ what <-
     unnest(achievegap)
 ```
 
-In total, we executed 100 runs for each of two, three, four, five, and six DIF items. Figure \ref{fig:achievegap} shows each method's performance on the achievement gap residual. AOAA-OAT is the clear winner. It performed nearly perfectly for two, three, or four DIF items. Even when six of the 12 items on the test contained DIF, AOAA-OAT underestimated $\mu_\theta^\text{foc}$ by only 0.05 standard deviations on its worst run. As expected, artificial DIF caused AOAA and AOAA-AS to go off the rails as the number of DIF items increases. 
+In total, we executed 100 runs for each of two, three, four, five, and six DIF items. Figure \ref{fig:achievegap} shows each method's performance on the achievement gap residual. AOAA-OAT was the clear winner. It performed nearly perfectly for two, three, or four DIF items. Even when six of the 12 items on the test contained DIF, AOAA-OAT underestimated $\mu_\theta^\text{foc}$ by only 0.05 standard deviations on its worst run. As expected, artificial DIF caused AOAA and AOAA-AS to begin to exhibit problematic performance as the number of DIF items increased. 
+
+(START BEN DIDNT LOOK AT)
 
 EMC performed better than AOAA and AOAA-AS, but worse than the other methods. MINBC and MAXGI performed similarly well with MINBC estimating the achievement gap with more precision but more bias than MAXGI, especially for tests with more than four DIF items. We hypothesize that MINBC's susceptibility to bias results from considering every item, including the items with DIF, whereas as soon as, for example, AOAA-OAT, removes an item from the anchor set, it is thereafter completely disregarded by the method. 
 
@@ -238,14 +238,16 @@ temp %>%
     scale_y_continuous(labels = scales::percent, limits = c(0, 1))
 ```
 
+(STOP BEN DIDNT LOOK AT)
+
 # Discussion and summary
 
-Measurement instruments need to be inspected for DIF so that we can be sure of the validity of the conclusions that we draw regardless of the group membership of each student. Inspired by @ackerman1992didactic, we have resurrected the DIF-as-student-property view and shown its connection to the typical way in which AI methods and DIF simulation studies have been conceptualized.
+Validity hinges on measurement instruments being relatively free from DIF. Such instruments need to be inspected for DIF so that we can be sure of the validity of the conclusions that we draw regardless of the group membership of each student. We reviewed a variety of AI methods, proposed new AI methods, and tested their performance in a simulation study that we believe to be more realistic than the typical DIF simulation study. In particular, we simulated student ability as drawn from a two-dimensional distribution representing a student's target and nuisance ability, and then generated data using a noncompensatory item response model. Our simulation results showed that two of the most common AI methods, AOAA and AOAA-AS, perform quite poorly, especially as the number of items containing DIF grows. This is concerning given both their widespread use and the fact that other method—AOAA-OAT, EMC, MINGI, and MAXBC—demonstrate superior performance.
 
-More importantly, we reviewed a variety of AI methods, proposed new AI methods, and tested their performance in a simulation study that we believe to be more realistic than the typical DIF simulation study. In particular, we simulated student ability as drawn from a two-dimensional distribution representing a student's target and nuisance ability, and then generated data using a noncompensatory item response model. Our simulation results showed that two of the most common AI methods, AOAA and AOAA-AS, perform quite poorly, especially as the number of items containing DIF grows. On the other hand, AOAA-OAT, EMC, MINGI, and MAXBC all performed reasonably. 
-
-The fact that the AOAA-OAT exhibited superior performance is an important finding given that it is, to our knowledge, not used currently. We recommend its use whenever possible. One reason AOAA-OAT might not always be possible is that it can be computationally expensive. For example, finding three items containing DIF on a 12-item test requires fitting 46 item response models, and that number grows as either the test length or the number of items testing positive for DIF grows. To increase AOAA-OAT's use, we recommend its implementation (perhaps as the default) in popular IRT software such as the mirt R package.
+AOAA-OAT exhibiting superior performance is an important finding given that it is, to our knowledge, not used currently. We advocate for its widespread use. One drawback of the AOAA-OAT method is that it is computationally expensive. For example, finding three items containing DIF on a 12-item test requires fitting 46 item response models, and that number grows as either the test length or the number of items testing positive for DIF grows. To increase AOAA-OAT's use, we recommend its implementation (perhaps as the default) in popular IRT software such as the mirt R package.
 
 In addition to exploring and testing algorithmic AI methods, we introduced a method, the EM-MILG, that an analyst can use to visualize the amount of potential DIF in their data. This method can be used either to build their intuition or as a way in which they can select anchor items by hand. The EM-MILG's sibling method, the MILG, is, we believe, the best way to visualize the results of a DIF analysis after anchor items have been selected.    
 
 Future work should test these methods' performance under a greater variety of data-generating conditions. For example, changing the compensatory nature of the data generating model or adding additional nuisance ability dimensions. Furthermore, our work focused on the Rasch model, and it is of great interest to consider how these methods extend and perform when the goal is to detect and correct for DIF when fitting a 2PL or 3PL item response model.
+
+<!-- This feels like it could go somewhere, but not sure where: Undesirably, most applications of AI methods and many simulation studies do not make explicit the assumptions of the AI method [@strobl2018anchor]. In this way, psychometricians might benefit from adopting economists' habit of explicitly stating assumptions and debating their plausibility. -->

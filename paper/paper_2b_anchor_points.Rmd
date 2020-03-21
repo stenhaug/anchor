@@ -4,7 +4,7 @@ The previously discussed AI methods select a set of anchor items, whether it is 
 
 @strobl2018anchor suggest using the Gini index [@gini1912variabilita] to select the anchor point. The Gini index is typically used to measure the inequality of wealth distribution in a country. For example, South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution [@chitiga2015income]. In general, the Gini index "takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little" [@strobl2018anchor, p. 7].
 
-$\mu^{\star\text{foc}}$ is selected by maximizing the Gini index (thus the abbreviation MAXGI). The intuition and assumption is that the anchor point should prioritize the majority of items having little to no DIF. Denoting a function that calculates the Gini index from a vector of non-negative elements as  $G(\mathbf{x})$, MGI sets <!-- its weird to arg max over a parameter we already have a definition for - maybe switch to t or something -->
+$\mu^{\star\text{foc}}$ is selected by maximizing the Gini index (thus the abbreviation MAXGI). The intuition and assumption is that the anchor point should prioritize the majority of items having little to no DIF and a small subset of items thus having large amounts of DIF. Denoting a function that calculates the Gini index from a vector of non-negative elements as  $G(\mathbf{x})$, MGI sets <!-- its weird to arg max over a parameter we already have a definition for - maybe switch to t or something -->
 \begin{align}
 \mu^{\star\text{foc}} = \argmax_{\mu^\text{foc}} G(|\mu^\text{foc} + \tilde{\mathbf{d}}|)
 \end{align}
@@ -19,7 +19,7 @@ emlg <-
 gini_results <- emlg_to_gini_l1(emlg, lo = -2, hi = 0)
 ```
 
-For our demonstration data simulation, Figure \ref{fig:ginipath} shows the gini coefficient at a variety of possible $\mu^\text{foc}$ values. The result of MAXGI is $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$, which is extraordinarily close to the data-generating value of -1. Moreover, there is a local maximum at $\mu^{\text{foc}} \approx 1.5$, which corresponds to the items with DIF. This illustrates that — as @strobl2018anchor point out — the search path is informative.
+For our demonstration data simulation, Figure \ref{fig:ginipath} shows the gini index at a variety of possible $\mu^\text{foc}$ values. The result of MAXGI is $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$, which is quite close to the data-generating value of -1. Moreover, there is a local maximum at $\mu^{\text{foc}} \approx 1.5$, which corresponds to the items with DIF. This illustrates that—as @strobl2018anchor point out—the search path is informative.
 
 ```{r ginipath, fig.cap = 'Maximizing the Gini index (MAXGI) to select the anchor point.', out.width="70%", warning = FALSE, message = FALSE}
 gini_results$grid %>% 
