@@ -1,5 +1,7 @@
 # To do
 
+a few to dos in the overleaf project: https://www.overleaf.com/project/5e7915169cf58c00011c0ed1
+
 right now, the paper describes using the tbishirani gap cluster method but that isn't exactly right - needs to be updated
 
 need to up the simulation to actually be 100 runs

@@ -24,6 +24,7 @@ draws_df_to_logit_plot <- function(draws_df){
     draws_df %>%
         select(-run) %>%
         gather(var, val, factor_key = TRUE) %>%
+        mutate(var = as_factor(paste0("Item ", parse_number(as.character(var))))) %>%
         ggplot(aes(x = val, y = var)) +
         ggridges::geom_density_ridges() +
         labs(x = "", y = "")

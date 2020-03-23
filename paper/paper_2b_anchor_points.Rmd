@@ -1,10 +1,10 @@
-The previously discussed AI methods select a set of anchor items, whether it is an algorithm or the analyst that makes that selection. The anchor items are used to estimate $\hat \mu^\text{foc}$. An alternative strategy is to directly set the anchor point [@strobl2018anchor]. Anchor point methods have the advantage of not requiring the assumption that any particular item is DIF-free, and, therefore, allowing all items to be tested for DIF. The question then becomes the following: How is the anchor point selected?
+The previously discussed AI methods identify the model by selecting a set of anchor items that are assumed to be DIF-free. We now discuss the second type of AI methods: The use of an anchor point [@strobl2018anchor]. An anchor point directly sets the difference in mean abilities to some value, $\mu^{\star\text{foc}}$. Anchor point methods have the advantage of not requiring the assumption that any particular item is DIF-free, and, therefore, allowing all items to be tested for DIF. The question then becomes the following: How is the anchor point selected?
 
 ### Maximizing the Gini index (MAXGI)
 
 @strobl2018anchor suggest using the Gini index [@gini1912variabilita] to select the anchor point. The Gini index is typically used to measure the inequality of wealth distribution in a country. For example, South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution [@chitiga2015income]. In general, the Gini index "takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little" [@strobl2018anchor, p. 7].
 
-$\mu^{\star\text{foc}}$ is selected by maximizing the Gini index (thus the abbreviation MAXGI). The intuition and assumption is that the anchor point should prioritize the majority of items having little to no DIF and a small subset of items thus having large amounts of DIF. Denoting a function that calculates the Gini index from a vector of non-negative elements as  $G(\mathbf{x})$, MGI sets <!-- its weird to arg max over a parameter we already have a definition for - maybe switch to t or something -->
+@strobl2018anchor select $\mu^{\star\text{foc}}$ by maximizing the Gini index (thus our abbreviation MAXGI). The intuition and assumption is that the anchor point should prioritize the majority of items having little to no DIF and a small subset of items thus having large amounts of DIF. Denoting a function that calculates the Gini index from a vector of non-negative elements as  $G(\mathbf{x})$, MGI sets <!-- its weird to arg max over a parameter we already have a definition for - maybe switch to t or something -->
 \begin{align}
 \mu^{\star\text{foc}} = \argmax_{\mu^\text{foc}} G(|\mu^\text{foc} + \tilde{\mathbf{d}}|)
 \end{align}
@@ -19,7 +19,7 @@ emlg <-
 gini_results <- emlg_to_gini_l1(emlg, lo = -2, hi = 0)
 ```
 
-For our demonstration data simulation, Figure \ref{fig:ginipath} shows the gini index at a variety of possible $\mu^\text{foc}$ values. The result of MAXGI is $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$, which is quite close to the data-generating value of -1. Moreover, there is a local maximum at $\mu^{\text{foc}} \approx 1.5$, which corresponds to the items with DIF. This illustrates that—as @strobl2018anchor point out—the search path is informative.
+For the demonstration data, Figure \ref{fig:ginipath} shows the gini index at a variety of possible $\mu^\text{foc}$ values. The result of MAXGI is $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$, which is quite close to the data-generating value of -1. Moreover, there is a local maximum at $\mu^{\text{foc}} \approx 1.5$, which corresponds to the items with DIF. This illustrates that—as @strobl2018anchor point out—the search path is informative.
 
 ```{r ginipath, fig.cap = 'Maximizing the Gini index (MAXGI) to select the anchor point.', out.width="70%", warning = FALSE, message = FALSE}
 gini_results$grid %>% 
@@ -37,24 +37,6 @@ gini_results$grid %>%
     geom_vline(
         xintercept = gini_results$grid %>% filter(gini == max(gini)) %>% pull(anchor_point),
         linetype = "dashed"
-    )
-```
-
-The model is then refit with the identifying assumption that $\mu^{\text{foc}} = \mu^{\star\text{foc}}$, and the results can be displayed in a MILG as is shown in Figure \ref{fig:ginimilg}.
-
-```{r ginimilg, fig.cap = "The MILG with $\\mu^{\\text{foc}}$ set to $\\mu^{\\star\\text{foc}} = -0.99$.", out.width="70%", warning = FALSE, message = FALSE}
-# notice hard coding in this caption
-data <- out_3_biased_items$sim[[1]]$data
-groups <- out_3_biased_items$sim[[1]]$groups
-
-mod <- anchptfocmean_to_final_mod(gini_results$gini_anchor_points, data, groups)
-
-mod %>% 
-    mod_to_draws_df(n = 10000) %>% 
-    draws_df_to_logit_plot() +
-    labs(
-        x = latex2exp::TeX("$d_j = b_j^{ref} - b_j^{foc}$"),
-        y = ""
     )
 ```
 
@@ -92,12 +74,13 @@ In this way, $\text{Total DIF}(\mu^\text{foc})$ is a function where the input is
 \mu^{\star\text{foc}} = \argmin_{\mu^\text{foc}} \text{Total DIF}(\mu^\text{foc}).
 \end{align}
 
-MINBC is inspired in part by @chalmers2016might, who use the difference between test characteristic curves weighted by $g(\theta)$ as a measure of differential test functioning (DTF). The selection of $g(\theta)$ results in the relative weighting of $\theta$ values. Chalmers, Counsell, and Flora do not discuss how to choose $g(\theta)$ and in their empirical examples use $g(\theta)$ uniform for $-6 \le \theta \le 6$, which may be suboptimal in some cases. It might seem intuitive to choose $g(\theta) \sim N(0, 1)$ because $\mu^\text{ref} = 0$, but this choice doesn't take into account the ability distribution of the focal group. If $\mu^\text{foc} = 3$, wouldn't we also want to prioritize high $\theta$ values? Accordingly, we set $g(\theta)$ to be the average of the reference and focal group ability probability density functions:
+MINBC is inspired in part by @chalmers2016might, who use the difference between test characteristic curves weighted by $g(\theta)$ as a measure of differential test functioning (DTF). The selection of $g(\theta)$ results in the relative weighting of $\theta$ values. Chalmers, Counsell, and Flora do not discuss how to choose $g(\theta)$ and in their empirical examples use $g(\theta)$ uniform for $-6 \le \theta \le 6$, which may be suboptimal in some cases. It might seem intuitive to choose $g(\theta) \sim N(0, 1)$ because $\mu^\text{ref} = 0$, but this choice doesn't take into account the ability distribution of the focal group. If $\mu^\text{foc} = 3$, wouldn't we also want to prioritize high $\theta$ values? Accordingly, we set $g(\theta)$ to be the weighted average of the reference and focal group ability probability density functions:
 \begin{align}
-g(\theta) = \dfrac{N(\mu^{\text{ref}}, \sigma^{\text{ref}^2}) + N(\mu^{\text{foc}}, \sigma^{\text{foc}^2})}{2}.
+g(\theta) = p^\text{ref} \cdot N(\mu^{\text{ref}}, \sigma^{\text{ref}^2}) + (1 - p^\text{ref}) \cdot N(\mu^{\text{foc}}, \sigma^{\text{foc}^2})
 \end{align}
+where $p^\text{ref}$ is the proportion of all students that are in the reference group. In this paper, we always have $p^\text{ref} = 0.5$.
 
-For our demonstration data simulation, Figure \ref{fig:mabc} shows Total DIF at a variety of possible values for $\mu^\text{foc}$. In this case, MINBC works perfectly and the anchor point is found to be $\mu^{\star\text{foc}} = `r round(min_bc$between_curves_anchor_points, 2)`$. As with MAXGI, the model should then be refit using the identifying assumption that $\mu^{\text{foc}} = \mu^{\star\text{foc}}$.
+For the demonstration data, Figure \ref{fig:mabc} shows Total DIF at a variety of possible values for $\mu^\text{foc}$. In this case, MINBC works perfectly and the anchor point is found to be $\mu^{\star\text{foc}} = `r round(min_bc$between_curves_anchor_points, 2)`$. As with MAXGI, the model should then be refit using the identifying assumption that $\mu^{\text{foc}} = \mu^{\star\text{foc}}$.
 
 ```{r mabc, fig.cap = 'Minimizing the area between curves (MINBC) to select the anchor point.', out.width="70%"}
 min_bc$grid %>% 
@@ -112,38 +95,3 @@ min_bc$grid %>%
         y = latex2exp::TeX("$Total \\, DIF(\\mu^{foc})$")
     )
 ```
-
-## Summary of AI methods
-
-We described a variety of AI methods and their corresponding acronymns. Some of these methods, such as AOAA and EMC, select anchor items, while others, such as MAXGI and MINBC, select an anchor point. MILG and EM-MILG are somewhat of outliers in that they are methods for visualizing DIF or potential DIF. Table \ref{table:allmethods} summarizes all of these methods.
-
-\begin{table}[H]
-\caption{Summary of agnostic identification (AI) methods}
-\centering
-\begin{tabular}{|p{4cm}|p{6cm}|p{4cm}|}
-\toprule
-
-Method & Description & Literature \\
-
-\midrule
-
-equal means, multiple imputation logit graph (EM-MILG) & Arbitrarily set both group means to 0, which pushes all group performance differences to the item paramaters, measure variability using multiple imputations, and graph the result. Can be used by an analyst to hand select anchor items & Inspired by pedagolical examples by \cite{pohl2017cluster} and \cite{talbot2013taking} \\\hline
-
-multiple imputation logit graph (MILG) & Similar to EM-MILG but used to visualize potential DIF once the model is already identified &  \\\hline
-
-all-others-as-anchors (AOAA) & Test if each item has DIF by using all of the other items as anchors (not iterative). & Originally proposed by \cite{lord1980} and formalized by \cite{thissen1993detection} \\\hline
-
-all-others-as-anchors-all-significant (AOAA-AS) & The first iteration is AOAA. All items that test positive for DIF are removed from the anchor set. Continue iterating until no new items test positive for DIF. & Proposed by \cite{drasgow1987study} \\\hline
-
-all-others-as-anchors-one-at-a-time (AOAA-OAT) & The first iteration is AOAA. Only the item that shows the most extreme DIF is removed from the anchor set. Continue iterating until no new items test positive for DIF. & To our knowledge, not proposed or used previously \\\hline
-
-equal means clustering (EMC) & Cluster items based on differences in performance across groups and choose one of the clusters to be the anchor cluster. & Proposed by \cite{bechger2015statistical} and refined by \cite{pohl2017cluster} \\\hline
-
-maximizing Gini index (MAXGI) & Arbitrarily set both group means to 0 and then choose an anchor point by maximizing the Gini index & Adapted from work by \cite{strobl2018anchor} \\\hline
-
-minimizing the area between curves (MINBC) & Of the infinite number of model that maximizes the likelihood of the data, choose the one with the minimum total area between the two groups' item characteristic curves & Built on and inspired by work by \cite{raju1988area} and more recently, \cite{chalmers2016might} \\
-
-\bottomrule
-\end{tabular}
-\label{table:allmethods}
-\end{table}
