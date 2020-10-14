@@ -10,7 +10,6 @@ R.utils::sourceDirectory(here("R"))
 verbal <- read_rds("~/Desktop/anchor-2pl/data/verbal.rds")
 
 groups <- verbal$gender
-
 data <-
     verbal %>%
     select(-gender)
