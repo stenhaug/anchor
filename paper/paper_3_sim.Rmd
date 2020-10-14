@@ -154,7 +154,7 @@ what %>%
   ggridges::geom_density_ridges() +
   facet_wrap(~ method) +
   coord_flip() +
-  geom_hline(yintercept = -0.5, linetype = "dashed") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "chartreuse4", size = 0.5) +
   labs(
       y = "Number of DIF items",
       x = latex2exp::TeX("Achievement gap residual")
@@ -240,7 +240,7 @@ temp %>%
 
 Validity hinges on measurement instruments being relatively free of DIF. Such instruments need to be inspected for DIF so that we can be sure of the validity of the conclusions that we draw regardless of the group membership of each student. We reviewed a variety of AI methods, proposed new AI methods, and tested their performance in a simulation study that we believe to be more realistic than the typical DIF simulation study. In particular, we simulated student ability as drawn from a two-dimensional distribution representing a student's target and nuisance ability, and then generated data using a noncompensatory item response model. Our simulation results showed that two of the most common AI methods, AOAA and AOAA-AS, perform quite poorly, especially as the number of items containing DIF grows. This is concerning given both their widespread use and the fact that other methods—AOAA-OAT, EMC, MINGI, and MAXBC—demonstrate superior performance.
 
-AOAA-OAT exhibiting superior performance is an important finding given that it is, to our knowledge, not used currently. We advocate for its widespread use. One drawback of the AOAA-OAT method is that it is computationally expensive. For example, finding three items containing DIF on a 12-item test requires fitting 46 item response models, and that number grows as either the test length or the number of items testing positive for DIF grows. To increase AOAA-OAT's use, we recommend its implementation (perhaps as the default) in popular IRT software such as the mirt R package.
+AOAA-OAT exhibiting superior performance is an important finding given that it is, to our knowledge, not used currently. We advocate for its widespread use. One drawback of the AOAA-OAT method is that it is computationally expensive. For example, finding three items containing DIF on a 12-item test requires fitting 46 item response models, and that number grows as either the test length or the number of items testing positive for DIF grows. However, we believe the computational costs are worthwhile given the performance of this method relative to more widely implemented alternatives. To increase AOAA-OAT's use, we recommend its implementation (perhaps as the default) in popular IRT software such as the mirt R package.
 
 In addition to exploring and testing algorithmic AI methods, we introduced a method, the EM-MILG, that an analyst can use to visualize the amount of potential DIF in their data. This method can be used either to build their intuition or as a way in which they can select anchor items by hand. The EM-MILG's sibling method, the MILG, is, we believe, the best way to visualize the results of a DIF analysis after anchor items have been selected.
 

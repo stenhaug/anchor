@@ -1,18 +1,18 @@
 \contentsline {section}{\numberline {1}Introduction}{3}{section.1}% 
 \contentsline {section}{\numberline {2}Agnostic identification methods}{5}{section.2}% 
-\contentsline {subsection}{\numberline {2.1}The equal means, multiple imputation logit graph (EM-MILG)}{6}{subsection.2.1}% 
+\contentsline {subsection}{\numberline {2.1}The equal means, multiple imputation logit graph (EM-MILG)}{7}{subsection.2.1}% 
 \contentsline {subsection}{\numberline {2.2}Anchor items}{9}{subsection.2.2}% 
 \contentsline {subsubsection}{\numberline {2.2.1}All-others-as-anchors (AOAA)}{9}{subsubsection.2.2.1}% 
 \contentsline {paragraph}{\numberline {2.2.1.1}All-others-as-anchors-all-significant (AOAA-AS)}{10}{paragraph.2.2.1.1}% 
-\contentsline {paragraph}{\numberline {2.2.1.2}All-other-as-anchors-one-at-a-time (AOAA-OAT)}{10}{paragraph.2.2.1.2}% 
-\contentsline {subsubsection}{\numberline {2.2.2}Equal means clustering (EMC)}{11}{subsubsection.2.2.2}% 
-\contentsline {subsection}{\numberline {2.3}Anchor points}{12}{subsection.2.3}% 
-\contentsline {subsubsection}{\numberline {2.3.1}Maximizing the Gini index (MAXGI)}{12}{subsubsection.2.3.1}% 
-\contentsline {subsubsection}{\numberline {2.3.2}Minimizing between curves (MINBC)}{13}{subsubsection.2.3.2}% 
-\contentsline {subsection}{\numberline {2.4}Summary of AI methods}{16}{subsection.2.4}% 
-\contentsline {section}{\numberline {3}Simulation study}{18}{section.3}% 
-\contentsline {subsection}{\numberline {3.1}Drawing parameters}{19}{subsection.3.1}% 
-\contentsline {subsection}{\numberline {3.2}Visualizing a run}{20}{subsection.3.2}% 
+\contentsline {paragraph}{\numberline {2.2.1.2}All-other-as-anchors-one-at-a-time (AOAA-OAT)}{11}{paragraph.2.2.1.2}% 
+\contentsline {subsubsection}{\numberline {2.2.2}Equal means clustering (EMC)}{12}{subsubsection.2.2.2}% 
+\contentsline {subsection}{\numberline {2.3}Anchor points}{13}{subsection.2.3}% 
+\contentsline {subsubsection}{\numberline {2.3.1}Maximizing the Gini index (MAXGI)}{13}{subsubsection.2.3.1}% 
+\contentsline {subsubsection}{\numberline {2.3.2}Minimizing between curves (MINBC)}{14}{subsubsection.2.3.2}% 
+\contentsline {subsection}{\numberline {2.4}Summary of AI methods}{17}{subsection.2.4}% 
+\contentsline {section}{\numberline {3}Simulation study}{19}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}Drawing parameters}{20}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.2}Visualizing a run}{21}{subsection.3.2}% 
 \contentsline {subsection}{\numberline {3.3}Outcomes}{22}{subsection.3.3}% 
 \contentsline {subsubsection}{\numberline {3.3.1}Achievement gap residual}{22}{subsubsection.3.3.1}% 
 \contentsline {subsubsection}{\numberline {3.3.2}Anchor items.}{23}{subsubsection.3.3.2}% 

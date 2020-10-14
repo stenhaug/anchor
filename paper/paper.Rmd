@@ -16,10 +16,10 @@ title: |
     Promise and peril: Agnostic identification methods  
     for detecting differential item functioning
 subtitle: |
-    Ben Stenhaug, Ben Domingue, and Mike Frank  
+    Ben Stenhaug, Mike Frank, and Benjamin W. Domingue  
     Stanford University
 abstract: |
-  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use a LRT (or any other method), we require an identifying assumption to disentangle differences in group ability from potential DIF. We use the term "agnostic identification" (AI) to describe the process of finding such identifying assumptions without a priori knowledge of relative group ability or items that are DIF-free. We first summarize existing AI methods and propose a variety of new methods. We then conduct a simulation study—which we argue is more realistic than most DIF simulation studies in the literature—and find that one of the proposed new AI methods, all-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also suggest a new approach, the equal means, multiple imputation logit graph (EM-MILG), which clearly presents all information about possible DIF, including sampling variability in item parameters, to the analyst. \clearpage <!-- https://tinyurl.com/ybremelq -->
+  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use a LRT (or any other method), we require an identifying assumption to disentangle differences in group ability from potential DIF. We use the term "agnostic identification" (AI) to describe the process of finding such identifying assumptions without a priori knowledge of relative group ability or items that are DIF-free. We first summarize existing AI methods and propose a variety of new methods. We then conduct a simulation study—which we argue is more realistic than most DIF simulation studies in the literature—and find that one of the proposed new AI methods, all-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also suggest a new approach, the equal means, multiple imputation logit graph (EM-MILG), which clearly presents all information about possible DIF, including sampling variability in item parameters, to the analyst. Given the central importance of AI techniques to subsequent examinations of item-level bias, we believe these constitute important advances for the field. \clearpage <!-- https://tinyurl.com/ybremelq -->
   
 header-includes: 
 - \usepackage{amsmath}
@@ -44,7 +44,7 @@ knitr::opts_chunk$set(
     fig.align='center',
     echo=FALSE,
     warning=FALSE,
-    message=FALSE
+    message=FALSE,
     fig.pos='H',
     fig.retina = 5
 )

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.8)  23 MAR 2020 12:55
+This is XeTeX, Version 3.14159265-2.6-0.999991 (TeX Live 2019) (preloaded format=xelatex 2019.5.8)  24 MAR 2020 09:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1229,81 +1229,55 @@ LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 8.99904pt on input line 138.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
 (Font)              scaled to size 4.99947pt on input line 138.
-[4] [5] [6]
+[4] [5] [6] [7]
 File: paper_files/figure-latex/emmilg-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/emmilg-1.pdf>
-[7]
 File: paper_files/figure-latex/milg-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/milg-1.pdf>
-[8] [9] [10] [11] [12]
+[8] [9] [10] [11] [12] [13]
 File: paper_files/figure-latex/ginipath-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/ginipath-1.pdf>
-[13] [14]
+[14] [15]
 File: paper_files/figure-latex/mabc-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/mabc-1.pdf>
-[15]
-Underfull \hbox (badness 10000) in paragraph at lines 298--299
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 300--301
 []|\TU/lmr/m/n/10.95 Demonstration
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 302--302
+Underfull \hbox (badness 10000) in paragraph at lines 304--304
 []|\TU/lmr/m/n/10.95 all-others-as-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 302--302
+Underfull \hbox (badness 10000) in paragraph at lines 304--304
 []|\TU/lmr/m/n/10.95 Originally pro-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 302--302
+Underfull \hbox (badness 10000) in paragraph at lines 304--304
 \TU/lmr/m/n/10.95 posed by []Lord[]
  []
 
 
-Underfull \hbox (badness 2762) in paragraph at lines 302--302
+Underfull \hbox (badness 2762) in paragraph at lines 304--304
 \TU/lmr/m/n/10.95 ized by []Thissen
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 304--304
+Underfull \hbox (badness 10000) in paragraph at lines 306--306
 []|\TU/lmr/m/n/10.95 all-others-as-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 304--304
+Underfull \hbox (badness 10000) in paragraph at lines 306--306
 \TU/lmr/m/n/10.95 anchors-all-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 304--304
+Underfull \hbox (badness 10000) in paragraph at lines 306--306
 \TU/lmr/m/n/10.95 significant
- []
-
-
-Underfull \hbox (badness 2941) in paragraph at lines 304--304
-[]|\TU/lmr/m/n/10.95 The first iteration is
- []
-
-
-Underfull \hbox (badness 1097) in paragraph at lines 304--304
-\TU/lmr/m/n/10.95 removed from the an-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 306--306
-[]|\TU/lmr/m/n/10.95 all-others-as-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 306--306
-\TU/lmr/m/n/10.95 anchors-one-at-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 306--306
-\TU/lmr/m/n/10.95 a-time (AOAA-
  []
 
 
@@ -1312,140 +1286,165 @@ Underfull \hbox (badness 2941) in paragraph at lines 306--306
  []
 
 
-Underfull \hbox (badness 4254) in paragraph at lines 306--306
+Underfull \hbox (badness 1097) in paragraph at lines 306--306
+\TU/lmr/m/n/10.95 removed from the an-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--308
+[]|\TU/lmr/m/n/10.95 all-others-as-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--308
+\TU/lmr/m/n/10.95 anchors-one-at-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--308
+\TU/lmr/m/n/10.95 a-time (AOAA-
+ []
+
+
+Underfull \hbox (badness 2941) in paragraph at lines 308--308
+[]|\TU/lmr/m/n/10.95 The first iteration is
+ []
+
+
+Underfull \hbox (badness 4254) in paragraph at lines 308--308
 \TU/lmr/m/n/10.95 from the anchor set.
  []
 
 
-Underfull \hbox (badness 1881) in paragraph at lines 306--306
+Underfull \hbox (badness 1881) in paragraph at lines 308--308
 \TU/lmr/m/n/10.95 not proposed or
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 306--306
+Underfull \hbox (badness 10000) in paragraph at lines 308--308
 []|\TU/lmr/m/n/10.95 Correctly chose
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
+Underfull \hbox (badness 10000) in paragraph at lines 310--310
 \TU/lmr/m/n/10.95 differences in perfor-
  []
 
 
-Underfull \hbox (badness 7888) in paragraph at lines 308--308
+Underfull \hbox (badness 7888) in paragraph at lines 310--310
 \TU/lmr/m/n/10.95 mance across groups
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
+Underfull \hbox (badness 10000) in paragraph at lines 310--310
 \TU/lmr/m/n/10.95 and choose one of
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
+Underfull \hbox (badness 10000) in paragraph at lines 310--310
 []|\TU/lmr/m/n/10.95 Proposed by
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
+Underfull \hbox (badness 10000) in paragraph at lines 310--310
 []\TU/lmr/m/n/10.95 Bechger and
  []
 
 
-Underfull \hbox (badness 3989) in paragraph at lines 308--308
+Underfull \hbox (badness 3989) in paragraph at lines 310--310
 \TU/lmr/m/n/10.95 refined by []Pohl
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
+Underfull \hbox (badness 10000) in paragraph at lines 310--310
 \TU/lmr/m/n/10.95 by finding two
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
+Underfull \hbox (badness 10000) in paragraph at lines 310--310
 \TU/lmr/m/n/10.95 one correspond-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 308--308
+Underfull \hbox (badness 10000) in paragraph at lines 310--310
 \TU/lmr/m/n/10.95 items and the
  []
 
 
-Underfull \hbox (badness 3354) in paragraph at lines 310--310
+Underfull \hbox (badness 3354) in paragraph at lines 312--312
 []|\TU/lmr/m/n/10.95 maximizing Gini
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 310--310
+Underfull \hbox (badness 10000) in paragraph at lines 312--312
 []|\TU/lmr/m/n/10.95 Arbitrarily set both
  []
 
 
-Underfull \hbox (badness 6876) in paragraph at lines 310--310
+Underfull \hbox (badness 6876) in paragraph at lines 312--312
 \TU/lmr/m/n/10.95 point by maximizing
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 310--310
+Underfull \hbox (badness 10000) in paragraph at lines 312--312
 []|\TU/lmr/m/n/10.95 Adapted from
  []
 
 
-Underfull \hbox (badness 6284) in paragraph at lines 310--310
+Underfull \hbox (badness 6284) in paragraph at lines 312--312
 \TU/lmr/m/n/10.95 work by []Strobl
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 310--310
+Underfull \hbox (badness 10000) in paragraph at lines 312--312
 \TU/lmr/m/n/10.95 which is quite
  []
 
 
-Underfull \hbox (badness 6032) in paragraph at lines 310--310
+Underfull \hbox (badness 6032) in paragraph at lines 312--312
 \TU/lmr/m/n/10.95 generating value
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 312--312
+Underfull \hbox (badness 10000) in paragraph at lines 314--314
 []|\TU/lmr/m/n/10.95 minimizing the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 312--312
+Underfull \hbox (badness 10000) in paragraph at lines 314--314
 \TU/lmr/m/n/10.95 area between
  []
 
 
-Underfull \hbox (badness 4518) in paragraph at lines 312--312
+Underfull \hbox (badness 4518) in paragraph at lines 314--314
 []|\TU/lmr/m/n/10.95 Of the infinite num-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 312--312
+Underfull \hbox (badness 10000) in paragraph at lines 314--314
 \TU/lmr/m/n/10.95 more recently,
  []
 
 
-Underfull \hbox (badness 3815) in paragraph at lines 312--312
+Underfull \hbox (badness 3815) in paragraph at lines 314--314
 []\TU/lmr/m/n/10.95 Chalmers et al.[]
  []
 
 
-Underfull \hbox (badness 1910) in paragraph at lines 312--313
+Underfull \hbox (badness 1910) in paragraph at lines 314--315
 \TU/lmr/m/n/10.95 which is exactly
  []
 
-[16] [17]
+[17]
 File: paper_files/figure-latex/allmethodsfig-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/allmethodsfig-1.pdf>
-[18] [19]
+[18] [19] [20]
 File: paper_files/figure-latex/difmap-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/difmap-1.pdf>
-[20]
+[21]
 File: paper_files/figure-latex/simemmlg-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/simemmlg-1.pdf>
-[21] [22]
+[22]
 File: paper_files/figure-latex/achievegap-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/achievegap-1.pdf>
 [23]
@@ -1456,21 +1455,21 @@ File: paper_files/figure-latex/anchorhit-1.pdf Graphic file (type pdf)
 <use paper_files/figure-latex/anchorhit-1.pdf>
 [25] [26] [27] (./paper.bbl) [28
 
-] [29] [30] [31]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 578.
-[32]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 578.
+] [29] [30] [31] [32]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 579.
+[33]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 579.
 (./paper.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 578.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 578.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 579.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 579.
  ) 
 Here is how much of TeX's memory you used:
- 29916 strings out of 492916
- 539123 string characters out of 6133346
- 780066 words of memory out of 5000000
- 33615 multiletter control sequences out of 15000+600000
- 540788 words of font info for 93 fonts, out of 8000000 for 9000
+ 29911 strings out of 492916
+ 539035 string characters out of 6133346
+ 780074 words of memory out of 5000000
+ 33613 multiletter control sequences out of 15000+600000
+ 540780 words of font info for 92 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 59i,16n,115p,2029b,508s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 59i,16n,115p,2042b,487s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on paper.pdf (32 pages).
+Output written on paper.pdf (33 pages).

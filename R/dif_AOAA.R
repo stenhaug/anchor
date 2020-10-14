@@ -70,9 +70,11 @@ dif_AOAA_AS <- function(data, groups, dif_aoaa){
     status <-
         dif_aoaa %>%
         mutate(
-            status = ifelse(p < 0.05, "flex", "unknown")
+            status = ifelse(p < 0.05, "flex", "unknown"),
+            order = ifelse(p < 0.05, 1, NA)
         )
 
+    track_order <- 2
     while(TRUE){
         # for each unknown item, we use all other unknown items to test it
         new_status <- get_next_status(status, data, groups)
@@ -81,14 +83,14 @@ dif_AOAA_AS <- function(data, groups, dif_aoaa){
         status <-
             status %>%
             select(-p) %>%
-            left_join(new_status, by = "item") %>%
-            select(item, p, status)
+            left_join(new_status %>% select(-order), by = "item")
 
         # if no new significant tests then we're done
         if(all(status$p > 0.05, na.rm = TRUE)){break}
 
         # remove ALL SIGNIFICANT items from the anchor set
         status$status[which(status$p < 0.05)] <- "flex"
+        status$order[which(status$p < 0.05)] <- track_order
     }
 
     # unknowns become anchors

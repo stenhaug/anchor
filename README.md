@@ -1,5 +1,7 @@
 # To do
 
+need to add funding sources acknowledgements etc
+
 a few to dos in the overleaf project: https://www.overleaf.com/project/5e7915169cf58c00011c0ed1
 
 right now, the paper describes using the tbishirani gap cluster method but that isn't exactly right - needs to be updated
@@ -10,7 +12,16 @@ need to up the simulation to actually be 100 runs
 
 i call helper functions zelper functions so they go at the bottom when sorting by names : )
 
-# Ideas for extensions
+
+# Future work (new)
+
+Seems like a good next step would be to read the sort of multidimensional DIF literature: See "The impact of multidimensionality on the detection of differential bundle functioning using simultaneous item bias test" and "Robustness of item parameter estimation programs to assumptions of unidimensionality and normality" as well as that walker paper.
+
+I love this idea in the discussion of a metric for possible DIF
+
+ben.domingue: "we should talk more about geometries at some point. this is reminiscent of the 'architecture' thing i've talked about in the past that has always been of interest to me. but i like the grafs as a starting point! the conversation i want to have is more of a big picture one.""
+
+# Future work (old)
 
 Remember my bounds idea I like that
 
