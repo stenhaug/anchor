@@ -1,0 +1,97 @@
+The previously discussed AI methods identify the model by selecting a set of anchor items that are assumed to be DIF-free. We now discuss the second type of AI methods: The use of an anchor point [@strobl2018anchor]. An anchor point directly sets the difference in mean abilities to some value, $\mu^{\star\text{foc}}$. Anchor point methods have the advantage of not requiring the assumption that any particular item is DIF-free, and, therefore, allowing all items to be tested for DIF. The question then becomes the following: How is the anchor point selected?
+
+### Maximizing the Gini index (MAXGI)
+
+@strobl2018anchor suggest using the Gini index [@gini1912variabilita] to select the anchor point. The Gini index is typically used to measure the inequality of wealth distribution in a country. For example, South Africa typically has the highest Gini index of all measured countries, meaning that it is the country with the most unequal wealth distribution [@chitiga2015income]. In general, the Gini index "takes high values if, for example, a small minority of persons has a lot of wealth while the vast majority has very little" [@strobl2018anchor, p. 7].
+
+@strobl2018anchor select $\mu^{\star\text{foc}}$ by maximizing the Gini index (thus our abbreviation MAXGI). The intuition and assumption is that the anchor point should prioritize the majority of items having little to no DIF and a small subset of items thus having large amounts of DIF. Denoting a function that calculates the Gini index from a vector of non-negative elements as  $G(\mathbf{x})$, MGI sets <!-- its weird to arg max over a parameter we already have a definition for - maybe switch to t or something -->
+\begin{align}
+\mu^{\star\text{foc}} = \argmax_{\mu^\text{foc}} G(|\mu^\text{foc} + \tilde{\mathbf{d}}|)
+\end{align}
+where $\mu^\text{foc} \in (-\infty, \infty)$ and $\mu^\text{foc}$ is added to each element of $\tilde{\mathbf{d}}$.
+
+```{r}
+emlg <- 
+    coef_1f(out_3_biased_items$intuitive_mod[[1]])$items %>% 
+    select(item, ref_easy = a_ref_easy, foc_easy = b_foc_easy) %>% 
+    mutate(difference_in_easy = ref_easy - foc_easy)
+
+gini_results <- emlg_to_gini_l1(emlg, lo = -2, hi = 0)
+```
+
+For the demonstration data, Figure \ref{fig:ginipath} shows the gini index at a variety of possible $\mu^\text{foc}$ values. The result of MAXGI is $\mu^{\star\text{foc}} = `r round(gini_results$gini_anchor_points, 2)`$, which is quite close to the data-generating value of -1. Moreover, there is a local maximum at $\mu^{\text{foc}} \approx 1.5$, which corresponds to the items with DIF. This illustrates that—as @strobl2018anchor point out—the search path is informative.
+
+```{r ginipath, fig.cap = 'Maximizing the Gini index (MAXGI) to select the anchor point.', out.width="70%", warning = FALSE, message = FALSE}
+gini_results$grid %>% 
+    ggplot(aes(x = anchor_point, y = gini)) +
+    geom_point() +
+    labs(
+        x = latex2exp::TeX("$\\mu^{foc}$"),
+        y = latex2exp::TeX("$G(|\\mu^{foc} + \\tilde{\\mathbf{d}}|)$")
+    ) +
+    # geom_point(
+    #     data = gini_results$grid %>% filter(gini == max(gini)),
+    #     color = "green",
+    #     size = 3
+    # ) +
+    geom_vline(
+        xintercept = gini_results$grid %>% filter(gini == max(gini)) %>% pull(anchor_point),
+        linetype = "dashed"
+    )
+```
+
+### Minimizing between curves (MINBC)
+
+```{r}
+# not ideal that i input -anchor_point here but can fix later
+# min_bc <-
+#     out_3_biased_items$intuitive_mod[[1]] %>%
+#     min_between_curves(lo = 0, hi = 2, by = 0.001)
+# min_bc %>% write_rds(here("paper", "paper_2_min_bc.rds"))
+
+min_bc <- read_rds(here("paper", "paper_2_min_bc.rds"))
+```
+
+Raju's area method [@raju1988area] measures the amount of DIF by calculating the area between the item characteristic curves, the function that maps the student's ability to their probability of correct response, of the two groups:
+\begin{align}
+\text{Area Between Curves} = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, b_j^{\text{foc}})|
+\end{align}
+Raju's area method has been cited as one of the most commonly used IRT-based DIF detection methods [@magis2011generalized]. However, Raju's area method is not an AI method because the item characteristic curves still need to be linked by anchor items or an anchor point. An additional weakness is that the area is unweighted, so all values of $\theta$ matter equally, despite some being much more realistic than others. 
+
+To adapt Raju's area method into an AI method, we propose a new method, which we call "minimizing the area between curves" (MINBC). To understand MINBC, imagine a scenario in which the data-generating process is $\mu^{\text{foc}} = \mu^{\text{ref}}$ and $d_j = 0 \forall j$, so that the groups have equal ability and there is no DIF. The fundamental identification problem is that there are an infinite number of models with the same likelihood from which to choose. For example, we could correctly assume that the focal group has the same ability as the reference group and fix $\mu^{\star\text{foc}} = 0$. The model would then estimate $\hat d_j \approx 0 \forall j$, and we would correctly conclude the groups have the same ability and there is no DIF. Alternatively, we could assume that the focal group has $\mu^{\star\text{foc}} = 3$. The model would then compensate by finding $\hat d_j \approx -3 \forall j$, and we would incorrectly conclude that the focal group is high ability, but every item contains DIF against them. Both of these models have the same likelihood, so how should one choose which model to believe? MINBC chooses the model with the least amount of total DIF, as measured by the total weighted area between the item characteristic curves. As a result, the likelihood tie is broken by preferring to explain differences in performance across groups by ability differences (as opposed to DIF).
+
+<!-- again might want to choose a different variable for provisional values -->
+Denote a function that takes $\mu^\text{foc}$ as input and estimates $\hat b_j^\text{foc}$ by fitting a unidimensional Rasch model as $m_j(\mu^\text{foc})$. The amount of DIF on each item is calculated as
+\begin{align}
+\text{DIF}_j(\mu^\text{foc}) = \int |\text{Pr}(y_j = 1| \theta, b_j^{\text{ref}}) - \text{Pr}(y_j = 1| \theta, m_j(\mu^\text{foc}))| g(\theta)d\theta
+\end{align}
+where $g(\theta)$ is a weighting function such that $\int g(\theta)d\theta = 1$. The total DIF on the test, then, is
+\begin{align}
+\text{Total DIF}(\mu^\text{foc}) = \sum_{j} \text{DIF}_j(\mu^\text{foc})
+\end{align}
+In this way, $\text{Total DIF}(\mu^\text{foc})$ is a function where the input is $\mu^\text{foc}$ and the output is the total amount of DIF on the test. MINBC sets
+\begin{align}
+\mu^{\star\text{foc}} = \argmin_{\mu^\text{foc}} \text{Total DIF}(\mu^\text{foc}).
+\end{align}
+
+MINBC is inspired in part by @chalmers2016might, who use the difference between test characteristic curves weighted by $g(\theta)$ as a measure of differential test functioning (DTF). The selection of $g(\theta)$ results in the relative weighting of $\theta$ values. Chalmers, Counsell, and Flora do not discuss how to choose $g(\theta)$ and in their empirical examples use $g(\theta)$ uniform for $-6 \le \theta \le 6$, which may be suboptimal in some cases. It might seem intuitive to choose $g(\theta) \sim N(0, 1)$ because $\mu^\text{ref} = 0$, but this choice doesn't take into account the ability distribution of the focal group. If $\mu^\text{foc} = 3$, wouldn't we also want to prioritize high $\theta$ values? Accordingly, we set $g(\theta)$ to be the weighted average of the reference and focal group ability probability density functions:
+\begin{align}
+g(\theta) = p^\text{ref} \cdot N(\mu^{\text{ref}}, \sigma^{\text{ref}^2}) + (1 - p^\text{ref}) \cdot N(\mu^{\text{foc}}, \sigma^{\text{foc}^2})
+\end{align}
+where $p^\text{ref}$ is the proportion of all students that are in the reference group. In this paper, we always have $p^\text{ref} = 0.5$.
+
+For the demonstration data, Figure \ref{fig:mabc} shows Total DIF at a variety of possible values for $\mu^\text{foc}$. In this case, MINBC works perfectly and the anchor point is found to be $\mu^{\star\text{foc}} = `r round(min_bc$between_curves_anchor_points, 2)`$. As with MAXGI, the model should then be refit using the identifying assumption that $\mu^{\text{foc}} = \mu^{\star\text{foc}}$.
+
+```{r mabc, fig.cap = 'Minimizing the area between curves (MINBC) to select the anchor point.', out.width="70%"}
+min_bc$grid %>% 
+    ggplot(aes(x = anchor_point, y = total_between_curves)) +
+    geom_point() +
+    geom_vline(
+        xintercept = min_bc$between_curves_anchor_points,
+        linetype = "dashed"
+    ) +
+    labs(
+        x = latex2exp::TeX("$\\mu^{foc}$"),
+        y = latex2exp::TeX("$Total \\, DIF(\\mu^{foc})$")
+    )
+```

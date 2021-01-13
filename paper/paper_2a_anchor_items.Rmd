@@ -1,0 +1,104 @@
+Psychometricians have long been in search of the perfect method for detecting differential functioning of *individual* items. The IRT-based likelihood ratio test (LRT) is effective at detecting DIF [@meade2012solving]. Given both the efficacy of the LRT approach and our preference for methods that exist within the IRT-framework, we do not discuss alternative methods like the Mantel-Haenszel procedure [@holland1986differential], which has been shown to perform no better—and in some cases worse—than IRT-based methods [@swaminathan1990detecting]. Within the IRT-framework, we—as is common—estimate models using marginal maximum likelihood estimation [@bock1981marginal] and identify the scale by setting $\mu^\text{ref} = 0$. Both of these choices are—for our purposes—completely inconsequential.
+
+The use of LRT requires an identifying assumption. The assumption is needed so as to link groups. There are two possibilities. One possibility is to utilize information about the distribution of the focal group; in particular, knowledge that the focal group and reference group have the same mean ability would be valuable. Alternatively, we can use information from a set of unbiased items to derive such information. In the equating literature, the former is a "non-common item random groups" design and the latter is a "common-item nonequivalent groups" design [@cook1987problems; @topczewski2013comparison].
+
+However, in the typical setting, no a prior assumptions—about either relative group ability or which items might have DIF—can be made. Thus, we're interested in *agnostic identification* methods (hereafter referred to as "AI methods"). The fundamental challenge is to disentangle estimation of $\hat\mu^\text{foc} - \mu^\text{ref} = \hat\mu^\text{foc} - 0 = \hat\mu^\text{foc}$, the difference in mean abilities, from the estimation of $\hat d = \hat{b_j}^{\text{foc}} - \hat{b_j}^{\text{ref}}$, the difference in item easiness. There are two types of AI methods: The most common, the use of anchor items, selects a group of items that are assumed to be DIF-free. These anchor items identify the model, thereby allowing for the estimation of $\hat\mu^\text{foc}$, and the remaining items can be tested for DIF using an LRT. The other type, the use of an anchor point [@strobl2018anchor], directly sets the difference in mean abilities to some value, $\mu^{\star\text{foc}}$. This anchor point identifies the model, and all items can be tested for DIF using an LRT.
+
+In this section, we summarize existing AI methods and propose a variety of extensions. For simplicity, we focus on the Rasch model to isolate the fundamental issues in "the AI problem". Further, so as to offer a coherent framework, we sometimes edit names of existing methods. ^[We recognize that others have done the same [e.g., @kopf2015framework], and that we risk contributing to a proliferation of names.] We use a (simulated) demonstration dataset to illustrate key features of the different methods. ^[This data is used solely for illustrative purposes; we conduct an extensive simulation study later in the paper.] The data consists of 10,000 reference group students and 10,000 focal group students taking an eight-item test. Our simulation is similar to our multidimensional alternative to the @kopf2015framework approach discussed above. Target ability is simulated as ${\theta_i}^{\text{ref}} \sim N(\mu^\text{ref} = 0,1)$ for students in the reference group and ${\theta_i}^{\text{foc}} \sim N(\mu^\text{foc} = -1,1)$ for students in the focal group. Nuisance ability is set to ${\eta_i}^{\text{ref}} = 0$ and ${\eta_i}^{\text{foc}} = -1$. The slope on target ability is set to $a_{1j} = 1$ for all items. The slope on nuisance ability is set to $a_{2j} = 0.5$ for the last three items (the items with DIF) and $a_{2j} = 0$ otherwise. We can also, of course, describe these conditions from the DIF-as-item-property view where there is no nuisance ability. From that perspective, ${b_j}^{\text{foc}} = {b_j}^{\text{ref}}$ for the first five items and ${b_j}^{\text{foc}} = {b_j}^{\text{ref}} - 0.5$ for the last three items. To be sure, this data is used only for demonstrative purposes. We compare the performance of the AI methods in a more realistic scenario in the [the simulation study](#simstudy).
+
+```{r}
+# source(here("paper/paper_2_sim.R"))
+# out_3_biased_items %>% write_rds(here("paper", "paper_2_out_3_biased_items.rds"))
+out_3_biased_items <- read_rds(here("paper", "paper_2_out_3_biased_items.rds"))
+```
+
+## The equal means, multiple imputation logit graph (EM-MILG) {#emmilg}
+
+Before we begin to discuss different AI methods, we begin by offering a suggestion for examining the identification problem in a given dataset. This approach is motivated by our observation that AI methods typically work like a black box. The analyst puts their item response data in and the black box outputs an identification assumption to be used when fitting subsequent models. From our perspective, tools that help an analyst to better understand their data are of great value.
+
+To that end, we propose the "equal means, multiple imputation logit graph" (EM-MILG), which presents information about potential DIF to the analyst. EM-MILG begins by fitting a multigroup unidimensional Rasch model to the data that is identified by arbitrarily setting $\mu^\text{foc} = 0$ [@chalmers2012mirt]. Given that we also assume $\mu^\text{ref} = 0$, this is equivalent to the assumption that the groups have equal mean ability. As a result, all differences in performance—either from group ability differences or DIF—manifest in the item easiness difference parameter $\tilde{d_j}$. The tilde (e.g., $\tilde{d_j}$) is used to denote parameters estimated with $\mu^\text{foc}$ set to $0$—as compared to the hat (e.g., $\hat{d_j}$), which is used for parameter estimates from a properly identified model.
+
+To measure the variation in each $\tilde{{d_j}}$, the item parameter covariance matrix is estimated using Oakes' identity [@chalmers2018numerical]. Then, multiple imputations (MI) [@yang2012characterizing] are drawn to estimate the distribution of $\tilde{d_j}$ for each item. These are the distributions displayed in a EM-MILG. The method is inspired in part by @pohl2017cluster who fit a model with both the reference and focal group means set to 0 in a pedagogical example, and @talbot2013taking who fixed both pre-test and post-test means to 0 in order to estimate item-specific learning gains.
+
+Figure \ref{fig:emmilg} shows the EM-MILG for the demonstration data. We emphasize that the EM-MILG contains all possible information about the difference in group performance. The analyst might assume that—because there are five items where the reference group outperforms the focal group by approximately 1 logit and only three items where the difference is 1.5 logits—items 1-5 are unbiased. This might seem to be a strong assumption, bit it is one we emphasize: All AI methods assume—in one way or another—that, if there is DIF, its a minority of items that are responsible (in this case, items 6-8). These unbiased items are known as anchor items; setting anchor items is the most common identification assumption. After anchor items have been selected, the model is refit where the identifying assumption that $\mu^\text{foc} = 0$ is dropped and replaced with the identifying assumption that the anchor items are DIF-free (i.e., $d_j = 0$ for anchor items). Of course, the demonstration data is designed such that there are obvious groups; this need not be the case in practice.
+
+```{r emmilg, fig.cap = 'A equal means multiple imputations logit graph (EM-MILG) shows the distribution of how many logits the reference group outperforms the focal group by on each item.', out.width="70%", warning = FALSE, message = FALSE}
+out_3_biased_items$intuitive_mod[[1]] %>%
+    mod_intuitive_to_draws_df() %>%
+    draws_df_to_logit_plot() +
+    labs(
+        x = latex2exp::TeX("$\\tilde{d_j} = \\tilde{b_j}^{ref} - \\tilde{b_j}^{foc}$")
+    )
+
+# labeling good enough for now maybe check here to fiddle more:
+# https://stackoverflow.com/questions/8190087/italic-greek-letters-latex-style-math-in-plot-titles
+```
+
+The same process of using multiple imputations to estimate the distribution of $\tilde{d_j}$ can be used with a properly identified model. Because the equal means assumption is not made, we refer to the resulting visualization as a multiple imputations logit graph (MILG). As expected, in our demonstration data, selecting the first five items as anchors correctly results in $\hat d_j \approx 0.5$ for the items with DIF as is shown in the MILG in Figure \ref{fig:milg}.
+
+```{r milg, fig.cap = 'A multiple imputations logit graph (MILG) shows the distribution of DIF against the focal group. Anchor items are fixed by setting $d_j = 0$.', out.width="70%", warning = FALSE, message = FALSE}
+# CAREFUL - this code assumes that the analyst would choose the same anchor items as AOAA-OAT found 
+
+out_3_biased_items$AOAA_OAT_final_dif[[1]] %>% 
+    mutate(difference_in_easy = difference_in_easy - difference_in_easy[anchor][1]) %>% 
+    mutate(item = as_factor(paste0("Item ", parse_number(as.character(item))))) %>%
+    ggplot(aes(x = difference_in_easy, y = item)) +
+    ggridges::geom_density_ridges(
+        data = 
+            out_3_biased_items$AOAA_OAT_mod[[1]] %>% 
+            mod_to_draws_df(n = 1000) %>% 
+            select(-run) %>%
+            gather(var, val) %>% 
+            mutate(var = as_factor(paste0("Item ", parse_number(as.character(var))))) %>%
+            filter(val != 0),
+        aes(x = val, y = var)
+    ) +
+    geom_point(
+        data =
+            out_3_biased_items$AOAA_OAT_final_dif[[1]] %>% 
+            mutate(difference_in_easy = difference_in_easy - difference_in_easy[anchor][1]) %>%
+            mutate(item = as_factor(paste0("Item ", parse_number(as.character(item))))) %>% 
+            filter(a_ref_easy == b_foc_easy)
+    ) +
+    labs(
+        x = latex2exp::TeX("$\\hat{d_j} = \\hat{b_j}^{ref} - \\hat{b_j}^{foc}$"),
+        y = ""
+    )
+```
+
+In general, one of our main concerns with traditional AI methods is that they can lull the analyst into a false sense of security: The analyst chooses a method, implements it, and then proceeds as if the method certainly resulted in a model that reflects some objective reality. Our aim with EM-MILG is to combat this concern by presenting all information clearly to the analyst. In the previous example, the analyst may be wary of their results, having seen how arbitrary it was to conclude that the first five and not the last three items are unbiased. Even when other AI methods are used, the analyst can use the EM-MILG as the first step in order to give them a sense of their item response data. And, of course, the MILG can be used to visualize DIF regardless of how the model is identified. We now move on to more traditional AI methods, which don't require judgment from the analyst, but make the majority-of-items-don't-have-DIF assumption more subtly.
+
+## Anchor items {#anchoritems}
+
+### All-others-as-anchors (AOAA)
+
+@meade2012solving compared the most commonly used AI methods and unequivocally recommended the all-others-as-anchors (AOAA) method. AOAA tests each item for DIF one at a time using all of the other items as anchors. For example, when testing the first item for DIF, all of the other items are used as anchors. This is done using a LRT that compares the baseline model, where all item parameters are fixed across groups, to the flexible model, where the parameters of the tested item are freed across groups [@thissen1993detection]. Then, when testing the second item for DIF, once again all of the other items (including the first item) are used as anchors, and so on. The items for which the flexible model outperforms the baseline model (typically based on a $\chi^2$ test) are identified as having DIF, and the rest of the items become anchor items. AOAA is implemented in the mirt R package, and is called by passing scheme = "drop" to the DIF function (drop refers to dropping a single constraint when moving from the baseline to the flexible model).
+
+Implicit in the use of AOAA is the assumption that all items not being tested do not exhibit DIF, which is, of course, counter to the underlying rationale for the undertaking. On a practical level, it is thought that AOAA will perform well if a small minority of items have DIF or the DIF is balanced such that some items are biased against the focal group, while others are biased against the reference group. Researchers have noticed the circular logic of AOAA, but have mostly described it indirectly by pointing out inflated Type I errors in simulation studies [@stark2006detecting]. A simple thought experiment illustrates how AOAA fails: Imagine a three item test with a sufficiently large number of students where the first item has DIF, and the other two do not. Using AOAA, all items test positive for DIF. The last two items incorrectly test positive because including the first item in the anchor set causes the group ability difference to be misestimated. This phenomenon of items with real DIF inducing the appearance of DIF in other items was only indirectly discussed in the literature until @andrich2012real coined the term "artificial DIF", which is a significant problem in applications of AI methods.
+
+#### All-others-as-anchors-all-significant (AOAA-AS)
+
+One way to attempt to counter artificial DIF is with purification through iterative anchor selection. For example, @drasgow1987study started with AOAA, removed items displaying DIF from the anchor set, then repeated the process iteratively—with items that have been removed from the anchor set allowed to have free parameters across groups in both the baseline and flexible model—until no more items tested positively. @kopf2015framework named this technique Iterative-backward-AOAA with "backward" (as in reverse) referring to beginning with the assumption that all items are DIF-free. We find it clearer to refer to this method as all-others-as-anchors-all-significiant (AOAA-AS). We append "all-significant" to indicate that all items that test positive for DIF are removed from the anchor set in each iteration. AOAA-AS is implemented in the mirt R package, and is called by passing scheme = "drop_sequential" to the DIF function.
+
+We argue that AOAA-AS, while a potential improvement, doesn't solve the fundamental problem of AOAA: What does one do when all items test positive for DIF? With a sufficient sample size and at least one item with DIF, this will necessarily be the case. In our thought experiment, we get the same result with AOAA-AS as we did with AOAA: All items test positive for DIF, and there are no anchor items. @kopf2015framework encountered precisely this problem in their simulation study and chose to select a single anchor item randomly. @woods2009empirical suggested a more straightforward, one-step method: Use AOAA and select the four items that exhibit the least amount of DIF as anchor items.
+
+#### All-other-as-anchors-one-at-a-time (AOAA-OAT)
+
+We propose an extension of these methods, all-others-as-anchors-one-at-a-time (AOAA-OAT), which, to our knowledge (and surprise), has not previously been explicitly proposed. AOAA-OAT is inspired by @hagquist2017recent, who assert that "items showing DIF initially should not be resolved simultaneously but sequentially" [p. 6]. Like AOAA-AS, AOAA-OAT starts with AOAA, but only the single item exhibiting the most DIF—based on the $\chi^2$ test statistic—is removed from the anchor set. The process continues iteratively until no new items display DIF. AOAA-OAT and AOAA-AS are similar in that they are both iterative; the difference is that AOAA-OAT takes the more conservative approach of removing only *one* item in each iteration as opposed to *all* items that test positive for DIF. As a result, we believe that AOAA-OAT is less likely to be "fooled" by artifical DIF. AOAA-OAT is not currently implemented in the mirt R package.
+
+<!-- improvement would be to explain what more homogeneous means in more detail -->
+<!-- the two kopf 2015 papers love the iterative forward SA. I bet AOAA-OAT is as good or better while fitting fewer models -->
+
+Applying AOAA-OAT to our thought experiment demonstrates its effectiveness. The initial AOAA removes the real DIF item from the anchor set because it exhibits the most DIF (i.e., because the group difference in performance is most different from the average group difference in performance on the other two items). In the next step, both of the other items test negative for DIF, and we arrive at the correct conclusion.
+
+<!-- probably should add transition here -->
+
+### Equal means clustering (EMC)
+
+<!-- ben d rightly points out that it would be good to say more what we mean by "similarly" - could look at how they describe it -->
+
+@bechger2015statistical proposed selecting anchor items by identifying clusters of items that function similarly and then choosing one of those clusters to be the "anchor cluster". They pointed out that one way around the lack of model identifiability is to consider only relative item parameters. For each group, the relative easinesses for each pair of items can be stored in the (square) matrix $\mathbf{R}^{\text{ref}}$ with entries ${R_{xy}}^{\text{ref}} = {b_x}^{\text{ref}} - {b_y}^{\text{ref}}$, where $x$ and $y$ both index the items. A similar matrix, $\mathbf{R}^{\text{foc}}$, can be formed. The ultimate matrix of interest is $\Delta \mathbf{R} \equiv \mathbf{R}^{\text{ref}}-\mathbf{R}^{\text{foc}}$ which is the "differences between groups in the pairwise differences in (easiness) between items" [p. 323].
+
+The general idea of identifying clusters of items is intriguing. However, their approach is complicated, and they did not describe a process for moving from $\Delta \mathbf{R}$ to an anchor cluster. @pohl2017cluster extended their work by proposing one such process. They point out that $\Delta \mathbf{R}$ is skew-symmetric and of rank 1, which means that all information is contained in a single row or column. Accordingly, they recommend k-means clustering on just the first column of $\Delta \mathbf{R}$ where the number of clusters, k, is chosen by minimizing BIC. They suggest using a combination of cluster size, cluster homogeneity, and cluster parameter precision to choose which of the clusters is the anchor cluster. They conducted a simulation study where some items contained DIF, and, unfortunately, found that BIC identifies only a single cluster, so all items were anchors.
+
+We propose a new cluster-based approach, which we call "equal means clustering" (EMC). Instead of working with an arbitrary column from $\Delta \mathbf{R}$, we work with the vector $\tilde{\mathbf{d}}$, which, as described in the [EM-MILG section](#emmilg), comes from setting $\mu^\text{foc} = 0$. Recall that $\mu^\text{ref}$ is to $0$ to identify the scale, and thus the name "equal means clustering". Instead of choosing k with BIC, we use the gap statistic method recommended by @hastie2001estimating. Based on the assumption that, at most, a minority of items contain DIF, we choose the largest cluster as the anchor cluster. If there is a tie for the largest cluster, the cluster with the lowest standard deviation of $\tilde{\mathbf{d}}$ is selected.

@@ -1,0 +1,108 @@
+---
+output:
+  bookdown::pdf_document2:
+    includes:
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: yes
+    toc: yes
+    toc_depth: 5 
+
+fontsize: 11pt
+bibliography: paper.bib
+link-citations: yes
+
+title: |
+    Promise and peril: Agnostic identification methods  
+    for detecting differential item functioning
+subtitle: |
+    Ben Stenhaug, Mike Frank, and Benjamin W. Domingue  
+    Stanford University
+abstract: |
+  It is well known that likelihood ratio tests (LRT) are effective at detecting differential item functioning (DIF) in item response models. However, to use a LRT (or any other method), we require an identifying assumption to disentangle differences in group ability from potential DIF. We use the term "agnostic identification" (AI) to describe the process of finding such identifying assumptions without a priori knowledge of relative group ability or items that are DIF-free. We first summarize existing AI methods and propose a variety of new methods. We then conduct a simulation study—which we argue is more realistic than most DIF simulation studies in the literature—and find that one of the proposed new AI methods, all-others-as-anchors-one-at-a-time (AOAA-OAT), significantly outperforms current methods. We also suggest a new approach, the equal means, multiple imputation logit graph (EM-MILG), which clearly presents all information about possible DIF, including sampling variability in item parameters, to the analyst. Given the central importance of AI techniques to subsequent examinations of item-level bias, we believe these constitute important advances for the field. \clearpage <!-- https://tinyurl.com/ybremelq -->
+  
+header-includes: 
+- \usepackage{amsmath}
+- \DeclareMathOperator*{\argmax}{arg\,max} # for gini coefficient
+- \DeclareMathOperator*{\argmin}{arg\,min} # for gini coefficient
+
+- \usepackage{float}
+- \usepackage[autostyle, english = american]{csquotes}
+
+- \setlength{\parindent}{4em} # all of this for draft, papaja should take care of things
+- \setlength{\parskip}{2em}
+- \usepackage{setspace}\doublespacing
+- \AtBeginEnvironment{tabular}{\singlespacing} # this makes that table single spaced
+
+- \usepackage{natbib} # citations in that table were a hassle. this is still a bit broken. remember can always change tex file.
+---
+
+```{r setup, include = FALSE}
+# https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html 
+
+knitr::opts_chunk$set(
+    fig.align='center',
+    echo=FALSE,
+    warning=FALSE,
+    message=FALSE,
+    fig.pos='H',
+    fig.retina = 5
+)
+
+library(tidyverse)
+library(ggtext)
+library(here)
+library(mirt)
+library(cluster)
+library(DescTools)
+library(knitr)
+library(kableExtra)
+set.seed(12345)
+R.utils::sourceDirectory(here("R"))
+
+theme_set(theme_bw())
+```
+
+<!-- the literature basically talks separately about anchor selection and DIF methods. much more literature is on DIF methods and less is on anchor selection. I'm basically writing a paper about anchor selection and just calling it DIF methods because that seems like where the action is. I'm taking fixed at that the likelihood ratio test is the way to go (and perhaps that deserves more detail)? -->
+
+\clearpage
+
+# Introduction {#intro}
+
+```{r child = "paper_1_intro.Rmd"}
+```
+
+# Agnostic identification methods
+
+```{r child = "paper_2a_anchor_items.Rmd"}
+```
+
+## Anchor points
+
+```{r child = "paper_2b_anchor_points.Rmd"}
+```
+
+## Summary of AI methods
+
+```{r child = "paper_2c_summary_of_methods.Rmd"}
+```
+
+# Simulation study {#simstudy}
+
+```{r child = "paper_3_sim.Rmd"}
+```
+
+\clearpage
+
+<!-- weird formatting that isn't apa I don't think and indentation is weird, solution is to use papaja (look at paper_apa.Rmd) or this might also be helpful https://stackoverflow.com/questions/4073674/how-to-disable-indentation-in-particular-section-in-latex-->
+
+<!-- hopefully all of this below goes away with papaja and other solutions. but remember if it can't editing the latek file is always an option on the final draft! 
+https://github.com/haozhu233/kableExtra/issues/214
+https://stackoverflow.com/questions/51613152/citing-within-an-rmarkdown-table
+https://tex.stackexchange.com/questions/272475/citations-in-tabular-environment-not-working
+https://tex.stackexchange.com/questions/359872/is-it-possible-to-use-cite-inside-xtable
+https://github.com/yihui/rmarkdown-cookbook/issues/71
+-->
+
+\bibliographystyle{apa}
+\bibliography{paper.bib}
