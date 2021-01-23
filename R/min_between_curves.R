@@ -2,7 +2,7 @@
 # see note on assuming cov stays constant below ...  think about if going to 2PL
 # see note on Theta + anchor_point below which needs thinking if I do the 2PL
 
-min_between_curves <- function(intuitive_mod, lo, hi, by){
+min_between_curves <- function(intuitive_mod, lo, hi, by, ref_weight = 0.5){
 
     n_items <- length(intuitive_mod@Data$K)
     Theta <- seq(-6, 6, length.out = 61)
@@ -13,7 +13,7 @@ min_between_curves <- function(intuitive_mod, lo, hi, by){
     sd_ref <- sqrt(coef(intuitive_mod, simplify = TRUE)$a_ref$cov[1])
     weights_ref <- dnorm(Theta, mu_ref, sd_ref) / sum(dnorm(Theta, mu_ref, sd_ref))
 
-    f <- function(intuitive_mod, anchor_point){
+    f <- function(intuitive_mod, anchor_point, ref_weight){
         # was disoriented but the anchor point is what you boost the focal group by
         # so if anchor_point = 1 then the mean of the focal group is -1
 
@@ -24,7 +24,7 @@ min_between_curves <- function(intuitive_mod, lo, hi, by){
         sd_foc <- sqrt(coef(intuitive_mod, simplify = TRUE)$b_foc$cov[1])
         weights_foc <- dnorm(Theta, mu_foc, sd_foc) / sum(dnorm(Theta, mu_foc, sd_foc))
 
-        weights <- (weights_foc + weights_ref) / 2 # assumes 50% in each group which I could of course change
+        weights <- weights_foc * (1 - ref_weight) + weights_ref * ref_weight # changed this!
 
         data <-
             tibble(
@@ -54,7 +54,7 @@ min_between_curves <- function(intuitive_mod, lo, hi, by){
             anchor_point = seq(lo, hi, by)
         )  %>%
         mutate(
-            total_between_curves = anchor_point %>% map_dbl(~ f(intuitive_mod, .)),
+            total_between_curves = anchor_point %>% map_dbl(~ f(intuitive_mod, ., ref_weight)),
             anchor_point = -anchor_point
         )
 
